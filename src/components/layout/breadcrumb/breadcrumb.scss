@@ -1,0 +1,35 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+.nav-title {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+
+  .item {
+    // i {
+    //   margin-right: 4px;
+    // }
+    display: flex;
+    align-items: center;
+    padding-right: 18px;
+    position: relative;
+    color: $right-side-font-color;
+    cursor: default;
+
+    &:after {
+      content: "/";
+      position: absolute;
+      top: 0;
+      right: 6px;
+    }
+  }
+
+  .item:last-child {
+    color: $theme;
+    padding-right: 0;
+
+    &:after {
+      content: "";
+    }
+  }
+}

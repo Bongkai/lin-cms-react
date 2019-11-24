@@ -1,0 +1,22 @@
+@import './realize/lin-variables';
+@import './realize/reset';
+@import './realize/animation';
+@import './antd/custom-antd';
+// @import './realize/transition';
+// @import './realize/global';
+
+.lin-container {
+  .lin-title {
+    height: 59px;
+    line-height: 59px;
+    color: $parent-title-color;
+    font-size: 16px;
+    font-weight: 500;
+    text-indent: 40px;
+    border-bottom: 1px solid #dae1ed;
+  }
+
+  .lin-wrap {
+    padding: 20px;
+  }
+}

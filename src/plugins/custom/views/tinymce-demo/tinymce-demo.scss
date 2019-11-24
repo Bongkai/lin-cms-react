@@ -1,0 +1,11 @@
+.tinymce-demo-wrap {
+  min-height: 400px;
+  position: relative;
+
+  .loading {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-16px, -19px);
+  }
+}

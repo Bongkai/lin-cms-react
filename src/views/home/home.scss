@@ -1,0 +1,134 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+.home-container {
+  // height: 100%;
+
+  .layout-container {
+    .aside {
+      // height: 100vh;
+      background: $sidebar-background;
+      overflow-x: hidden;
+      &::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+      };
+      transition: all 0.3s linear;
+    }
+
+    .sub-container {
+      height: 100vh;
+      overflow: hidden;
+      
+      .header.ant-layout-header {
+        width: 100%;
+        padding: 0;
+        background: $header-background;
+        // height: $header-height !important;
+        height: $header-height;
+        // display: flex;
+        // align-items: center;
+        // justify-content: space-between;
+        box-shadow: 0px 2px 6px 0px rgba(190, 204, 216, 0.4);
+        border-bottom: 1px solid rgba(190, 204, 216, 0.4);
+        z-index: 1;
+      
+        .left {
+          height: 100%;
+          width: 100%;
+          // overflow: hidden;
+          // display: flex;
+          // align-items: center;
+          // justify-content: space-between;
+      
+          .operate {
+            display: flex;
+            align-items: center;
+            background: $header-background;
+            padding-left: 20px;
+            // height: 72px;
+            // height: 46px;
+
+            .fold-icon {
+              font-size: 14px;
+              color: $right-side-font-color;
+              cursor: pointer;
+              margin-right: 10px;
+              transition: all 0.3s linear;
+
+              &:hover {
+                color: $theme;
+              }
+            }
+      
+            // .iconfont {
+            //   font-size: 16px;
+            //   font-weight: 500;
+            //   color: $right-side-font-color;
+            //   cursor: pointer;
+            //   transform: rotate(0deg);
+            //   transition: all 0.3s linear;
+            //   margin-right: 10px;
+      
+            //   &:hover {
+            //     color: $theme;
+            //   }
+            // }
+      
+            // .rotate {
+            //   transform: rotate(180deg);
+            //   transition: all 0.3s linear;
+            // }
+          }
+        }
+      
+        .right-info {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .content {
+        // height: 100%;
+        overflow: auto;
+        background: $appmain-background;
+
+        &::-webkit-scrollbar {
+          width: 10px;
+          background-color: #ddd;
+        };
+        &::-webkit-scrollbar-thumb {
+          background-color: #aaa;
+          border-radius: 5px;
+    
+          &:hover {
+            background-color: $theme;
+          }
+        }
+      }
+    }
+  }
+  
+  .el-main {
+    overflow-y: auto;
+    position: relative;
+    padding: 0;
+  }
+  
+  .backTop {
+    position: fixed;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    right: 50px;
+    bottom: 50px;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    border-radius: 50%;
+    z-index: 99;
+    background: #fff;
+    .iconfont {
+      font-size: 36px;
+    }
+  }
+}

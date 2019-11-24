@@ -1,0 +1,17 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+.group-add-container {
+  .title {
+    height: 60px;
+    line-height: 59px;
+    color: $parent-title-color;
+    font-size: 16px;
+    font-weight: 500;
+    text-indent: 40px;
+    border-bottom: 1px solid #dae1ec;
+  }
+
+  .content {
+    padding: 20px;
+  }
+}

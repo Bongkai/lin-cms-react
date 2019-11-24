@@ -1,0 +1,53 @@
+.lin-table {
+  .ant-table-thead > tr > th {
+    padding: 20px 16px;
+  }
+  // .ant-table-thead > tr > th, .ant-table-tbody {
+  //   background: #fff;
+
+  //   > tr > td {
+  //     padding: 14px 16px;
+  //   }
+  // }
+
+  &.no-v-divider {
+    .ant-table-bordered .ant-table-thead > tr > th,
+    .ant-table-bordered .ant-table-tbody > tr > td {
+      border-right: 0;
+    }
+    .ant-table-bordered .ant-table-header > table,
+    .ant-table-bordered .ant-table-body > table,
+    .ant-table-bordered .ant-table-fixed-left table,
+    .ant-table-bordered .ant-table-fixed-right table {
+      border-right: 1px solid #e8e8e8;
+    }
+  }
+  &.no-h-divider {
+    // .ant-table-bordered .ant-table-thead > tr > th,
+    .ant-table-bordered .ant-table-tbody > tr > td {
+      border-bottom: 0;
+    }
+    .ant-table-bordered .ant-table-header > table,
+    .ant-table-bordered .ant-table-body > table,
+    .ant-table-bordered .ant-table-fixed-left table,
+    .ant-table-bordered .ant-table-fixed-right table {
+      border-bottom: 1px solid #e8e8e8;
+    }
+  }
+  &.stripe {
+    .ant-table-row:nth-child(odd) {
+      background: #f8f9fa;
+    }
+    .ant-table-row:nth-child(even) {
+      background: #fff;
+    }
+  }
+  &.stripe-reverse {
+    .ant-table-row:nth-child(odd) {
+      background: #fff;
+    }
+    .ant-table-row:nth-child(even) {
+      background: #f8f9fa;
+    }
+  }
+}

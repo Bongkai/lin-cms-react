@@ -1,0 +1,15 @@
+
+.user-container {
+  height: 40px;
+  .dropdown-link {
+    cursor: pointer;
+
+    .nav-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 10px;
+    }
+  }
+}

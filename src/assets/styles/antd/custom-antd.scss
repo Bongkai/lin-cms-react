@@ -1,0 +1,330 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+$menu-item-height: $menuItem-height;
+$menu-item-margintop: 0;
+$menu-item-marginbottom: 0;
+
+$menu-text-color: rgb(196, 201, 210);
+// $menu-text-color-selected: #3963bc;
+$menu-text-color-selected: #1890ff;
+// $menu-bg: rgb(25, 42, 94);
+$menu-bg: #192A5E;
+$menu-bg-deep: #122150;
+$menu-item-hover: $menu-bg-deep;
+$menu-item-hover-deep:#0a1949;
+
+$default-size-height: 36px;
+$small-size-height: 24px;
+$btn-color-danger: #f4516c;
+
+
+// 自定义 Menu 组件的 dark-theme 样式
+// ---
+.custom-antd.ant-menu-dark {
+  .ant-menu-inline.ant-menu-sub {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+}
+
+
+// 备份
+
+// .custom-antd.ant-menu-dark {
+//   // Menu / SubMenu / Item 的整体样式
+//   background-color: $menu-bg;
+
+//   &.ant-menu-inline .ant-menu-item,
+//   &.ant-menu-inline .ant-menu-item a,
+//   &.ant-menu-inline .ant-menu-submenu .ant-menu-submenu-title,
+//   &.ant-menu-inline-collapsed .ant-menu-item,
+//   &.ant-menu-inline-collapsed .ant-menu-submenu .ant-menu-submenu-title {
+//     color: $menu-text-color;
+//     height: $menu-item-height;
+//     line-height: $menu-item-height;
+//     margin-top: $menu-item-margintop;
+//     margin-bottom: $menu-item-marginbottom;
+//   }
+
+//   // Item 的通用 selected 样式
+//   .ant-menu-item-selected,
+//   .ant-menu-item-selected a,
+//   .ant-menu-item-selected .iconfont,
+//   .ant-menu-item-selected.ant-menu-item-active,
+//   .ant-menu-item-selected.ant-menu-item-active,
+//   .ant-menu-item-selected.ant-menu-item-active .iconfont {
+//     color: $menu-text-color-selected !important; // 这个 !important 不能去掉
+//   }
+  
+//   // Menu 直属的 Item 的 active / selected 样式
+//   >.ant-menu-item.ant-menu-item-selected {
+//     background-color: $menu-bg;
+//   }
+//   >.ant-menu-item.ant-menu-item-active {
+//     background-color: $menu-item-hover;
+//   }
+
+//   // SubMenu 的整体样式
+//   .ant-menu-inline.ant-menu-sub {
+//     background-color: $menu-bg-deep;
+//     -webkit-box-shadow: none;
+//     box-shadow: none;
+//   }
+
+//   // SubMenu 的样式
+//   .ant-menu-submenu.ant-menu-submenu-inline {
+//     // SubMenu 关闭时的 active 样式（Menu 直属的 SubMenu 的此项在后面独立设置覆盖）
+//     &.ant-menu-submenu-active {
+//       background-color: $menu-item-hover-deep;
+//     }
+
+//     // SubMenu 展开时的样式
+//     &.ant-menu-submenu-open {
+//       background-color: $menu-bg-deep;
+//       &.ant-menu-submenu-active {
+//         background-color: $menu-item-hover-deep !important; // 这个 !important 不能去掉
+//       }
+
+//       // SubMenu 里的 Item 的 active / selected 样式
+//       .ant-menu-item.ant-menu-item-selected {
+//         background-color: $menu-bg-deep;
+//         span {
+//           color: $menu-text-color-selected;
+//         }
+//       }
+//       .ant-menu-item.ant-menu-item-active,
+//       .ant-menu-item.ant-menu-item-selected.ant-menu-item-active {
+//         background-color: $menu-item-hover-deep !important;
+//       }
+//     }
+
+//     // SubMenu 的 title 的箭头图标颜色
+//     .ant-menu-submenu-arrow,
+//     .ant-menu-submenu-arrow::before,
+//     .ant-menu-submenu-arrow::after {
+//       background: $menu-text-color !important;
+//       opacity: 1 !important;
+//     }
+//   }
+
+//   .ant-menu-item-selected span {
+//     color: $menu-text-color-selected;
+//   }
+
+//   // Menu 直系子 Submenu 的 active 样式独立设置（须放在 SubMenu 通用配置的后面）
+//   >.ant-menu-submenu.ant-menu-submenu-inline.ant-menu-submenu-active {
+//     background-color: $menu-item-hover;
+//   }
+// }
+
+
+
+// 【全局】自定义 Modal 组件样式
+// ---
+// .ant-modal-mask {
+//   background: rgba(0, 0, 0, .5);
+//   // User 组件使用的 Dropdown 组件的 z-index 为 1050，所以这里设高一层
+//   z-index: 1051;
+// }
+
+// .ant-modal {
+//   z-index: 1053;
+// }
+
+// .ant-modal-wrap {
+//   z-index: 1052;
+// }
+
+
+
+// 自定义 Form 组件样式
+// ---
+// .custom-antd.ant-form {
+//   .ant-form-item {
+//     margin-bottom: 35px;
+
+//     &:last-child {
+//       margin-bottom: 0;
+//     }
+  
+//     .ant-form-item-label {
+//       padding-right: 10px;
+//     }
+//   }
+// }
+
+
+
+// 自定义 Input 组件样式
+// ---
+// .custom-antd.ant-input {
+//   height: $default-size-height;
+
+//   &:hover {
+//     border: 1px solid rgba(57, 99, 188, .4);
+//   }
+
+//   &:focus {
+//     border: 1px solid $theme;
+//     box-shadow: none;
+//   }
+
+//   &::-webkit-input-placeholder {
+//     color: $theme;
+//     opacity: 0.4;
+//   }
+// }
+
+
+
+// 自定义 Select 组件样式
+// ---
+// .custom-antd.ant-select {
+//   .ant-select-selection.ant-select-selection--single {
+//     height: $default-size-height;
+    
+//     &:hover {
+//       border: 1px solid rgba(57, 99, 188, .4);
+//     }
+
+//     &:focus {
+//       border: 1px solid $theme;
+//       box-shadow: none;
+//     }
+
+//     .ant-select-selection__rendered {
+//       height: $default-size-height;
+//       line-height: $default-size-height;
+//       .ant-select-selection__placeholder {
+//         margin-top: -11px;
+//       }
+//     }
+
+//     .ant-select-selection__placeholder {
+//       color: $theme;
+//       opacity: 0.4;
+//     }
+
+//     .ant-select-arrow {
+//       color: $theme;
+//       opacity: 0.4;
+//     }
+//   }
+// }
+
+
+
+// 自定义 Button 组件样式
+// ---
+.custom-antd {
+  // 去掉点击按钮时的光晕效果
+  // button[ant-click-animating-without-extra-node]:after {
+  //   border: 0 none;
+  //   opacity: 0;
+  //   animation:none 0 ease 0 1 normal;
+  // }
+
+  &.ant-btn {
+    // height: $default-size-height;
+  
+    // &.ant-btn-sm {
+    //   height: $small-size-height;
+    //   font-size: 12px;
+    //   padding: 3px 12px 2px 12px;
+    // }
+  
+    // &:hover {
+    //   color: $theme;
+    //   border: 1px solid rgba(57, 99, 188, .4);
+    // }
+  
+    // &:focus {
+    //   color: $theme;
+    //   border: 1px solid $theme;
+    // }
+  
+    &.ant-btn-primary.btn-plain {
+      background: #fff;
+      color: $theme;
+      padding: 0 12px;
+      border: 1px solid $theme;
+      border-radius: 2px;
+      transition: all .1s linear;
+  
+      &:hover {
+        background: $theme;
+        color: #fff;
+        transition: all .1s linear;
+      }
+    }
+
+    &.ant-btn-danger.btn-plain {
+      background: #fff;
+      color: $btn-color-danger;
+      padding: 0 12px;
+      border: 1px solid $btn-color-danger;
+      border-radius: 2px;
+      transition: all .1s linear;
+  
+      &:hover {
+        background: $btn-color-danger;
+        color: #fff;
+        transition: all .1s linear;
+      }
+    }
+  }
+}
+
+
+
+// 自定义 Table 组件样式
+// ---
+// .custom-antd.ant-table {
+//   // 见 lin-table 的样式文件
+// }
+
+
+
+// 自定义 Pagination 组件样式
+// ---
+// .custom-antd.ant-pagination {
+//   .ant-pagination-prev,
+//   .ant-pagination-next {
+//     .ant-pagination-item-link {
+//       color: rgba(0, 0, 0, .65);
+//       border: 1px solid #d9d9d9;
+//       &:hover {
+//         color: $theme;
+//         border: 1px solid rgba(57, 99, 188, .4);
+//       }
+//       &:active {
+//         color: $theme;
+//         border: 1px solid rgba(57, 99, 188, .4);
+//       }
+//     }
+//   }
+//   .ant-pagination-item {
+//     &:hover {
+//       border: 1px solid rgba(57, 99, 188, .4);
+//       a {
+//         color: $theme;
+//       }
+//     }
+//   }
+//   .ant-pagination-item.ant-pagination-item-active {
+//     background: $theme;
+//     border: 1px solid $theme;
+//     a {
+//       color: #fff;
+//     }
+//   }
+//   .ant-pagination-options-quick-jumper input {
+//     &:hover {
+//       border: 1px solid rgba(57, 99, 188, .4);
+//     }
+//     &:focus {
+//       border: 1px solid $theme;
+//       box-shadow: none;
+//     }
+//   }
+// }

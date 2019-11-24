@@ -1,0 +1,29 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+.nav-bar-container {
+  width: 100%;
+  height: $navbar-height;
+  display: flex;
+  align-items: center;
+  
+  .logo.js-min-logo {
+    width: 64px;
+    font-size: 16px;
+    color: #fff;
+  }
+  
+  .nav-content {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: $navbar-padding;
+    
+    .right-info {
+      display: flex;
+      align-items: center;
+    }
+  }
+}

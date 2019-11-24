@@ -1,0 +1,25 @@
+.screenfull-container {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  cursor: pointer;
+
+  .screenfull-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // &:before {
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   width: 40px;
+    //   height: 40px;
+    //   font-size: 20px;
+    //   color: #2c3e50;
+    // }
+  }
+}

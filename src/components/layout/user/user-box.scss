@@ -1,0 +1,143 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+.user-box {
+  width: 326px;
+  // background-color: none;
+  // background: transparent;
+  // border: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  // 调节 box 的Y轴位置
+  transform: translateY(18px);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+
+  .user-info {
+    background-image: url("../../../assets/img/user/user-bg.png");
+    background-size: 100% 100%;
+    transform: translateY(-10px);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    padding: 35px 20px 25px 30px;
+    // z-index: 100;
+    position: relative;
+
+    .corner {
+      position: absolute;
+      right: 18px;
+      top: -9px;
+      width: 27px;
+      height: 10px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+
+      .mask {
+        opacity: 0;
+        transition: all .2s;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, .3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        color: white;
+
+        input {
+          display: none;
+        }
+      }
+
+      &:hover {
+        .mask {
+          opacity: 1;
+        }
+      }
+    }
+
+    .text {
+      margin-left: 20px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .nickname {
+        margin-bottom: 10px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .nickname-edit {
+        width: 160px;
+      }
+
+      .desc {
+        font-size: 14px;
+        color: rgba(222, 226, 230, 1);
+      }
+    }
+
+    .info {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      color: #fff;
+      font-size: 14px;
+      height: 20px;
+      line-height: 20px;
+
+      .mid {
+        padding: 0 5px;
+      }
+    }
+  }
+
+  .dropdown-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-left: 35px;
+    height: 122px;
+    color: #596c8e;
+    font-size: 14px;
+    background: white;
+    margin-top: -10px;
+
+    li {
+      cursor: pointer;
+
+      &:nth-child(1) {
+        margin-top: 20px;
+      }
+
+      &:nth-child(2) {
+        margin-bottom: 20px;
+      }
+
+      i {
+        margin-right: 10px;
+      }
+
+      &:hover {
+        color: $theme !important;
+
+        i {
+          color: $theme !important;
+        }
+      }
+    }
+  }
+}

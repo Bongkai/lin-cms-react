@@ -1,0 +1,132 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+.reuse-tab-wrap {
+  // width: calc(100% -40px);
+  height: 26px;
+  bottom: 0;
+  left: 0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  .swiper-container {
+    width: 100%;  // 这个不能删
+  }
+
+  .reuse-tab-item {
+    width: 126px;
+    height: 26px;
+    background-color: $reuse-tab-item-background;
+    // color: $right-side-font-color;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // padding: 0 1em;
+    margin-right: 1px;
+    position: relative;
+    white-space: nowrap;
+    transition: color 0s;
+    cursor: pointer;
+
+    .link {
+      width: 100%;
+      height: 26px;
+      line-height: 26px;
+      color: $right-side-font-color;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: color 0s;
+
+      &.active {
+        color: #fff;
+      }
+    }
+
+    .icon-close {
+      opacity: 0;
+      position: absolute;
+    }
+
+    &:hover {
+      background: $theme;
+      border: none;
+      color: #fff;
+
+      .link {
+        color: #fff;
+        transition: color 0s;
+      }
+
+      .icon-close {
+        position: absolute;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        // font-size: 6px;
+        top: 0;
+        right: 0;
+        opacity: 1;
+        border-radius: 0 0 0 16px;
+        background: rgba(255, 255, 255, 0.3);
+
+        .icon-close-icon {
+          font-size: 12px;
+          position: absolute;
+          right: 0px;
+          transform: scale(0.8);
+        }
+
+        // &::before {
+        //   font-size: 12px;
+        //   position: absolute;
+        //   right: -1px;
+        //   transform: scale(0.7);
+        // }
+      }
+    }
+  }
+
+  .active {
+    // width: 100%;
+    height: 26px;
+    line-height: 26px;
+    color: #ffffff;
+    background: $theme;
+    box-sizing: border-box;
+    border: none;
+    position: relative;
+
+    // .icon-close {
+    //   position: absolute;
+    //   display: inline-block;
+    //   width: 16px;
+    //   height: 16px;
+    //   // font-size: 6px;
+    //   top: 0;
+    //   right: 0;
+    //   opacity: 0;
+    //   border-radius: 0 0 0 16px;
+    //   background: rgba(255, 255, 255, 0.3);
+
+    //   .icon-close-icon {
+    //     font-size: 12px;
+    //     position: absolute;
+    //     right: 0px;
+    //     transform: scale(0.8);
+    //   }
+    //   // &::before {
+    //   //   font-size: 6px;
+    //   //   position: absolute;
+    //   //   right: -1px;
+    //   //   transform: scale(0.7);
+    //   // }
+    // }
+  }
+
+  // .reuse-tab-wrap {
+  //   height: 100%;
+  // }
+}
