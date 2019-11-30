@@ -45,8 +45,6 @@ export default class About extends React.Component {
               </div>
             </div>
             <img className='welcome-bg' src={welcomeBgImg} alt='' />
-            {/* <img className='welcome-bg' src='../../assets/img/about/header-bg.png' alt='' /> */}
-            {/* <img className='welcome-bg' src='./header-bg.png' alt='' /> */}
           </div>
           <div className='lin-info-right'>
             <div className='team-detail'>

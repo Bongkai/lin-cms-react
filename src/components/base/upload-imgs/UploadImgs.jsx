@@ -1068,51 +1068,43 @@ export default class UploadImgs extends React.Component {
                 src={item.display}
               />
               <div className='info'>
-                {
-                  item.file ?
-                  <Icon type='cloud-upload' className='wait-upload' /> : null
-                }
+                {item.file && (
+                  <Icon type='cloud-upload' className='wait-upload' />
+                )}
               </div>
               <div className='control'>
-                {
-                  !disabled ?
-                  <>
-                    <Icon type='close' className='del'
-                      onClick={()=>this.delItem(item.id)}
-                    />
-                    <div className='preview' title='更换图片'
-                      onClick={()=>this.handleClick(item.id)}
-                    >
-                      <Icon type='edit' />
-                    </div>
-                  </> : null
-                }
-                {
-                  sortable || preview ?
+                {!disabled && (<>
+                  <Icon type='close' className='del'
+                    onClick={()=>this.delItem(item.id)}
+                  />
+                  <div className='preview' title='更换图片'
+                    onClick={()=>this.handleClick(item.id)}
+                  >
+                    <Icon type='edit' />
+                  </div>
+                </>)}
+                {(sortable || preview) && (
                   <div className='control-bottom'>
-                    {
-                      sortable && !disabled ?
+                    {sortable && !disabled && (
                       <Icon type='arrow-left' title='前移'
                         className={`control-bottom-btn${index===0?' disabled':''}`}
                         onClick={()=>this.move(item.id, -1)}
-                      /> : null
-                    }
-                    {
-                      preview ?
+                      />
+                    )}
+                    {preview && (
                       <Icon type='eye' title='预览'
                         className='control-bottom-btn'
                         onClick={()=>this.handlePreview(index)}
-                      /> : null
-                    }
-                    {
-                      sortable && !disabled ?
+                      />
+                    )}
+                    {sortable && !disabled && (
                       <Icon type='arrow-right' title='后移'
                         className={`control-bottom-btn${index===(itemList.length-1)?' disabled':''}`}
                         onClick={()=>this.move(item.id, 1)}
-                      /> : null
-                    }
-                  </div> : null
-                }
+                      />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             :
@@ -1123,11 +1115,7 @@ export default class UploadImgs extends React.Component {
               {
                 loading
                 ?
-                <Spin 
-                  indicator={
-                    <Icon type='loading' style={{ fontSize: '32px' }} />
-                  }
-                />
+                <Spin indicator={<Icon type='loading' style={{ fontSize: '32px' }} />} />
                 :
                 <Icon type='plus' style={{ fontSize: '2.5em' }} />
               }

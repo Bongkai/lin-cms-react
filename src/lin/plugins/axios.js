@@ -10,8 +10,7 @@ import Config from '@/config'
 import ErrorCode from '@/config/error-code'
 import { store } from '@/store'
 import { loginOut } from '@/store/actions/app.actions'
-import { getToken } from '@/lin/utils/token'
-import User from '@/lin/models/user'
+import { getToken, saveAccessToken } from '@/lin/utils/token'
 
 
 // Full config:  https://github.com/axios/axios#request-config
@@ -38,6 +37,8 @@ const config = {
 const _axios = axios.create(config)
 
 _axios.interceptors.request.use((originConfig) => {
+  // TODO: 有 API 请求重新计时
+
   const reqConfig = { ...originConfig }
 
   // step1: 容错处理
@@ -67,15 +68,12 @@ _axios.interceptors.request.use((originConfig) => {
     }
 
     // 检测是否包含文件类型, 若包含则进行 formData 封装
-    // 检查子项是否有 Object 类型, 若有则字符串化
     let hasFile = false
     Object.keys(reqConfig.data).forEach((key) => {
       if (typeof reqConfig.data[key] === 'object') {
         const item = reqConfig.data[key]
         if (item instanceof FileList || item instanceof File || item instanceof Blob) {
           hasFile = true
-        } else if (Object.prototype.toString.call(item) === '[object Object]') {
-          reqConfig.data[key] = JSON.stringify(reqConfig.data[key])
         }
       }
     })
@@ -144,7 +142,8 @@ _axios.interceptors.response.use(async (res) => {
       const cache = {}
       if (cache.url !== url) {
         cache.url = url
-        await User.getRefreshToken()
+        const refreshResult = await _axios('cms/user/refresh')
+        saveAccessToken(refreshResult.access_token)
         // 将上次失败请求重发
         const result = await _axios(res.config)
         resolve(result)
@@ -157,10 +156,10 @@ _axios.interceptors.response.use(async (res) => {
       reject(res)
       return
     }
-    console.log('msg', msg)
+    
     // 本次请求添加 params 参数：showBackend 为 true, 弹出后端返回错误信息
     if (params && params.showBackend) {
-      // 【这是什么意思？】
+      // message = msg[0]
       [message] = msg
     } else { // 弹出前端自定义错误信息
       const errorArr = Object.entries(ErrorCode).filter(
@@ -177,7 +176,7 @@ _axios.interceptors.response.use(async (res) => {
     }
 
     antdMessage.error(message)
-    resolve(res.data)
+    reject()
   })
 }, (error) => {
   if (!error.response) {

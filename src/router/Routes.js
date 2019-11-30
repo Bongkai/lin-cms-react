@@ -19,11 +19,9 @@ const Routes = ({
       classNames={'fade'}
       key={location.pathname}
     >
-      {
-        renderRoutes(
-          routes, state, authPath, permissionPath, extraProps, switchProps, location
-        )
-      }
+      {renderRoutes(
+        routes, state, authPath, permissionPath, extraProps, switchProps, location
+      )}
     </CSSTransition>
   </TransitionGroup>
   :
@@ -42,7 +40,7 @@ function renderRoutes(
   location
 ) {
   const { logined, auths, user } = state
-  return routes ? (
+  return routes && (
     <Switch location={location} {...switchProps}>
       <Redirect exact from='/' to={permissionPath} />
       {routes.map((route, index) => (
@@ -99,7 +97,7 @@ function renderRoutes(
       ))}
       <Redirect to='/404' />
     </Switch>
-  ) : null
+  )
 }
 
 export default withRouter(Routes)

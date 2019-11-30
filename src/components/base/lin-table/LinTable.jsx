@@ -162,11 +162,8 @@ export default class LinTable extends React.Component {
   }
 
   render() {
-    const {
-      verticalDivider,    // 新增属性，值为 'none' 时取消内部垂直分隔线，默认为 undefined
-      horizonalDivider,   // 新增属性，值为 'none' 时取消内部水平分隔线，默认为 undefined
-      stripe,             // 新增属性，值为 true 时生成斑马条纹背景，默认为 undefined
-      stripeReverse,      // 新增属性，值为 true 时生成反斑马条纹背景，默认为 undefined
+    const { 
+      verticalDivider, horizonalDivider, stripe, stripeReverse,
       columns,
       ...restProps
     } = this.props

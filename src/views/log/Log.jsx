@@ -254,12 +254,14 @@ class Log extends React.Component {
             </div>
           </div>
         </StickyTop>
-        <div className='search' style={{ display: isSearch ? 'flex' : 'none' }}>
-          <p className='search-tip'>
-            搜索 “<span className='search-keyword'>{keyword}</span>”，
-            找到 <span className='search-num'>{totalCount}</span> 条日志信息</p>
-          <button className='search-back' onClick={(ev)=>this.backInit(ev)}>返回全部日志</button>
-        </div>
+        {isSearch && (
+          <div className='search'>
+            <p className='search-tip'>
+              搜索 “<span className='search-keyword'>{keyword}</span>”，
+              找到 <span className='search-num'>{totalCount}</span> 条日志信息</p>
+            <button className='search-back' onClick={(ev)=>this.backInit(ev)}>返回全部日志</button>
+          </div>
+        )}
         <div className='content'>
           <article>
             {logs.map((item, index) => (
@@ -278,29 +280,25 @@ class Log extends React.Component {
             ))}
           </article>
           
-          {!loading ? <Divider style={{ height: '2px' }} /> : null}
+          {loading && <Divider style={{ height: '2px' }} />}
 
           {
             loading ?
             <Spin className='loading' size='large' />
             :
             <div className='more'>
-              {/* {moreLoading ? <i className='iconfont icon-loading'></i> : null} */}
-              {moreLoading ? <Icon type='loading-3-quarters' className='more-loading-icon' /> : null}
-              {
-                !moreLoading && !finished ?
+              {moreLoading && <Icon type='loading-3-quarters' className='more-loading-icon' />}
+              {!moreLoading && !finished && (
                 <div onClick={()=>this.nextPage()}>
                   <span>查看更多</span>
-                  {/* <i className='iconfont icon-gengduo' style={{ fontSize: '14px' }} /> */}
                   <Icon type='down-circle' className='down-circle-icon' />
-                </div> : null
-              }
-              {
-                finished ? 
+                </div>
+              )}
+              {finished && (
                 <div>
                   <span>{totalCount === 0 ? '暂无数据' : '没有更多数据了'}</span>
-                </div> : null
-              }
+                </div>
+              )}
             </div>
           }
         </div>

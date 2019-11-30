@@ -205,7 +205,7 @@ export default class GroupInfo extends React.Component {
     return (
       <div className='group-info-container'>
         <Form className='custom-antd' {...this.layout} colon={false}>
-          {!isAuthsPage ? (<>
+          {!isAuthsPage && (<>
             <Item label='分组名称' required>
               {getFieldDecorator('name', {
                 validate: [{
@@ -224,9 +224,9 @@ export default class GroupInfo extends React.Component {
                 <Input className='custom-antd' />
               )}
             </Item>
-          </>): null}
+          </>)}
           
-          {!isInfoPage ? (
+          {!isInfoPage && (
             <Item className='auths-item' label={isAddPage ? '分配权限' : ''}>
               {
                 loading ? 
@@ -250,14 +250,14 @@ export default class GroupInfo extends React.Component {
                 </div>
               }
             </Item>
-          ) : null}
+          )}
 
-          {isAddPage ? (
+          {isAddPage && (
             <Item className='submit' label=' '>
               <Button type='primary' onClick={()=>this.onSubmit('添加分组')}>确 定</Button>
               <Button onClick={()=>this.resetForm()}>重 置</Button>
             </Item>
-          ) : null}
+          )}
         </Form>
       </div>
     )

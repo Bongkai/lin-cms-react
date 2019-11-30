@@ -156,7 +156,7 @@ export default class UserInfo extends React.Component {
     return (
       <div className='user-info-container'>
         <Form className='custom-antd' {...layout} colon={false}>
-          {!isPwdPage ? (<>
+          {!isPwdPage && (<>
             <Item label='用户名' required>
               {getFieldDecorator('username', {
                 rules: [{ required: true, message: '用户名不能为空' }],
@@ -181,8 +181,8 @@ export default class UserInfo extends React.Component {
                 <Input />
               )}
             </Item>
-          </>) : null}
-          {!isInfoPage ? (<>
+          </>)}
+          {!isInfoPage && (<>
             <Item label='密码' required>
               {getFieldDecorator('password', {
                 validate: [{
@@ -217,8 +217,8 @@ export default class UserInfo extends React.Component {
                 <Input type='password' />
               )}
             </Item>
-          </>) : null}
-          {!isPwdPage ? (
+          </>)}
+          {!isPwdPage && (
             <Item label='选择分组'>
               {getFieldDecorator('group_id', {
                 initialValue: isInfoPage ? data.group_id : (groups[0] ? groups[0].id : null)
@@ -234,13 +234,13 @@ export default class UserInfo extends React.Component {
                 </Select>
               )}
             </Item>
-          ) : null}
-          {isAddPage ? (
+          )}
+          {isAddPage && (
             <Item className='submit' label=' '>
               <Button type='primary' onClick={()=>this.onSubmit('添加用户')}>确 定</Button>
               <Button onClick={this.resetForm}>重 置</Button>
             </Item>
-          ) : null}
+          )}
         </Form>
       </div>
     )

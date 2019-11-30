@@ -24,7 +24,9 @@ export default class TinymceDemo extends React.Component {
           <Suspense fallback={
             <Spin className='loading' size='large' />
           }>
-            <Tinymce upload_url='http://dev.lin.colorful3.com/cms/file/'
+            <Tinymce
+              initialValue={'This is default content'}
+              uploadUrl='http://dev.lin.colorful3.com/cms/file/'
               onEditorChange={this.handleEditorChange}
             />
           </Suspense>

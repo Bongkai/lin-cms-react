@@ -99,10 +99,7 @@ export default class GroupList extends React.Component {
   }
 
   render() {
-    const {
-      loading, tableData,
-      modalFormVisible, editingRecord,
-    } = this.state
+    const { loading, tableData, modalFormVisible, editingRecord } = this.state
     return (
       <div className='group-list-container'>
         <div className='header'>

@@ -1,8 +1,6 @@
 import React from 'react'
-// import OriginSwiper from 'swiper/dist/js/swiper'
 import OriginSwiper from 'swiper/js/swiper'
 
-// import 'swiper/dist/css/swiper.min.css'
 import 'swiper/css/swiper.min.css'
 import './swiper.scss'
 

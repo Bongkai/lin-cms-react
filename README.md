@@ -80,7 +80,11 @@ git clone https://github.com/Bongkai/lin-cms-react.git
 npm install or yarn
 
 # develop
-npm start
+npm start or yarn start
+
+# build & run build
+npm run build
+node server.js
 ```
 
 ## 讨论交流

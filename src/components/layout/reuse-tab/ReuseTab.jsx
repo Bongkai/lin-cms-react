@@ -11,6 +11,7 @@ import {
 
 import './reuse-tab.scss'
 
+
 const connectWrapper = connect(
   state => state,
   { changeReuseTab }
@@ -163,26 +164,27 @@ class ReuseTab extends React.Component {
     const { histories } = this.props.app
     const { pathname } = this.props.location
     const visible = histories.length > 1
-    return (
-      <div className='reuse-tab-wrap' style={{display:visible?'block':'none'}}>
+    return visible && (
+      <div className='reuse-tab-wrap'>
         <Swiper parameters={this.state.parameters}>
           {histories.map((item, index) => {
             const _item = this.stageList[item.stageId]
-            return _item ? (
+            return _item && (
               <div className='swiper-slide reuse-tab-item' key={_item.route}>
                 {/* 这里用 NavLink 的话删除 Tab 的逻辑会出错 */}
-                <div className={`link ${pathname===_item.route?'active':''}`}
+                <div className={`link ${pathname === _item.route && 'active'}`}
                   onClick={()=>this.onLinkClick(_item.route)}
                 >
-                  {/* <i className={item.icon} /> */}
                   <Icon type={item.icon} style={{ fontSize: '16px' }} />
-                  <span style={{ padding: '0 5px' }}>{Utils.cutString(item.title, 8)}</span>
+                  <span style={{ padding: '0 5px' }}>
+                    {Utils.cutString(item.title, 8)}
+                  </span>
                   <span className='icon-close' onClick={(ev)=>this.close(ev, index)}>
                     <Icon className='icon-close-icon' type='close' />
                   </span>
                 </div>
               </div>
-            ) : null
+            )
           })}
         </Swiper>
       </div>

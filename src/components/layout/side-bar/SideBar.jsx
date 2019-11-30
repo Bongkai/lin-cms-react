@@ -72,11 +72,6 @@ class SideBar extends React.Component {
         ?
         <SubMenu className='sub-menu-content' key={key}
           title={<>
-            {/* <Icon 
-              component={()=>(
-                <i className={item.icon || 'iconfont icon-erjizhibiao'} />
-              )} 
-            /> */}
             <Icon type={item.icon} style={{ fontSize: '16px' }} />
             <span>{Utils.cutString(item.title, 12)}</span>
           </>}
@@ -86,11 +81,6 @@ class SideBar extends React.Component {
         :
         <Item key={key}>
           <NavLink to={item.path}>
-            {/* <Icon 
-              component={()=>(
-                <i className={item.icon || 'iconfont icon-jian1'} />
-              )} 
-            /> */}
             <Icon type={item.icon} style={{ fontSize: '16px' }} />
             <span title={item.title}>{Utils.cutString(item.title, 12)}</span>
           </NavLink>
@@ -144,6 +134,9 @@ class SideBar extends React.Component {
   toSearch() {
     this.setState({
       showSearchList: true
+    }, () => {
+      // antd 尚未支持直接 focus 到 showSearch 的输入框
+      // this.searchInput.focus()
     })
   }
 
@@ -221,14 +214,14 @@ class SideBar extends React.Component {
           </div>
         }
         <div>
-          {
-            !collapsed ?
+          {!collapsed && (
             <div style={{ marginTop: '15px' }}>
               {
                 showSearchList
                 ?
-                <Select className='search' ref={ref=>this.searchInput=ref} id='searchInput'
+                <Select className='search' ref={ref=>this.searchInput=ref}
                   showSearch
+                  // defaultOpen
                   dropdownMatchSelectWidth={false}
                   defaultActiveFirstOption={false}
                   placeholder='请输入关键字'
@@ -248,8 +241,8 @@ class SideBar extends React.Component {
                   <Icon type='search' style={{ color: 'rgb(185, 190, 195)' }} />
                 </div>
               }
-            </div> : null
-          }
+            </div>
+          )}
         </div>
         <div>
           <Menu className='custom-antd menu-content' 

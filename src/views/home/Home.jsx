@@ -36,7 +36,7 @@ class Home extends React.Component {
   }
 
   // TODO: 修改成不使用 componentWillMount 的写法
-  // 
+  
   UNSAFE_componentWillMount() {
     this.props.updateRoute(this.props.location.pathname)
   }
@@ -91,9 +91,6 @@ class Home extends React.Component {
                 <div className='operate'
                   style={{height: reuseLength > 1 ? '46px' : '72px'}}
                 >
-                  {/* <i className={`iconfont icon-fold ${isCollapsed ? 'rotate' : ''}`}
-                    onClick={this.changeSlidebarState}
-                  /> */}
                   <Icon type={isCollapsed ? 'menu-unfold' : 'menu-fold'} className='fold-icon'
                     onClick={this.changeSlidebarState}
                   />

@@ -26,13 +26,6 @@ export default class UserList extends React.Component {
       groupId: undefined,
       // activeTab: '修改信息',
       editingRecord: {},
-      // form: { // 表单信息
-      //   nickname: '',
-      //   password: '',
-      //   confirmPassword: '',
-      //   email: '',
-      //   groupId: '',
-      // },
       loading: true,
     }
     // 设置表头信息

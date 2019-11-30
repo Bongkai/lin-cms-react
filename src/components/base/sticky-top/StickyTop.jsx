@@ -7,7 +7,7 @@ export default class StickyTop extends React.Component {
   render() {
     const { children, height } = this.props
     return (
-      <div className='sticky-top-container' style={{height:height?height:'auto'}}>
+      <div className='sticky-top-container' style={{ height: height || 'auto' }}>
         {children}
       </div>
     )
