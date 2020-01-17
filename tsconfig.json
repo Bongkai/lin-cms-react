@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "jsx": "react",
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "downlevelIteration": true,
+    "paths": {
+      "@/*": ["./*"],
+      "lin/*": ["./lin/*"],
+      "assets/*": ["./assets/*"],
+      "views/*": ["./views/*"],
+      "components/*": ["./components/*"],
+      "hooks/*": ["./hooks/*"],
+    },
+    "experimentalDecorators": true,
+    "lib": ["dom", "ES6", "ES7", "DOM.Iterable", "ScriptHost"]
+  },
+  "exclude": ["node_modules"],
+}

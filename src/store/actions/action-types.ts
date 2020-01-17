@@ -1,0 +1,20 @@
+export const UPDATE_ROUTE = 'UPDATE_ROUTE'
+export type UPDATE_ROUTE = typeof UPDATE_ROUTE
+
+export const CLEAR_ROUTE = 'CLEAR_ROUTE'
+export type CLEAR_ROUTE = typeof CLEAR_ROUTE
+
+export const SET_USER_AND_STATE = 'SET_USER_AND_STATE'
+export type SET_USER_AND_STATE = typeof SET_USER_AND_STATE
+
+export const SET_USER_AUTHS = 'SET_USER_AUTHS'
+export type SET_USER_AUTHS = typeof SET_USER_AUTHS
+
+// export const SET_REFRESH_OPTION = 'SET_REFRESH_OPTION'
+// export type SET_REFRESH_OPTION = typeof SET_REFRESH_OPTION
+
+export const REMOVE_LOGINED = 'REMOVE_LOGINED'
+export type REMOVE_LOGINED = typeof REMOVE_LOGINED
+
+export const CHANGE_REUSE_TAB = 'CHANGE_REUSE_TAB'
+export type CHANGE_REUSE_TAB = typeof CHANGE_REUSE_TAB

@@ -2,23 +2,9 @@
 
 .user-list-container {
   padding: 0 30px;
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .title {
-      height: 59px;
-      line-height: 59px;
-      color: $parent-title-color;
-      font-size: 16px;
-      font-weight: 500;
-    }
-
-    .group-select {
-      min-width: 220px;
-    }
+  
+  .group-select {
+    min-width: 220px;
   }
 
   .pagination {

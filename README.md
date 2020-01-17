@@ -9,7 +9,7 @@
   <a href="#简介">简介</a>&nbsp;|&nbsp;<a href="#快速上手">快速上手</a>&nbsp;|&nbsp;<a href="#版本日志">版本日志</a>
 </p>
 
-![](https://img.shields.io/badge/版本-0.0.1--alpha.1-3963bc.svg)
+![](https://img.shields.io/badge/版本-0.0.1--alpha.2-3963bc.svg)
 ![](https://img.shields.io/badge/node-8.11.0+-3963bc.svg)
 ![](https://img.shields.io/badge/脚手架-create--react--app-3963bc.svg)
 ![](https://img.shields.io/badge/license-MIT-3963bc.svg)
@@ -34,9 +34,13 @@ Lin-CMS 是一套前后端完整的解决方案，后端部署请移步：
 
 [lin-cms-koa](https://github.com/TaleLin/lin-cms-koa)
 
-### 文档地址
+### 官方文档地址
 
 [http://doc.cms.7yue.pro/](http://doc.cms.7yue.pro/)
+
+#### 项目后端 PHP 版作者编写的 Vue + PHP 文档地址，可供进一步参考
+
+[https://chenjinchuang.github.io/](https://chenjinchuang.github.io/)
 
 ### 线上 Demo
 
@@ -90,7 +94,7 @@ node server.js
 ## 讨论交流
 微信公众号搜索：林间有风
 <br>
-<img class="QR-img" src="http://imglf6.nosdn0.126.net/img/YUdIR2E3ME5weEdlNThuRmI4TFh3UWhiNmladWVoaTlXUXpicEFPa1F6czFNYkdmcWRIbGRRPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg" width="150" height="150" style='text-align:left;width: 100px;height: 100px'>
+<img class="QR-img" src="http://imglf6.nosdn0.126.net/img/YUdIR2E3ME5weEdlNThuRmI4TFh3UWhiNmladWVoaTlXUXpicEFPa1F6czFNYkdmcWRIbGRRPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg" width="150" height="150" style='text-align: left;width: 100px;height: 100px'>
 
 QQ群搜索：林间有风 或 643205479
 
@@ -98,7 +102,13 @@ QQ群搜索：林间有风 或 643205479
 
 ## 版本日志
 
-最新版本 `0.0.1-alpha.1`
+最新版本 `0.0.1-alpha.2`
+
+### 0.0.1-alpha.2
+
+1.  `U` 使用 React Hooks 进行项目重构
+2.  `A` 使用 TypeScript 优化大部分项目代码
+3.  `A` 添加 ESLint 和 Prettier 提升项目代码规范
 
 ### 0.0.1-alpha.1
 

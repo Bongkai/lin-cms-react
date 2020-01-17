@@ -1,1 +1,4 @@
-*.css linguist-language=javascript
+*.js linguist-language=typescript
+*.jsx linguist-language=typescript
+*.tsx linguist-language=typescript
+# *.css linguist-language=typescript

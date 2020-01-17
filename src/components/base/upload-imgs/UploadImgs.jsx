@@ -1,10 +1,10 @@
 /**
  * Component: UploadImgs
  * Describe: 多图片上传组件, 附有预览, 排序, 验证等功能
- * 
+ *
  * todo: 使用中间件模式优化信息装载和验证功能
  * todo: 文件判断使用 serveWorker 优化性能
- * 
+ *
  */
 
 import React from 'react'
@@ -17,7 +17,6 @@ import { getFileType, checkIsAnimated, isEmptyObj, createId } from './utils'
 import './upload-imgs.scss'
 import 'react-photoswipe/lib/photoswipe.css'
 import Utils from '../../../lin/utils/util'
-
 
 /**
  * 本地图像通过验证后构造的信息对象
@@ -131,7 +130,7 @@ function createItem(data = null, oldData = {}) {
   return item
 
   // item (this.state.itemList[i]) 结构示例：
-  // 
+  //
   // {
   //   display: 'blob:http://localhost:3000/96b8c7f2-4c78-43f0-805c-785f1eedefd9'
   //   file: File {name: '1.jpg.jpg', lastModified: 1461407065011, lastModifiedDate: Sat Apr 23 2016 18:24:25 GMT+0800 (中国标准时间), webkitRelativePath: ', size: 254809, …}
@@ -160,13 +159,17 @@ function createItem(data = null, oldData = {}) {
  */
 function getRangeTip(prx, min, max, unit = '') {
   let str = prx
-  if (min && max) { // 有范围限制
+  if (min && max) {
+    // 有范围限制
     str += ` ${min}${unit}~${max}${unit}`
-  } else if (min) { // 只有最小范围
+  } else if (min) {
+    // 只有最小范围
     str += ` ≥ ${min}${unit}`
-  } else if (max) { // 只有最大范围
+  } else if (max) {
+    // 只有最大范围
     str += ` ≤ ${max}${unit}`
-  } else { // 无限制
+  } else {
+    // 无限制
     str += '无限制'
   }
   return str
@@ -178,7 +181,6 @@ const uploadLimit = 10
 let catchData = []
 /** for originUpload: 计时器缓存 */
 let time
-
 
 export default class UploadImgs extends React.Component {
   constructor(props) {
@@ -268,11 +270,11 @@ export default class UploadImgs extends React.Component {
     ) {
       let { minNum, maxNum } = nextProps
       minNum = minNum < 0 ? 0 : parseInt(minNum, 10)
-      maxNum = (maxNum < minNum) ? minNum : parseInt(maxNum, 10)
+      maxNum = maxNum < minNum ? minNum : parseInt(maxNum, 10)
       return {
         min: minNum,
         max: maxNum,
-        isStable: (maxNum !== 0) && (minNum === maxNum),
+        isStable: maxNum !== 0 && minNum === maxNum,
       }
     }
 
@@ -283,13 +285,13 @@ export default class UploadImgs extends React.Component {
     ) {
       return {
         boxStyle: UploadImgs.setBoxStyle(nextProps),
-        disabled: nextProps.disabled
+        disabled: nextProps.disabled,
       }
     }
 
     if (!Utils.shallowEqual(nextProps.rules, prevState.rules)) {
       return {
-        rulesTip: UploadImgs.setRulesTip(nextProps)
+        rulesTip: UploadImgs.setRulesTip(nextProps),
       }
     }
 
@@ -317,7 +319,7 @@ export default class UploadImgs extends React.Component {
     style.lineHeight = '1.3'
     style.flexDirection = 'column'
     style.cursor = props.disabled ? 'not-allowed' : 'pointer'
-  
+
     return style
   }
 
@@ -341,17 +343,29 @@ export default class UploadImgs extends React.Component {
     }
 
     // 宽高限制提示语
-    if (basicRule.width && basicRule.height) { // 固定宽高限制
+    if (basicRule.width && basicRule.height) {
+      // 固定宽高限制
       tips.push(`宽高 ${basicRule.width}x${basicRule.height}`)
-    } else if (basicRule.width) { // 固定宽限制
+    } else if (basicRule.width) {
+      // 固定宽限制
       tips.push(`宽度 ${basicRule.width}`)
-      tips.push(`${getRangeTip('高度', basicRule.minHeight, basicRule.maxHeight)}`)
-    } else if (basicRule.height) { // 固定高限制
+      tips.push(
+        `${getRangeTip('高度', basicRule.minHeight, basicRule.maxHeight)}`,
+      )
+    } else if (basicRule.height) {
+      // 固定高限制
       tips.push(`高度 ${basicRule.height}`)
-      tips.push(`${getRangeTip('宽度', basicRule.minWidth, basicRule.maxWidth)}`)
-    } else { // 宽高都不固定
-      tips.push(`${getRangeTip('宽度', basicRule.minWidth, basicRule.maxWidth)}`)
-      tips.push(`${getRangeTip('高度', basicRule.minHeight, basicRule.maxHeight)}`)
+      tips.push(
+        `${getRangeTip('宽度', basicRule.minWidth, basicRule.maxWidth)}`,
+      )
+    } else {
+      // 宽高都不固定
+      tips.push(
+        `${getRangeTip('宽度', basicRule.minWidth, basicRule.maxWidth)}`,
+      )
+      tips.push(
+        `${getRangeTip('高度', basicRule.minHeight, basicRule.maxHeight)}`,
+      )
     }
 
     // 宽高比限制提示语
@@ -365,7 +379,9 @@ export default class UploadImgs extends React.Component {
 
     // 文件大小
     if (basicRule.minSize || basicRule.maxSize) {
-      tips.push(getRangeTip('文件大小', basicRule.minSize, basicRule.maxSize, 'Mb'))
+      tips.push(
+        getRangeTip('文件大小', basicRule.minSize, basicRule.maxSize, 'Mb'),
+      )
     }
 
     // 是否动态图
@@ -397,43 +413,45 @@ export default class UploadImgs extends React.Component {
       method: 'post',
       url: '/cms/file',
       data,
-    }).then((res) => {
-      // res 结构示例：
-      // [
-      //   {
-      //     id: 599
-      //     key: 'file_0'
-      //     path: '2019/10/28/3c647cee-f955-11e9-bce1-00163e1cb574.jpg'
-      //     url: 'http://demo.lin.colorful3.com/assets/2019/10/28/3c647cee-f955-11e9-bce1-00163e1cb574.jpg'
-      //   }
-      // ]
-      if (!Array.isArray(res) || res.length === 0) {
-        throw new Error('图像上传失败')
-      }
-
-      const resObj = res.reduce((acc, item) => {
-        acc[item.key] = item
-        return acc
-      }, {})
-
-      uploadList.forEach((item, index) => {
-        const remoteData = resObj[`file_${index}`]
-        item.cb(remoteData)
-      })
-    }).catch((err) => {
-      uploadList.forEach((item) => {
-        item.cb(false)
-      })
-      let msg = '图像上传失败, 请重试'
-      if (err.msg) {
-        // eslint-disable-next-line
-        msg = err.msg
-      } else if (err.message) {
-        msg = err.message
-      }
-      console.error(err)
-      message.error(msg)
     })
+      .then(res => {
+        // res 结构示例：
+        // [
+        //   {
+        //     id: 599
+        //     key: 'file_0'
+        //     path: '2019/10/28/3c647cee-f955-11e9-bce1-00163e1cb574.jpg'
+        //     url: 'http://demo.lin.colorful3.com/assets/2019/10/28/3c647cee-f955-11e9-bce1-00163e1cb574.jpg'
+        //   }
+        // ]
+        if (!Array.isArray(res) || res.length === 0) {
+          throw new Error('图像上传失败')
+        }
+
+        const resObj = res.reduce((acc, item) => {
+          acc[item.key] = item
+          return acc
+        }, {})
+
+        uploadList.forEach((item, index) => {
+          const remoteData = resObj[`file_${index}`]
+          item.cb(remoteData)
+        })
+      })
+      .catch(err => {
+        uploadList.forEach(item => {
+          item.cb(false)
+        })
+        let msg = '图像上传失败, 请重试'
+        if (err.msg) {
+          // eslint-disable-next-line
+          msg = err.msg
+        } else if (err.message) {
+          msg = err.message
+        }
+        console.error(err)
+        message.error(msg)
+      })
   }
 
   /**
@@ -499,10 +517,10 @@ export default class UploadImgs extends React.Component {
     item.loading = true
     // 处理上传文件之前的钩子函数
     if (beforeUpload && typeof beforeUpload === 'function') {
-      const result = await new Promise((resolve) => {
+      const result = await new Promise(resolve => {
         let beforeUploadResult
         try {
-          beforeUploadResult = beforeUpload(item, (data) => {
+          beforeUploadResult = beforeUpload(item, data => {
             resolve(!!data)
           })
         } catch (err) {
@@ -510,14 +528,16 @@ export default class UploadImgs extends React.Component {
         }
         // promise 模式
         if (
-          beforeUploadResult != null && 
+          beforeUploadResult != null &&
           typeof beforeUploadResult.then === 'function'
         ) {
-          beforeUploadResult.then((remoteData) => {
-            resolve(!!remoteData)
-          }).catch(() => {
-            resolve(false)
-          })
+          beforeUploadResult
+            .then(remoteData => {
+              resolve(!!remoteData)
+            })
+            .catch(() => {
+              resolve(false)
+            })
         }
       })
       if (!result) {
@@ -529,10 +549,10 @@ export default class UploadImgs extends React.Component {
     // 如果是用户自定义方法
     // 出于简化 api 的考虑, 只允许单个文件上传, 不进行代理
     if (customRequest && typeof customRequest === 'function') {
-      const result = await new Promise((resolve) => {
+      const result = await new Promise(resolve => {
         let customRequestResult
         try {
-          customRequestResult = customRequest(item.file, (remoteData) =>{
+          customRequestResult = customRequest(item.file, remoteData => {
             resolve(remoteData || false)
           })
         } catch (err) {
@@ -544,11 +564,13 @@ export default class UploadImgs extends React.Component {
           customRequestResult != null &&
           typeof customRequestResult.then === 'function'
         ) {
-          customRequestResult.then((remoteData) => {
-            resolve(remoteData || false)
-          }).catch(() => {
-            resolve(false)
-          })
+          customRequestResult
+            .then(remoteData => {
+              resolve(remoteData || false)
+            })
+            .catch(() => {
+              resolve(false)
+            })
         }
       })
       reduceResult(item, result)
@@ -559,8 +581,8 @@ export default class UploadImgs extends React.Component {
     }
 
     // 使用内置上传
-    return new Promise((resolve) => {
-      this.originUpload(item, (data) => {
+    return new Promise(resolve => {
+      this.originUpload(item, data => {
         reduceResult(item, data)
         if (!data) {
           resolve(false)
@@ -578,7 +600,7 @@ export default class UploadImgs extends React.Component {
     const { itemList, isStable, min } = this.state
 
     // 检查是否有不符合要求的空项
-    const l = isStable ? itemList.length : (itemList.length - 1)
+    const l = isStable ? itemList.length : itemList.length - 1
     for (let i = 0; i < l; i += 1) {
       if (itemList[i].status === 'input') {
         message.error('当前存在未选择图片, 请全部选择')
@@ -603,7 +625,7 @@ export default class UploadImgs extends React.Component {
         }
       }
     }
-    
+
     const imgInfoList = await Promise.all(asyncList)
 
     // 检查是否有上传失败的图像
@@ -616,7 +638,7 @@ export default class UploadImgs extends React.Component {
     /**
      * @type {array<ReturnItem>}
      */
-    const result = imgInfoList.map((item) => {
+    const result = imgInfoList.map(item => {
       /** @type {ReturnItem} */
       const val = {
         id: item.status === 'new' ? '' : item.id,
@@ -643,7 +665,7 @@ export default class UploadImgs extends React.Component {
   delItem(id) {
     const { itemList, isStable } = this.state
     // 根据id找到对应项
-    const index = itemList.findIndex(item => (item.id === id))
+    const index = itemList.findIndex(item => item.id === id)
     const blobUrl = itemList[index].display
     if (isStable) {
       // 固定数量图片, 删除后留下空项
@@ -666,7 +688,7 @@ export default class UploadImgs extends React.Component {
     this.setState({
       previewData,
       previewing: true,
-      previewIndex: index
+      previewIndex: index,
     })
   }
 
@@ -674,7 +696,7 @@ export default class UploadImgs extends React.Component {
     this.setState({
       previewing: false,
       previewData: [],
-      previewIndex: 0
+      previewIndex: 0,
     })
   }
 
@@ -730,11 +752,11 @@ export default class UploadImgs extends React.Component {
   move(id, step) {
     const { itemList, isStable } = this.state
     // 找到操作的元素
-    const index = itemList.findIndex(item => (item.id === id))
+    const index = itemList.findIndex(item => item.id === id)
     // 边界检测
-    if ((index + step) < 0 || (index + step) >= itemList.length) return
+    if (index + step < 0 || index + step >= itemList.length) return
     // 非固定项时, 不可和最后一项输入换位置
-    if (!isStable && (index + step) === (itemList.length - 1)) {
+    if (!isStable && index + step === itemList.length - 1) {
       if (itemList[itemList.length - 1].status === 'input') return
     }
     const i = itemList[index]
@@ -742,10 +764,10 @@ export default class UploadImgs extends React.Component {
     itemList[index] = j
     itemList[index + step] = i
     this.setState({
-      itemList: [...itemList]
+      itemList: [...itemList],
     })
   }
-  
+
   /**
    * 验证上传的图像是否符合要求
    * @param {LocalFileInfo} imgInfo 图像信息, 包括文件名, 宽高
@@ -786,10 +808,14 @@ export default class UploadImgs extends React.Component {
       }
     } else {
       if (rule.minWidth && imgInfo.width < rule.minWidth) {
-        throw new Error(`"${imgInfo.name}"图像宽不符合要求, 至少为${rule.minWidth}`)
+        throw new Error(
+          `"${imgInfo.name}"图像宽不符合要求, 至少为${rule.minWidth}`,
+        )
       }
       if (rule.maxWidth && imgInfo.width > rule.maxWidth) {
-        throw new Error(`"${imgInfo.name}"图像宽不符合要求, 至多为${rule.maxWidth}`)
+        throw new Error(
+          `"${imgInfo.name}"图像宽不符合要求, 至多为${rule.maxWidth}`,
+        )
       }
     }
     if (rule.height) {
@@ -798,10 +824,14 @@ export default class UploadImgs extends React.Component {
       }
     } else {
       if (rule.minHeight && imgInfo.height < rule.minHeight) {
-        throw new Error(`"${imgInfo.name}"图像高不符合要求, 至少为${rule.minHeight}`)
+        throw new Error(
+          `"${imgInfo.name}"图像高不符合要求, 至少为${rule.minHeight}`,
+        )
       }
       if (rule.maxHeight && imgInfo.height > rule.maxHeight) {
-        throw new Error(`"${imgInfo.name}"图像高不符合要求, 至多为${rule.maxHeight}`)
+        throw new Error(
+          `"${imgInfo.name}"图像高不符合要求, 至多为${rule.maxHeight}`,
+        )
       }
     }
 
@@ -822,10 +852,14 @@ export default class UploadImgs extends React.Component {
 
     // 文件大小
     if (rule.minSize && imgInfo.size < rule.minSize * ONE_MB) {
-      throw new Error(`"${imgInfo.name}"图像文件大小比不符合要求, 至少为${rule.minSize}Mb`)
+      throw new Error(
+        `"${imgInfo.name}"图像文件大小比不符合要求, 至少为${rule.minSize}Mb`,
+      )
     }
     if (rule.maxSize && imgInfo.size > rule.maxSize * ONE_MB) {
-      throw new Error(`"${imgInfo.name}"图像文件大小比不符合要求, 至多为${rule.maxSize}Mb`)
+      throw new Error(
+        `"${imgInfo.name}"图像文件大小比不符合要求, 至多为${rule.maxSize}Mb`,
+      )
     }
 
     return true
@@ -849,7 +883,7 @@ export default class UploadImgs extends React.Component {
      * 处理单个图片, 返回处理成功的图片数据
      * @param {File} file 图片文件
      */
-    const handleImg = async (file) => {
+    const handleImg = async file => {
       try {
         // 获取图像信息 localFileInfo
         const info = await this.getImgInfo(file)
@@ -858,7 +892,8 @@ export default class UploadImgs extends React.Component {
         await this.validateImg(info)
         return info
       } catch (err) {
-        throw err
+        // throw err
+        console.log(err)
       }
     }
 
@@ -872,7 +907,7 @@ export default class UploadImgs extends React.Component {
       this.setImgInfo(imgInfoList, currentId)
       // 开启自动上传
       if (autoUpload) {
-        this.state.itemList.forEach((ele) => {
+        this.state.itemList.forEach(ele => {
           this.uploadImg(ele)
         })
       }
@@ -902,7 +937,7 @@ export default class UploadImgs extends React.Component {
     window.URL.revokeObjectURL(itemList[index].display)
     // 替换图片
     itemList[index] = createItem(imgInfoList[0], itemList[index])
-    
+
     // 如果需要设置的图像数量大于1, 需要执行追加图片逻辑
     if (imgInfoList.length > 1) {
       // 最大图片数量限制
@@ -929,12 +964,15 @@ export default class UploadImgs extends React.Component {
       }
     }
 
-    this.setState({
-      itemList
-    }, () => {
-      // 初始化图片
-      this.initItemList(this.state.itemList)
-    })
+    this.setState(
+      {
+        itemList,
+      },
+      () => {
+        // 初始化图片
+        this.initItemList(this.state.itemList)
+      },
+    )
   }
 
   /**
@@ -944,8 +982,8 @@ export default class UploadImgs extends React.Component {
    */
   handleClick(id) {
     if (!this.props.disabled) {
-      this.setState({ 
-        currentId: id || ''
+      this.setState({
+        currentId: id || '',
       })
       this.input.value = null
       this.input.click()
@@ -970,14 +1008,14 @@ export default class UploadImgs extends React.Component {
           result.push(createItem())
         }
         this.setState({
-          itemList: result
+          itemList: result,
         })
         return
       }
       // 如果不是固定上传数量, 则仅创建一个空项
       result.push(createItem())
       this.setState({
-        itemList: result
+        itemList: result,
       })
       return
     }
@@ -996,7 +1034,7 @@ export default class UploadImgs extends React.Component {
       result.push(createItem())
     }
     this.setState({
-      itemList: result
+      itemList: result,
     })
   }
 
@@ -1049,21 +1087,28 @@ export default class UploadImgs extends React.Component {
   reset() {
     this.initItemList(this.props.value)
   }
-  
+
   render() {
     const { sortable, preview, multiple, disabled, fit } = this.props
-    const { 
-      itemList, boxStyle, rulesTip, accept, loading, previewing, previewData, previewIndex
+    const {
+      itemList,
+      boxStyle,
+      rulesTip,
+      accept,
+      loading,
+      previewing,
+      previewData,
+      previewIndex,
     } = this.state
     return (
       <div className='upload-imgs-container'>
-        {
-          itemList.map((item, index) => (
-            item.display
-            ?
+        {itemList.map((item, index) =>
+          item.display ? (
             // 已加载图片
             <div className='thumb-item' key={item.id} style={boxStyle}>
-              <img className='thumb-item-img' alt=''
+              <img
+                className='thumb-item-img'
+                alt=''
                 style={{ width: '100%', height: '100%', objectFit: fit }}
                 src={item.display}
               />
@@ -1073,70 +1118,95 @@ export default class UploadImgs extends React.Component {
                 )}
               </div>
               <div className='control'>
-                {!disabled && (<>
-                  <Icon type='close' className='del'
-                    onClick={()=>this.delItem(item.id)}
-                  />
-                  <div className='preview' title='更换图片'
-                    onClick={()=>this.handleClick(item.id)}
-                  >
-                    <Icon type='edit' />
-                  </div>
-                </>)}
+                {!disabled && (
+                  <>
+                    <Icon
+                      type='close'
+                      className='del'
+                      onClick={() => this.delItem(item.id)}
+                    />
+                    <div
+                      className='preview'
+                      title='更换图片'
+                      onClick={() => this.handleClick(item.id)}
+                    >
+                      <Icon type='edit' />
+                    </div>
+                  </>
+                )}
                 {(sortable || preview) && (
                   <div className='control-bottom'>
                     {sortable && !disabled && (
-                      <Icon type='arrow-left' title='前移'
-                        className={`control-bottom-btn${index===0?' disabled':''}`}
-                        onClick={()=>this.move(item.id, -1)}
+                      <Icon
+                        type='arrow-left'
+                        title='前移'
+                        className={`control-bottom-btn${
+                          index === 0 ? ' disabled' : ''
+                        }`}
+                        onClick={() => this.move(item.id, -1)}
                       />
                     )}
                     {preview && (
-                      <Icon type='eye' title='预览'
+                      <Icon
+                        type='eye'
+                        title='预览'
                         className='control-bottom-btn'
-                        onClick={()=>this.handlePreview(index)}
+                        onClick={() => this.handlePreview(index)}
                       />
                     )}
                     {sortable && !disabled && (
-                      <Icon type='arrow-right' title='后移'
-                        className={`control-bottom-btn${index===(itemList.length-1)?' disabled':''}`}
-                        onClick={()=>this.move(item.id, 1)}
+                      <Icon
+                        type='arrow-right'
+                        title='后移'
+                        className={`control-bottom-btn${
+                          index === itemList.length - 1 ? ' disabled' : ''
+                        }`}
+                        onClick={() => this.move(item.id, 1)}
                       />
                     )}
                   </div>
                 )}
               </div>
             </div>
-            :
+          ) : (
             // 未加载图片
-            <div className='upload-item' key={item.id} style={boxStyle}
-              onClick={()=>this.handleClick(item.id)}
+            <div
+              className='upload-item'
+              key={item.id}
+              style={boxStyle}
+              onClick={() => this.handleClick(item.id)}
             >
-              {
-                loading
-                ?
-                <Spin indicator={<Icon type='loading' style={{ fontSize: '32px' }} />} />
-                :
+              {loading ? (
+                <Spin
+                  indicator={
+                    <Icon type='loading' style={{ fontSize: '32px' }} />
+                  }
+                />
+              ) : (
                 <Icon type='plus' style={{ fontSize: '2.5em' }} />
-              }
+              )}
               <div style={{ marginTop: '1em', fontSize: '0.75em' }}>
                 {rulesTip.map((item, index) => (
                   <div key={index}>{item}</div>
                 ))}
               </div>
             </div>
-          ))
-        }
-        <input type='file' className='upload-imgs__input'
+          ),
+        )}
+        <input
+          type='file'
+          className='upload-imgs__input'
           style={{ display: 'none' }}
-          ref={ref => this.input = ref} multiple={multiple} accept={accept}
-          onChange={(ev)=>this.handleChange(ev)}
+          ref={ref => (this.input = ref)}
+          multiple={multiple}
+          accept={accept}
+          onChange={ev => this.handleChange(ev)}
         />
-        <PhotoSwipe 
-          isOpen={previewing} 
+        <PhotoSwipe
+          isOpen={previewing}
           items={previewData}
           options={{ index: previewIndex }}
-          onClose={()=>this.closePreview()}
+          onClose={() => this.closePreview()}
         />
       </div>
     )
