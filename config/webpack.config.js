@@ -29,9 +29,10 @@ const eslint = require('eslint');
 
 const postcssNormalize = require('postcss-normalize');
 
-// 自己加的
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// 自己加的 ---
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const antdModifyVars = require('../src/assets/styles/antd/modifyVars');
+// ---
 
 const appPackageJson = require(paths.appPackageJson);
 
@@ -336,7 +337,8 @@ module.exports = function(webpackEnv) {
         'lin': path.resolve(paths.appSrc, 'lin'),
         'assets': path.resolve(paths.appSrc, 'assets'),
         'views': path.resolve(paths.appSrc, 'views'),
-        'components': path.resolve(paths.appSrc, 'components')
+        'components': path.resolve(paths.appSrc, 'components'),
+        'hooks': path.resolve(paths.appSrc, 'hooks'),
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -375,7 +377,6 @@ module.exports = function(webpackEnv) {
                 formatter: require.resolve('react-dev-utils/eslintFormatter'),
                 eslintPath: require.resolve('eslint'),
                 resolvePluginsRelativeTo: __dirname,
-                
               },
               loader: require.resolve('eslint-loader'),
             },
@@ -421,6 +422,13 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  // 自己加的
+                  [
+                    '@babel/plugin-proposal-decorators',
+                    {
+                      legacy: true
+                    }
+                  ]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -457,6 +465,11 @@ module.exports = function(webpackEnv) {
                 // being evaluated would be much more helpful.
                 sourceMaps: false,
               },
+            },
+            // 自己加的
+            {
+              test: /\.(ts|tsx)$/,
+              loader: require.resolve('awesome-typescript-loader')
             },
             // "postcss" loader applies autoprefixer to our CSS.
             // "css" loader resolves paths in CSS and adds assets as dependencies.

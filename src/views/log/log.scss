@@ -1,81 +1,58 @@
 @import 'assets/styles/realize/lin-variables.scss';
 
 .log-container {
-  .log-header {
+  .header-right {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
-    margin-bottom: -24px;
 
-    .header-left {
-      float: left;
-
-      .title {
-        height: 60px;
-        line-height: 59px;
-        color: #4c76af;
-        font-size: 16px;
-        font-weight: 500;
-        margin-bottom: 0px;
-      }
+    .dropdown {
+      height: 36px;
+      padding: 0 12px;
+      margin: 0 10px;
     }
 
-    .header-right {
-      float: right;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .date-picker.ant-calendar-picker {
+      .ant-calendar-picker-input.ant-input {
+        width: 350px;
 
-      .dropdown {
-        height: 36px;
-        padding: 0 12px;
-        margin: 0 10px;
+        &:hover {
+          border: 1px solid rgba(57, 99, 188, .4);
+        }
+
+        &:focus {
+          border: 1px solid $theme;
+          box-shadow: none;
+        }
+
+        .ant-calendar-range-picker-input {
+          &::-webkit-input-placeholder {
+            color: $theme;
+            opacity: 0.4;
+          }
+        }
+        
+        .ant-calendar-range-picker-separator {
+          line-height: 26px;
+          color: #303133;
+        }
       }
 
-      .date-picker.ant-calendar-picker {
-        .ant-calendar-picker-input.ant-input {
-          width: 350px;
-          // height: 36px;
-
-          &:hover {
-            border: 1px solid rgba(57, 99, 188, .4);
-          }
-
-          &:focus {
-            border: 1px solid $theme;
-            box-shadow: none;
-          }
-
-          .ant-calendar-range-picker-input {
-            &::-webkit-input-placeholder {
-              color: $theme;
-              opacity: 0.4;
-            }
-          }
-          
-          .ant-calendar-range-picker-separator {
-            line-height: 26px;
-            color: #303133;
-          }
-        }
-
-        .anticon.anticon-calendar.ant-calendar-picker-icon {
-          color: $theme;
-          opacity: 0.4;
-        }
+      .anticon.anticon-calendar.ant-calendar-picker-icon {
+        color: $theme;
+        opacity: 0.4;
       }
     }
   }
 
   .search {
-    height: 52px;
     width: 100%;
+    height: 52px;
     background: rgba(57, 99, 188, 0.1);
+    padding: 0 20px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    // margin-top:24px;
 
     .search-tip {
       margin-left: 40px;
@@ -186,13 +163,6 @@
         }
       }
     }
-
-    .loading {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-16px, -19px);
-    }
   }
 
   .more {
@@ -216,28 +186,12 @@
       display: inline;
       margin-left: 6px;
     }
-
-    // .icon-gengduo {
-    //   display: inline;
-    //   margin-left: 6px;
-    // }
-
-    // .icon-loading {
-    //   &:before {
-    //     display: inline-block;
-    //     animation: spin 1s linear infinite;
-    //   }
-    // }
   }
 
   .strong {
     color: #464dd5;
   }
 }
-
-// .picker.ant-calendar-picker-container.ant-calendar-picker-container-placement-bottomRight {
-//   transform: translateY(50px);
-// }
 
 @keyframes spin {
   from {

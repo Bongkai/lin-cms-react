@@ -1,6 +1,6 @@
-
 // 检测官方文档: https://mimesniff.spec.whatwg.org/#matching-an-image-type-pattern
 /** 类型检测掩码集合 */
+// prettier-ignore
 const patternMask = [{
   name: 'image/x-icon',
   mask: [0xFF, 0xFF, 0xFF, 0xFF],
@@ -38,14 +38,15 @@ const patternMask = [{
 /** 判断是否是空对象 */
 export function isEmptyObj(data) {
   if (!data) return true
-  return (JSON.stringify(data) === '{}')
+  return JSON.stringify(data) === '{}'
 }
 
 /** 生成随机字符串 */
 export function createId() {
-  return Math.random().toString(36).substring(2)
+  return Math.random()
+    .toString(36)
+    .substring(2)
 }
-
 
 /**
  * 检测是否是动图
@@ -54,7 +55,9 @@ export function createId() {
 export async function checkIsAnimated({ file, fileUrl, fileType }) {
   // 参数验证
   if (!file || !(file instanceof File)) {
-    console.error('isAnimated param check fail: param expected to be File object')
+    console.error(
+      'isAnimated param check fail: param expected to be File object',
+    )
     return false
   }
   // 如果不是 gif 和 webp, 默认作为非动图
@@ -63,24 +66,29 @@ export async function checkIsAnimated({ file, fileUrl, fileType }) {
   }
 
   if (fileType === 'image/webp') {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const request = new XMLHttpRequest()
       request.open('GET', fileUrl, true)
       request.addEventListener('load', () => {
-        resolve((request.response.indexOf('ANMF') !== -1))
+        resolve(request.response.indexOf('ANMF') !== -1)
       })
       request.send()
     })
   }
   if (fileType === 'image/gif') {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const request = new XMLHttpRequest()
       request.open('GET', fileUrl, true)
       request.responseType = 'arraybuffer'
       request.addEventListener('load', () => {
         const arr = new Uint8Array(request.response)
         // make sure it's a gif (GIF8)
-        if (arr[0] !== 0x47 || arr[1] !== 0x49 || arr[2] !== 0x46 || arr[3] !== 0x38) {
+        if (
+          arr[0] !== 0x47 ||
+          arr[1] !== 0x49 ||
+          arr[2] !== 0x46 ||
+          arr[3] !== 0x38
+        ) {
           resolve(false)
           return
         }
@@ -95,7 +103,14 @@ export async function checkIsAnimated({ file, fileUrl, fileType }) {
         // at least 2 frame headers
         let frames = 0
         for (let i = 0, len = arr.length - 9; i < len && frames < 2; ++i) {
-          if (arr[i] === 0x00 && arr[i + 1] === 0x21 && arr[i + 2] === 0xF9 && arr[i + 3] === 0x04 && arr[i + 8] === 0x00 && (arr[i + 9] === 0x2C || arr[i + 9] === 0x21)) {
+          if (
+            arr[i] === 0x00 &&
+            arr[i + 1] === 0x21 &&
+            arr[i + 2] === 0xf9 &&
+            arr[i + 3] === 0x04 &&
+            arr[i + 8] === 0x00 &&
+            (arr[i + 9] === 0x2c || arr[i + 9] === 0x21)
+          ) {
             frames++
           }
         }
@@ -117,21 +132,21 @@ export async function getFileType(file) {
   if (!(file instanceof File)) {
     return 'unknown'
   }
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const fileReader = new FileReader()
-    fileReader.onloadend = (e) => {
-      const header = (new Uint8Array(e.target.result)).slice(0, 20)
+    fileReader.onloadend = e => {
+      const header = new Uint8Array(e.target.result).slice(0, 20)
       let type = 'unknown'
 
       // eslint-disable-next-line arrow-body-style
-      const index = patternMask.findIndex((item) => {
+      const index = patternMask.findIndex(item => {
         // eslint-disable-next-line arrow-body-style
         return item.mask.every((subItem, subI) => {
           // subItem 掩码标志
           // item.byte[subI] 规范值
           // header[subI] 文件实际值
           // eslint-disable-next-line
-          return ((subItem & (header[subI] ^ item.byte[subI])) === 0)
+          return (subItem & (header[subI] ^ item.byte[subI])) === 0
         })
       })
 

@@ -1,0 +1,17 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+.lin-header {
+  height: 60px;
+  line-height: 60px;
+  color: $parent-title-color;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &.header-with-divider {
+    padding-left: 40px;
+    border-bottom: 1px solid #dae1ec;
+  }
+}

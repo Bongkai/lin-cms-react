@@ -2,18 +2,4 @@
 
 .group-list-container {
   padding: 0 30px 20px;
-
-  .title {
-    height: 59px;
-    line-height: 59px;
-    color: $parent-title-color;
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .pagination {
-    display: flex;
-    justify-content: flex-end;
-    margin: 20px;
-  }
 }
