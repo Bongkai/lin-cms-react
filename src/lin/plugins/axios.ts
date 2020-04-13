@@ -19,7 +19,7 @@ const config = {
   crossDomain: true,
   // withCredentials: true, // Check cross-site Access-Control
   // 定义可获得的http响应状态码
-  // return true、设置为null或者undefined，promise将resolved,否则将rejected
+  // return true、设置为 null 或者 undefined，promise 将 resolved,否则将 rejected
   validateStatus(status: number) {
     return status >= 200 && status < 500
   },
@@ -95,7 +95,7 @@ _axios.interceptors.request.use(
       console.warn(`其他请求类型: ${reqConfig.method}, 暂无自动处理`)
     }
 
-    // step2: auth 处理
+    // step2: permission 处理
     if (reqConfig.url === 'cms/user/refresh') {
       const refreshToken: string | null = getToken('refresh_token')
       if (refreshToken) {
@@ -121,13 +121,12 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
   async res => {
     let {
-      error_code,
-      msg,
+      code,
+      message,
     }: {
-      error_code: number
-      msg: string
+      code: number
+      message: string
     } = res.data // eslint-disable-line
-    let message = '' // 错误提示
 
     // 请求成功
     if (res.status.toString().charAt(0) === '2') {
@@ -135,21 +134,27 @@ _axios.interceptors.response.use(
     }
 
     return new Promise(async (resolve, reject) => {
-      const { params, url } = res.config
+      const { url, handleError, showBackend } = res.config as any
 
       // refresh_token 异常，直接登出
-      if (error_code === 10000 || error_code === 10100) {
+      // if (code === 10000 || code === 10100 || code === 10012) {
+      if (code === 10000 || code === 10100) {
         setTimeout(() => {
           store.dispatch(loginOut())
           const { origin } = window.location
           window.location.href = origin
         }, 1500)
-        resolve(null)
-        return
+
+        return resolve(null)
       }
 
       // 令牌相关，刷新令牌
-      if (error_code === 10040 || error_code === 10050) {
+      if (
+        code === 10040 ||
+        code === 10041 ||
+        code === 10050 ||
+        code === 10051
+      ) {
         const cache = {} as any
         if (cache.url !== url) {
           cache.url = url
@@ -157,33 +162,30 @@ _axios.interceptors.response.use(
           saveAccessToken((refreshResult as any).access_token)
           // 将上次失败请求重发
           const result = await _axios(res.config)
-          resolve(result)
-          return
+
+          return resolve(result)
         }
       }
 
-      // 本次请求添加 params 参数：handleError 为 true，用户自己try catch，框架不做处理
-      if (params && params.handleError) {
-        reject(res)
-        return
+      // 第一种情况：默认直接提示后端返回的异常信息；
+      // 特殊情况：如果本次请求添加了 handleError: true，用户自己try catch，框架不做处理
+      if (handleError) {
+        return reject(res)
       }
+      console.log('message', message)
 
-      // 本次请求添加 params 参数：showBackend 为 true, 弹出后端返回错误信息
-      if (params && params.showBackend) {
-        // message = msg[0]
-        ;[message] = msg
-      } else {
+      // 第二种情况：采用前端自己的一套异常提示信息；
+      // 特殊情况：如果本次请求添加了 showBackend: true, 弹出后端返回错误信息。
+      if (Config.useFrontEndErrorMsg && !showBackend) {
         // 弹出前端自定义错误信息
         const errorArr = Object.entries(ErrorCode).filter(
-          v => v[0] === error_code.toString(),
+          v => v[0] === code.toString(),
         )
         // 匹配到前端自定义的错误码
-        if (errorArr.length > 0) {
-          if (errorArr[0][1] !== '') {
-            message = errorArr[0][1] // eslint-disable-line
-          } else {
-            message = ErrorCode['777']
-          }
+        if (errorArr.length > 0 && errorArr[0][1] !== '') {
+          message = errorArr[0][1] // eslint-disable-line
+        } else {
+          message = ErrorCode['777']
         }
       }
 
@@ -192,7 +194,7 @@ _axios.interceptors.response.use(
     })
   },
   (error: any) => {
-    if (!(error as any).response) {
+    if (!error.response) {
       notification.error({
         message: 'Network Error',
         description: React.createElement(
@@ -206,7 +208,7 @@ _axios.interceptors.response.use(
 
     // 判断请求超时
     if (
-      (error as any).code === 'ECONNABORTED' &&
+      error.code === 'ECONNABORTED' &&
       error.message.indexOf('timeout') !== -1
     ) {
       antdMessage.warning('请求超时')

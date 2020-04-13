@@ -18,7 +18,6 @@ module.exports = {
     },
   },
   rules: {
-    'prettier/prettier': 'error',
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     camelcase: 0, // 变量可以用下划线
@@ -26,6 +25,7 @@ module.exports = {
     'linebreak-style': ['error', 'windows'],
     'no-case-declarations': 0,
     'no-async-promise-executor': 0,
-    'no-extra-semi': 0, // 和prettier冲突
+    'no-extra-semi': 0, // 和 prettier 冲突
+    'max-len': 0,
   },
 }

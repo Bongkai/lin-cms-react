@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { Icon } from 'antd'
-import Utils from 'lin/utils/util'
-import { IStoreState } from '@/store'
-import { IRouterItem } from '@/config/stage'
+import Utils from '@/lin/utils/util'
+
+import { IStoreState } from '@/types/store'
+import { IRouterItem } from '@/types/project'
 
 import './menu-tab.scss'
 
@@ -36,9 +37,9 @@ export default function MenuTab() {
     setTabArr(_tabArr)
   }, [stageInfo, sideBarLevel])
 
-  return visible ? (
-    <ul className='menu-tab'>
-      {tabArr.map((item: IRouterItem) => {
+  return (
+    <ul className='menu-tab' r-if={visible}>
+      {tabArr.map(item => {
         const { route } = item
         return (
           route && (
@@ -56,5 +57,5 @@ export default function MenuTab() {
         )
       })}
     </ul>
-  ) : null
+  )
 }

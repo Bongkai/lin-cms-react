@@ -10,13 +10,16 @@ import {
   // BackTop,
 } from '@/components/layout'
 import { updateRoute, clearRoute } from '@/store/actions/app.actions'
-import { IStoreState } from '@/store'
-import { IHistoryItem } from '@/store/redux/app.redux'
+
+import { IStoreState, IHistoryItem } from '@/types/store'
 
 import './home.scss'
 
 const { Header, Sider, Content } = Layout
 
+/**
+ * Home 首页
+ */
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false)
   const reuseLength = useSelector<IStoreState, IHistoryItem[]>(
@@ -47,7 +50,7 @@ export default function Home() {
           className='aside'
           collapsed={collapsed}
           breakpoint='md'
-          width={190}
+          width={210}
           collapsedWidth={64}
         >
           <SideBar collapsed={collapsed} />
@@ -57,7 +60,7 @@ export default function Home() {
             <div className='left'>
               <div
                 className='operate'
-                style={{ height: reuseLength > 1 ? '46px' : '72px' }}
+                style={{ height: reuseLength > 1 ? '45px' : '86px' }}
               >
                 <Icon
                   className='fold-icon'

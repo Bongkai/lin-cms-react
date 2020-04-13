@@ -1,28 +1,29 @@
 import React, { useState, useRef } from 'react'
 import { Form, Modal, Tabs, Button } from 'antd'
-import GroupInfo from '../group-info/GroupInfo'
+import UserInfo from './UserInfo'
+
 import { ModalProps } from 'antd/lib/modal'
+import { IAdminUserItem } from '@/types/model'
 import { FormComponentProps } from '@/types/antd/Form'
-import { IGroupItem } from '@/lin/models/admin'
 
 interface IProps extends ModalProps, FormComponentProps {
-  data?: IGroupItem
+  data: IAdminUserItem
   refreshData: (...args: any) => void
 }
 
 const formWrapper = Form.create<IProps>({
-  name: 'group_edit',
+  name: 'user_edit',
 })
 
 function FormModal({ form, data, refreshData, ...restProps }: IProps) {
   const [activeTab, setActiveTab] = useState('修改信息')
   const [submitting, setSubmitting] = useState(false)
-  const groupInfo = useRef<any>()
-  const groupAuths = useRef<any>()
+  const userInfo = useRef<any>()
+  const userPassword = useRef<any>()
 
-  async function onSubmit() {
+  function onSubmit() {
     setSubmitting(true)
-    const node = activeTab === '修改信息' ? groupInfo : groupAuths
+    const node = activeTab === '修改信息' ? userInfo : userPassword
     node.current.onSubmit((success: boolean) => {
       setSubmitting(false)
       success && refreshData()
@@ -30,7 +31,7 @@ function FormModal({ form, data, refreshData, ...restProps }: IProps) {
   }
 
   function resetForm() {
-    const node = activeTab === '修改信息' ? groupInfo : groupAuths
+    const node = activeTab === '修改信息' ? userInfo : userPassword
     node.current.onReset()
   }
 
@@ -54,12 +55,12 @@ function FormModal({ form, data, refreshData, ...restProps }: IProps) {
     >
       <Tabs activeKey={activeTab} animated={false} onChange={onTabChange}>
         <Tabs.TabPane tab='修改信息' key='修改信息'>
-          <GroupInfo pageType='info' ref={groupInfo} form={form} data={data} />
+          <UserInfo pageType='info' ref={userInfo} form={form} data={data} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='配置权限' key='配置权限'>
-          <GroupInfo
-            pageType='auths'
-            ref={groupAuths}
+        <Tabs.TabPane tab='修改密码' key='修改密码'>
+          <UserInfo
+            pageType='password'
+            ref={userPassword}
             form={form}
             data={data}
           />

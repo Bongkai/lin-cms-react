@@ -350,20 +350,26 @@
   }
 }
 
-@media screen and (max-width: 1200px){
-  .container .lin-info .lin-info-right{
+@media screen and (max-width: 1200px) {
+  .about-container .lin-info .lin-info-right {
     display: none;
   }
-  .container .lin-info .lin-info-left{
+  .about-container .lin-info .lin-info-left {
     width: 100%;
   }
-  .container .quantity-statistics .quantity-item{
+  .about-container .quantity-statistics .quantity-item {
     width: 32%;
     &:last-child {
       display: none;
     }
   }
-  .container .information .personal{
+  .about-container .information .personal {
     display: none;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .about-container .lin-info .lin-info-left {
+    width: 100%;
   }
 }

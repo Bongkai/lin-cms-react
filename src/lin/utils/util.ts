@@ -1,7 +1,8 @@
 import { cloneDeep, throttle, debounce } from 'lodash'
-import { IUserType } from '@/store/redux/app.redux'
-import { IRouterItem } from '@/config/stage'
 import { IHomeRouterItemMeta } from '@/router/home-router'
+
+import { IUserType } from '@/types/store'
+import { IRouterItem } from '@/types/project'
 
 interface IUtils {
   cutString: (str: string, len: number) => string
@@ -16,7 +17,7 @@ interface IUtils {
   sortByOrder: (source: any[]) => any[]
   deepClone: <T = any>(data: T) => T
   hasPermission: (
-    auths: string[],
+    permissions: string[],
     route: IRouterItem | IHomeRouterItemMeta,
     user: IUserType,
   ) => boolean
@@ -24,7 +25,6 @@ interface IUtils {
 
   // 以下为 React 版新增
   shallowEqual: (obj_1: object, obj_2: object) => boolean
-  dataURLToBlob: (base64: string) => Blob
 }
 
 /* eslint-disable */
@@ -219,16 +219,16 @@ Utils.deepClone = <T = any>(data: T): T => cloneDeep(data)
  * 判断权限
  */
 Utils.hasPermission = (
-  auths: string[],
+  permissions: string[],
   route: IRouterItem | IHomeRouterItemMeta,
   user: IUserType,
 ): boolean => {
-  if (user && user.isSuper) {
+  if (user && user.admin) {
     return true
   }
-  const { right } = route
-  if (right) {
-    return auths.some((auth: string) => right.indexOf(auth) > -1)
+  const { permission } = route
+  if (permission) {
+    return permissions.some((auth: string) => permission.indexOf(auth) > -1)
   }
   return true
 }
@@ -295,29 +295,6 @@ Utils.shallowEqual = (obj_1: object, obj_2: object): boolean => {
   const isKeyValueEqual = (arr: string[]) =>
     arr.every(item => obj_1[item] === obj_2[item])
   return isKeyValueEqual(keys_1) && isKeyValueEqual(keys_2)
-}
-
-/**
- * dataURL 转 Blob
- */
-Utils.dataURLToBlob = (base64: string): Blob => {
-  const block = base64.split(';')
-  const contentType = block[0].split(':')[1]
-  const b64Data = block[1].split(',')[1]
-  const sliceSize = 512
-  const byteCharacters = atob(b64Data)
-  const byteArrays: Uint8Array[] = []
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize)
-    const byteNumbers = new Array(slice.length)
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i)
-    }
-    const byteArray = new Uint8Array(byteNumbers)
-    byteArrays.push(byteArray)
-  }
-  const blob = new Blob(byteArrays, { type: contentType })
-  return blob
 }
 
 export default Utils

@@ -1,7 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { IStoreState } from '@/store'
-import { IRouterItem } from '@/config/stage'
+
+import { IStoreState } from '@/types/store'
+import { IRouterItem } from '@/types/project'
 
 import './breadcrumb.scss'
 

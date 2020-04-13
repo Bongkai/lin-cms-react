@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Select, Pagination, message } from 'antd'
-import LinHeader from 'components/base/lin-header/LinHeader'
+import LinHeader from '@/components/base/lin-header/LinHeader'
 import LinTable, {
   ILinTableOperation,
   IColumnsItem,
-} from 'components/base/lin-table/LinTable'
+} from '@/components/base/lin-table/LinTable'
 import FormModal from './FormModal'
-import Admin, {
-  IAdminUsers,
-  IAdminUserItem,
-  IResponseWithoutData,
-} from 'lin/models/admin'
-import useAwait from 'hooks/base/useAwait'
+import Admin from '@/lin/models/admin'
+import useAwait from '@/hooks/base/useAwait'
+import { MAX_SUCCESS_CODE } from '@/config/global'
 
-import './user-list.scss'
+import {
+  IAdminUserItem,
+  IAdminUsers,
+  IResponseWithoutData,
+} from '@/types/model'
+
+import './style/user-list.scss'
 
 const PAGE_COUNT = 10 // 每页10条数据
 
 // 设置表头信息
 const tableColumn: IColumnsItem[] = [
   { dataIndex: 'username', title: '名称', ellipsis: true },
-  { dataIndex: 'group_name', title: '所属分组', ellipsis: true },
+  { dataIndex: 'groupNames', title: '所属分组', ellipsis: true },
 ]
 
 export default function UserList() {
@@ -40,9 +43,9 @@ export default function UserList() {
   ]
 
   // 获取所有分组
-  let [groups] = useAwait(Admin.getAllGroups)
-  groups = groups || []
+  const [groups] = useAwait(Admin.getAllGroups, [])
 
+  // 用 useAwait 重写成上面的形式
   // useEffect(() => {
   //   async function getAllGroups() {
   //     try {
@@ -62,16 +65,19 @@ export default function UserList() {
       let res: IAdminUsers
       const page = currentPage - 1
       try {
-        setLoading(true)
         setModalFormVisible(false) // 修改弹窗表单成功后关闭弹窗
         res = await Admin.getAdminUsers({
           page,
           group_id: groupId,
           count: PAGE_COUNT,
         })
+        res.items.forEach(item => {
+          item.group_ids = item.groups
+          item.groupNames = item.group_ids.map(item => item.name).join(',')
+          delete item.groups
+        })
         setTableData(res.items)
-        // 为什么 total 多了一条？（super 用户不显示？）
-        setTotal(res.total > 1 ? res.total - 1 : res.total)
+        setTotal(res.total)
       } catch (e) {
         console.log(e)
       } finally {
@@ -120,12 +126,12 @@ export default function UserList() {
   async function deleteItem(record: IAdminUserItem) {
     try {
       let res: IResponseWithoutData = await Admin.deleteOneUser(record.id)
-      if (res.error_code === 0) {
+      if (res.code < MAX_SUCCESS_CODE) {
         setLoading(true)
-        message.success(`${res.msg}`)
+        message.success(`${res.message}`)
       } else {
         setLoading(false)
-        message.error(`${res.msg}`)
+        message.error(`${res.message}`)
       }
     } catch (e) {
       setLoading(false)
@@ -151,9 +157,10 @@ export default function UserList() {
           placeholder='请选择分组'
           onChange={onGroupChange}
         >
-          {groups.map(item => (
-            <Select.Option key={item.id}>{item.name}</Select.Option>
-          ))}
+          {groups &&
+            groups.map(item => (
+              <Select.Option key={item.id}>{item.name}</Select.Option>
+            ))}
         </Select>
       </LinHeader>
 
@@ -166,7 +173,8 @@ export default function UserList() {
         columns={tableColumn}
         operation={operation}
         dataSource={tableData}
-        rowKey='id'
+        // rowKey='id'
+        rowKey='username'
         loading={loading}
         pagination={false}
       />

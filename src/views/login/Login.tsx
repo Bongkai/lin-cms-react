@@ -4,15 +4,21 @@ import { useHistory } from 'react-router-dom'
 import { message } from 'antd'
 import LoadingWrapper from '@/components/base/loading-wrapper/LoadingWrapper'
 import User from '@/lin/models/user'
-import { setUserAndState, setUserAuths } from '@/store/actions/app.actions'
-import { IStoreState } from '@/store'
+import {
+  setUserAndState,
+  setUserPermissions,
+} from '@/store/actions/app.actions'
+
+import { IStoreState, IUserType } from '@/types/store'
 
 import './login.scss'
 import teamNameImg from '@/assets/img/login/team-name.png'
-import { IUserType } from '@/store/redux/app.redux'
 
+/**
+ * Login 登陆页面
+ */
 export default function Login() {
-  const [username, setUsername] = useState('super')
+  const [username, setUsername] = useState('root')
   const [password, setPassword] = useState('123456')
   const [loading, setLoading] = useState(false)
   const defaultRoute = useSelector<IStoreState, string>(
@@ -43,9 +49,9 @@ export default function Login() {
   async function getInformation() {
     try {
       // 尝试获取当前用户信息
-      const user = await User.getAuths()
+      const user = await User.getPermissions()
       dispatch(setUserAndState(user as IUserType))
-      dispatch(setUserAuths(user.auths))
+      dispatch(setUserPermissions(user.permissions))
     } catch (err) {
       console.log(err)
     }

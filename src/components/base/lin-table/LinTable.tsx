@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Table, Input, Button, Icon } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Table, Button } from 'antd'
+import { checkPermission } from '@/lin/directives/authorize'
+
 import { TableProps, ColumnProps } from '@/types/antd/Table'
-import Highlighter from 'react-highlight-words'
 
 import './lin-table.scss'
 
-export interface IColumnsItem extends ColumnProps<any> {
-  search?: boolean // 设为 true 开启列表头部的关键字搜索功能
-}
+export interface IColumnsItem extends ColumnProps<any> {}
 
 interface IOperationCoreItem {
   name: string
   type: 'primary' | 'danger'
   func?: (...args: any) => any
+  permission?: string | string[]
 }
 
 interface IOperation extends ColumnProps<any> {
@@ -57,92 +57,6 @@ export default function LinTable(props: ILinTable) {
     ...restProps
   } = props
   const [columns, setColumns] = useState<IColumnsItem[]>([])
-  const [searchText, setSearchText] = useState('')
-  const searchInput = useRef<any>()
-
-  const getColumnSearchProps = useCallback(
-    (dataIndex: string = '') => {
-      function handleSearch(
-        selectedKeys: string[],
-        confirm: (...args: any) => any,
-      ) {
-        if (searchFunc) {
-          searchFunc(selectedKeys, confirm)
-        } else {
-          confirm()
-          setSearchText(selectedKeys[0])
-        }
-      }
-
-      function handleReset(clearFilters: any) {
-        clearFilters()
-        setSearchText('')
-      }
-
-      return {
-        filterDropdown: ({
-          setSelectedKeys,
-          selectedKeys,
-          confirm,
-          clearFilters,
-        }) => (
-          <div style={{ padding: '8px' }}>
-            <Input
-              ref={searchInput}
-              style={{ width: '188px', marginBottom: '8px', display: 'block' }}
-              placeholder={`Search ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={ev =>
-                setSelectedKeys(ev.target.value ? [ev.target.value] : [])
-              }
-              onPressEnter={() => handleSearch(selectedKeys, confirm)}
-            />
-            <Button
-              type='primary'
-              icon='search'
-              size='small'
-              style={{ width: '90px', marginRight: '8px' }}
-              onClick={() => handleSearch(selectedKeys, confirm)}
-            >
-              搜索
-            </Button>
-            <Button
-              size='small'
-              style={{ width: '90px' }}
-              onClick={() => handleReset(clearFilters)}
-            >
-              重置
-            </Button>
-          </div>
-        ),
-        filterIcon: (filtered: string) => (
-          <Icon
-            type='search'
-            style={{ color: filtered ? '#3963bc' : undefined }}
-          />
-        ),
-        onFilter: (value: string, record: any) =>
-          record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: (visible: boolean) => {
-          if (visible) {
-            setTimeout(() => searchInput.current.select())
-          }
-        },
-        render: (text: string) => (
-          <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069' }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={text.toString()}
-          />
-        ),
-      }
-    },
-    [searchText], // eslint-disable-line
-  )
 
   useEffect(() => {
     function handleColumns() {
@@ -165,6 +79,12 @@ export default function LinTable(props: ILinTable) {
                   size='small'
                   type={item.type}
                   key={item.name}
+                  disabled={
+                    !checkPermission({
+                      permission: item.permission ? item.permission : '',
+                      // type: 'disabled',
+                    })
+                  }
                   onClick={() => {
                     item.func && item.func(text, record, index)
                   }}
@@ -175,29 +95,17 @@ export default function LinTable(props: ILinTable) {
             </div>
           ),
         })
-
-        _columns.forEach((item, index) => {
-          if (item.search) {
-            const searchProps =
-              typeof item.search === 'string' ? item.search : item.dataIndex
-
-            _columns[index] = {
-              ...item,
-              ...getColumnSearchProps(searchProps),
-            }
-          }
-        })
       }
       setColumns(_columns)
     }
     handleColumns()
-  }, [getColumnSearchProps]) // eslint-disable-line
+  }, []) // eslint-disable-line
 
-  const noVertDivider = verticalDivider === 'none' ? ' no-v-divider' : ''
-  const noHoriDivider = horizonalDivider === 'none' ? ' no-h-divider' : ''
-  const stripeType = stripe ? ' stripe' : stripeReverse ? ' stripe-reverse' : ''
+  const noVDivider = verticalDivider === 'none' ? 'no-v-divider' : ''
+  const noHDivider = horizonalDivider === 'none' ? 'no-h-divider' : ''
+  const stripeType = stripe ? 'stripe' : stripeReverse ? 'stripe-reverse' : ''
 
-  const classes = `lin-table${noVertDivider}${noHoriDivider}${stripeType}`
+  const classes = `lin-table ${noVDivider} ${noHDivider} ${stripeType}`
 
   return <Table className={classes} columns={columns} {...restProps} />
 }

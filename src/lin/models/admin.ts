@@ -1,55 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import { post, get, put, _delete } from '@/lin/plugins/axios'
 
-export interface IAllAuths {
-  [propName: string]: {
-    [propName: string]: string[]
-  }
-}
-
-export interface IGroupItem {
-  id: number
-  info: string
-  name: string
-}
-
-export interface IGroupItemWithAuths extends IGroupItem {
-  auths: IGroupItemAuths[]
-}
-
-export interface IGroupItemAuths {
-  [propName: string]: {
-    auth: string
-    module: string
-  }[]
-}
-
-export interface IAdminUsers {
-  count: number
-  items: IAdminUserItem[]
-  page: number
-  total: number
-  total_page: number
-}
-
-export interface IAdminUserItem {
-  active: number
-  admin: number
-  avatar: string | null
-  create_time: number
-  email: string | null
-  group_id: number
-  group_name: string
-  id: number
-  nickname: string | null
-  username: string
-}
-
-export interface IResponseWithoutData {
-  error_code: number
-  msg: string
-  request: string
-}
+import {
+  IAllPermissions,
+  IAdminUsers,
+  IGroupItem,
+  IGroupItemWithPermissions,
+  IResponseWithoutData,
+} from '@/types/model'
 
 const EE = 0,
   UCOUNT = 10,
@@ -99,8 +57,8 @@ export default class Admin {
     }
   }
 
-  static async getAllAuths(): Promise<IAllAuths> {
-    return get('cms/admin/authority')
+  static getAllPermissions(): Promise<IAllPermissions> {
+    return get('cms/admin/permission')
   }
 
   static async getAdminUsers({
@@ -164,20 +122,20 @@ export default class Admin {
     return groups
   }
 
-  static async getOneGroup(id: number): Promise<IGroupItemWithAuths> {
-    const group: IGroupItemWithAuths = await get(`cms/admin/group/${id}`)
+  static async getOneGroup(id: number): Promise<IGroupItemWithPermissions> {
+    const group: IGroupItemWithPermissions = await get(`cms/admin/group/${id}`)
     return group
   }
 
   static async createOneGroup(
     name: string,
     info: string,
-    auths: string[],
+    permission_ids: number[],
   ): Promise<IResponseWithoutData> {
     const res: IResponseWithoutData = await post('cms/admin/group', {
       name,
       info,
-      auths,
+      permission_ids,
     })
     return res
   }
@@ -200,30 +158,33 @@ export default class Admin {
   }
 
   static async deleteOneUser(id: number): Promise<IResponseWithoutData> {
-    const res: IResponseWithoutData = await _delete(`cms/admin/${id}`)
+    const res: IResponseWithoutData = await _delete(`cms/admin/user/${id}`)
     return res
   }
 
   static async updateOneUser(
     email: string,
-    group_id: number,
+    group_ids: number,
     id: number,
   ): Promise<IResponseWithoutData> {
-    const res: IResponseWithoutData = await put(`cms/admin/${id}`, {
+    const res: IResponseWithoutData = await put(`cms/admin/user/${id}`, {
       email,
-      group_id,
+      group_ids,
     })
     return res
   }
 
-  static async dispatchAuths(
+  static async dispatchPermissions(
     group_id: number,
-    auths: string[],
+    permission_ids: number[],
   ): Promise<IResponseWithoutData> {
-    const res: IResponseWithoutData = await post('cms/admin/dispatch/patch', {
-      group_id,
-      auths,
-    })
+    const res: IResponseWithoutData = await post(
+      'cms/admin/permission/dispatch/batch',
+      {
+        group_id,
+        permission_ids,
+      },
+    )
     return res
   }
 
@@ -232,21 +193,27 @@ export default class Admin {
     confirm_password: string,
     id: number,
   ): Promise<IResponseWithoutData> {
-    const res: IResponseWithoutData = await put(`cms/admin/password/${id}`, {
-      new_password,
-      confirm_password,
-    })
+    const res: IResponseWithoutData = await put(
+      `cms/admin/user/${id}/password`,
+      {
+        new_password,
+        confirm_password,
+      },
+    )
     return res
   }
 
-  static async removeAuths(
+  static async removePermissions(
     group_id: number,
-    auths: string[],
+    permission_ids: number[],
   ): Promise<IResponseWithoutData> {
-    const res: IResponseWithoutData = await post('cms/admin/remove', {
-      group_id,
-      auths,
-    })
+    const res: IResponseWithoutData = await post(
+      'cms/admin/permission/remove',
+      {
+        group_id,
+        permission_ids,
+      },
+    )
     return res
   }
 }

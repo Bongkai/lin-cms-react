@@ -3,24 +3,22 @@ import { useSelector } from 'react-redux'
 import { useHistory, NavLink } from 'react-router-dom'
 import { Menu, Select, Icon } from 'antd'
 import Utils from '@/lin/utils/util'
-import {
-  getSideBarList,
-  deepTravel,
-  ISideBarListItem,
-} from '@/store/getters/app.getters'
-import { IStoreState } from '@/store'
-import { IAppState } from '@/store/redux/app.redux'
-import { IRouterItem } from '@/config/stage'
+import { getSideBarList, deepTravel } from '@/store/getters/app.getters'
+
+import { IStoreState, IAppState, ISideBarListItem } from '@/types/store'
+import { IRouterItem } from '@/types/project'
 
 import './side-bar.scss'
-import logoImg from '../../../assets/img/logo.png'
-import mobileLogoImg from '../../../assets/img/mobile-logo.png'
+import logoImg from '@/assets/img/logo.png'
+import mobileLogoImg from '@/assets/img/mobile-logo.png'
 
 const { SubMenu, Item } = Menu
 const { Option } = Select
 
-// TODO: 把 IIdMap 定义得更精细些
-type IIdMap = object
+const name: unique symbol = Symbol()
+interface IIdMap {
+  [name]: string
+}
 
 interface IViewRouter {
   path: string
@@ -30,7 +28,7 @@ interface IViewRouter {
 
 export default function SideBar({ collapsed }) {
   const [list, setList] = useState<ISideBarListItem[]>([])
-  const [idMap, setIdMap] = useState<IIdMap>({})
+  const [idMap, setIdMap] = useState<IIdMap>({} as IIdMap)
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [showSearchList, setShowSearchList] = useState(false)
   const [groups, setGroups] = useState<IViewRouter[]>([])
@@ -51,7 +49,7 @@ export default function SideBar({ collapsed }) {
   // 当 list 创建完毕后生成 idMap
   useEffect(() => {
     function createIdMap(list: ISideBarListItem[]): IIdMap {
-      const mapData = {}
+      const mapData = {} as IIdMap
       deepTravel<ISideBarListItem>(list, item => {
         if (item.name) {
           mapData[item.name] = Utils.getRandomStr()
@@ -180,43 +178,38 @@ export default function SideBar({ collapsed }) {
 
   return (
     <div className='app-sidebar'>
-      {!collapsed ? (
-        <div className='logo'>
-          <img src={logoImg} alt='' />
+      <div className='logo' r-if={!collapsed}>
+        <img src={logoImg} alt='' />
+      </div>
+      <div className='mobile-logo' r-else>
+        <img src={mobileLogoImg} alt='' />
+      </div>
+
+      <div style={{ marginTop: '15px' }} r-if={!collapsed}>
+        <Select
+          className='search'
+          showSearch
+          // defaultOpen
+          dropdownMatchSelectWidth={false}
+          defaultActiveFirstOption={false}
+          placeholder='请输入关键字'
+          onSearch={search}
+          onChange={handleSearchChange}
+          onBlur={handleSearchBlur}
+          filterOption={false}
+          r-if={showSearchList}
+        >
+          {groups.map(item => (
+            <Option key={item.key} value={item.path}>
+              {item.title}
+            </Option>
+          ))}
+        </Select>
+        <div className='search-display' onClick={switchToSearch} r-else>
+          <Icon type='search' style={{ color: 'rgb(185, 190, 195)' }} />
         </div>
-      ) : (
-        <div className='mobile-logo'>
-          <img src={mobileLogoImg} alt='' />
-        </div>
-      )}
-      {!collapsed && (
-        <div style={{ marginTop: '15px' }}>
-          {showSearchList ? (
-            <Select
-              className='search'
-              showSearch
-              // defaultOpen
-              dropdownMatchSelectWidth={false}
-              defaultActiveFirstOption={false}
-              placeholder='请输入关键字'
-              onSearch={search}
-              onChange={handleSearchChange}
-              onBlur={handleSearchBlur}
-              filterOption={false}
-            >
-              {groups.map(item => (
-                <Option key={item.key} value={item.path}>
-                  {item.title}
-                </Option>
-              ))}
-            </Select>
-          ) : (
-            <div className='search-display' onClick={switchToSearch}>
-              <Icon type='search' style={{ color: 'rgb(185, 190, 195)' }} />
-            </div>
-          )}
-        </div>
-      )}
+      </div>
+
       <Menu
         className='custom-antd menu-content'
         theme='dark'

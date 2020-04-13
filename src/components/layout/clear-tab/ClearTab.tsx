@@ -2,9 +2,9 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Icon } from 'antd'
 import { changeReuseTab } from '@/store/actions/app.actions'
-import { IStoreState } from '@/store'
-import { IHistoryItem } from '@/store/redux/app.redux'
-import { IRouterItem } from '@/config/stage'
+
+import { IStoreState, IHistoryItem } from '@/types/store'
+import { IRouterItem } from '@/types/project'
 
 import './clear-tab.scss'
 
@@ -26,13 +26,14 @@ export default function ClearTab() {
     dispatch(changeReuseTab([ele]))
   }
 
-  return reuseLength > 1 ? (
+  return (
     <div
       className='clear-icon'
       title='关闭全部历史记录'
       onClick={clearAllHistories}
+      r-if={reuseLength > 1}
     >
       <Icon type='delete' style={{ fontSize: '20px' }} />
     </div>
-  ) : null
+  )
 }

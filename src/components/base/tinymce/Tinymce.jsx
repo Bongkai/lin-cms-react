@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import axios from 'lin/plugins/axios'
 import tinymce from 'tinymce/tinymce.min' // eslint-disable-line
+import axios from '@/lin/plugins/axios'
 import { Editor } from '@tinymce/tinymce-react'
 
 import 'tinymce/themes/silver/theme'

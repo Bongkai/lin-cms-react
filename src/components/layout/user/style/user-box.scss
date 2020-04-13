@@ -12,7 +12,7 @@
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
 
   .user-info {
-    background-image: url("../../../assets/img/user/user-bg.png");
+    background-image: url("../../../../assets/img/user/user-bg.png");
     background-size: 100% 100%;
     transform: translateY(-10px);
     border-top-left-radius: 4px;
@@ -76,6 +76,8 @@
       .nickname {
         margin-bottom: 10px;
         font-size: 16px;
+        height: 32px;
+        line-height: 32px;
         cursor: pointer;
       }
 

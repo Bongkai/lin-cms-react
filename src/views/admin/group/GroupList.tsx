@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, message } from 'antd'
-import LinHeader from 'components/base/lin-header/LinHeader'
+import LinHeader from '@/components/base/lin-header/LinHeader'
 import LinTable, {
   ILinTableOperation,
   IColumnsItem,
-} from 'components/base/lin-table/LinTable'
+} from '@/components/base/lin-table/LinTable'
 import FormModal from './FormModal'
-import Admin, { IGroupItem, IResponseWithoutData } from 'lin/models/admin'
+import Admin from '@/lin/models/admin'
+import { MAX_SUCCESS_CODE } from '@/config/global'
 
-import './group-list.scss'
+import { IGroupItem, IResponseWithoutData } from '@/types/model'
+
+import './style/group-list.scss'
 
 // 设置表头信息
 const tableColumn: IColumnsItem[] = [
@@ -67,11 +70,11 @@ export default function GroupList() {
     try {
       setLoading(true)
       let res: IResponseWithoutData = await Admin.deleteOneGroup(record.id)
-      if (res.error_code === 0) {
-        message.success(`${res.msg}`)
+      if (res.code < MAX_SUCCESS_CODE) {
+        message.success(`${res.message}`)
         await getAllGroups()
       } else {
-        message.error(`${res.msg}`)
+        message.error(`${res.message}`)
       }
     } catch (e) {
       console.log(e)

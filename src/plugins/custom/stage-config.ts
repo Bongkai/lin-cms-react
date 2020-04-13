@@ -1,4 +1,4 @@
-import { IRouterItem } from '@/config/stage'
+import { IRouterItem } from '@/types/project'
 
 const CustomRouter: IRouterItem = {
   route: null,
@@ -18,18 +18,8 @@ const CustomRouter: IRouterItem = {
       filePath: 'plugins/custom/views/upload-imgs-demo/UploadImgsDemo',
       inNav: true,
       icon: 'tool',
-      right: null,
+      permission: null,
     },
-    // {
-    //   title: 'gallery 画廊',
-    //   type: 'view',
-    //   name: 'GalleryDemo',
-    //   route: '/custom/gallery',
-    //   filePath: 'plugins/custom/views/Gallery.vue',
-    //   inNav: true,
-    //   icon: 'iconfont icon-zidingyi',
-    //   right: null,
-    // },
     {
       title: '富文本',
       type: 'view',
@@ -38,18 +28,8 @@ const CustomRouter: IRouterItem = {
       filePath: 'plugins/custom/views/tinymce-demo/TinymceDemo',
       inNav: true,
       icon: 'tool',
-      right: null,
+      permission: null,
     },
-    // {
-    //   title: 'multiple 多重输入',
-    //   type: 'view',
-    //   name: 'Multiple',
-    //   route: '/custom/multiple',
-    //   filePath: 'plugins/custom/views/MultipleInput.vue',
-    //   inNav: true,
-    //   icon: 'iconfont icon-zidingyi',
-    //   right: null,
-    // },
   ],
 }
 

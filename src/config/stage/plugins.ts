@@ -1,5 +1,6 @@
-import { IRouterItem } from './index'
 import custom from '@/plugins/custom/stage-config'
+
+import { IRouterItem } from '@/types/project'
 
 const pluginsConfig: IRouterItem[] = [custom]
 

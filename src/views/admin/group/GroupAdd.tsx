@@ -1,14 +1,14 @@
 import React from 'react'
 import { Form } from 'antd'
 import { FormComponentProps } from '@/types/antd/Form'
-import LinHeader from 'components/base/lin-header/LinHeader'
-import GroupInfo from '../group-info/GroupInfo'
+import LinHeader from '@/components/base/lin-header/LinHeader'
+import GroupInfo from './GroupInfo'
 
-import './group-add.scss'
+import './style/group-add.scss'
 
 interface IProps extends FormComponentProps<any> {}
 
-const formWrapper = Form.create<IProps>({
+const formWrapper = Form.create<FormComponentProps<any>>({
   name: 'group_add',
 })
 

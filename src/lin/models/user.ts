@@ -1,33 +1,16 @@
 import { post, get, put } from '@/lin/plugins/axios'
 import { saveTokens } from '../utils/token'
-import { IOriginalAuths } from '@/store/redux/app.redux'
+import { store } from '@/store/index'
 
-export interface IUserToken {
-  access_token: string
-  refresh_token: string
-}
+import { IUserType } from '@/types/store'
+import { IUserToken, IUserInformation } from '@/types/model'
 
-export interface IUserInformation {
-  active: number
-  admin: number
-  auths: IOriginalAuths[]
-  avatar: string | null
-  create_time: number
-  email: string | null
-  group_id: number | null
-  id: number
-  nickname: string | null
-  update_time: number
-  username: string
-  groupName?: string | undefined
-}
-
-const SUPER_VALUE = 2
-const ACTIVE_VALUE = 1
+// const SUPER_VALUE = 2
+// const ACTIVE_VALUE = 1
 
 export default class User {
   // 当前用户是否在激活状态
-  isActive: boolean
+  // isActive: boolean
 
   // 邮箱
   // email: string | null = null
@@ -39,13 +22,13 @@ export default class User {
   // username: string = null
 
   // 是否为超级管理员
-  isSuper: boolean
+  // isSuper: boolean
 
   // 用户头像
   // avatar: string | null = null
 
   // 拥有的权限
-  // auths: IOriginalAuths[] = []
+  // auths: IOriginalPermissions[] = []
 
   // 昵称
   // nickname: string | null = null
@@ -53,27 +36,29 @@ export default class User {
   // 分组名称
   // groupName: string | null = null
 
-  constructor(
-    active: number,
-    readonly email: string | null, // 邮箱
-    readonly groupId: number | null, // 权限分组id
-    readonly username: string, // 用户名
-    _super: number,
-    readonly avatar: string | null, // 用户头像
-    readonly auths: IOriginalAuths[], // 拥有的权限
-    readonly nickname: string | null, // 昵称
-    readonly groupName: string | undefined, // 分组名称
-  ) {
-    this.isActive = active === ACTIVE_VALUE
-    // this.email = email
-    // this.groupId = groupId
-    // this.username = username
-    // this.avatar = avatar
-    this.isSuper = _super === SUPER_VALUE
-    // this.auths = auths || []
-    // this.nickname = nickname
-    // this.groupName = groupName
-  }
+  // constructor(
+  //   // _super: number,
+  //   // readonly auths: IOriginalPermissions[], // 拥有的权限
+  //   // readonly groupName: string | undefined, // 分组名称
+  //   readonly nickname: string | null, // 昵称
+  //   readonly username: string, // 用户名
+  //   readonly admin: boolean,
+  //   readonly groups: any[], // 所属分组信息
+  //   readonly permissions: IOriginalPermissions[], // 拥有的权限
+  //   readonly email: string | null, // 邮箱
+  //   readonly avatar: string | null, // 用户头像 // active: number, // readonly groupId: number | null, // 权限分组id
+  // ) {
+  //   this.isSuper = admin
+  //   // this.isActive = active === ACTIVE_VALUE
+  //   // this.email = email
+  //   // this.groupId = groupId
+  //   // this.groupId = groupId
+  //   // this.username = username
+  //   // this.avatar = avatar
+  //   // this.auths = auths || []
+  //   // this.nickname = nickname
+  //   // this.groupName = groupName
+  // }
 
   /**
    * 分配用户
@@ -103,37 +88,23 @@ export default class User {
   /**
    * 获取当前用户信息，并返回User实例
    */
-  static async getInformation(): Promise<User> {
+  static async getInformation(): Promise<IUserType> {
     const info: IUserInformation = await get('cms/user/information')
-    return new User(
-      info.active,
-      info.email,
-      info.group_id,
-      info.username,
-      info.admin,
-      info.avatar,
-      info.auths,
-      info.nickname,
-      info.groupName,
-    )
+    const storeUser =
+      store.getState().app.user === null ? {} : store.getState().app.user
+
+    return Object.assign({ ...storeUser }, info)
   }
 
   /**
    * 获取当前用户信息和所拥有的权限
    */
-  static async getAuths(): Promise<User> {
-    const info: IUserInformation = await get('cms/user/auths')
-    return new User(
-      info.active,
-      info.email,
-      info.group_id,
-      info.username,
-      info.admin,
-      info.avatar,
-      info.auths,
-      info.nickname,
-      info.groupName,
-    )
+  static async getPermissions(): Promise<IUserType> {
+    const info: IUserInformation = await get('cms/user/permissions')
+    const storeUser =
+      store.getState().app.user === null ? {} : store.getState().app.user
+
+    return Object.assign({ ...storeUser }, info)
   }
 
   /**

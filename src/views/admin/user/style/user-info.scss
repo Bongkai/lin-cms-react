@@ -1,0 +1,25 @@
+.user-info-container {
+  max-width:800px;
+  margin-top: 20px;
+
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .checkbox-item {
+    border: 1px solid #DCDFE6;
+    border-radius: 3px;
+    font-size: 12px;
+    padding: 6px 5px 6px 10px;
+    &.ant-checkbox-wrapper {
+      margin: 4px 30px 4px 0;
+    }
+  }
+
+  .submit {
+    .ant-btn {
+      margin-right: 10px;
+    }
+  }
+}

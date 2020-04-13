@@ -1,15 +1,6 @@
 import Util from '@/lin/utils/util'
-import { IAppState, IUserType } from '@/store/redux/app.redux'
-import { IRouterItem } from '@/config/stage'
-
-export interface ISideBarListItem {
-  icon: string
-  name: symbol | string | null
-  path: string | null
-  title: string
-  type?: string
-  children?: ISideBarListItem[]
-}
+import { IAppState, IUserType, ISideBarListItem } from '@/types/store'
+import { IRouterItem } from '@/types/project'
 
 const name: unique symbol = Symbol()
 interface IStageMap {
@@ -60,13 +51,13 @@ function IterationDelateMenuChildren(arr: IRouterItem[]): IRouterItem[] {
 
 function permissionShaking(
   stageConfig: IRouterItem[],
-  auths: string[],
+  permissions: string[],
   user: IUserType,
 ): IRouterItem[] {
   const shookConfig = stageConfig.filter(route => {
-    if (Util.hasPermission(auths, route, user)) {
+    if (Util.hasPermission(permissions, route, user)) {
       if (route.children && route.children.length) {
-        route.children = permissionShaking(route.children, auths, user)
+        route.children = permissionShaking(route.children, permissions, user)
       }
       return true
     }
@@ -76,10 +67,10 @@ function permissionShaking(
 }
 
 // 获取有权限的舞台配置
-export const authStageConfig = (state: IAppState): IRouterItem[] => {
-  const { stageConfig, auths, user } = state
+export const permissionStageConfig = (state: IAppState): IRouterItem[] => {
+  const { stageConfig, permissions, user } = state
   const tempStageConfig = Util.deepClone(stageConfig)
-  const shookConfig = permissionShaking(tempStageConfig, auths, user)
+  const shookConfig = permissionShaking(tempStageConfig, permissions, user)
 
   // 设置舞台缓存
   const list = {} as IStageMap
@@ -180,7 +171,7 @@ export const getSideBarList = (state: IAppState): ISideBarListItem[] => {
   }
 
   const sideBar: ISideBarListItem[] = deepGetSideBar(
-    authStageConfig(state),
+    permissionStageConfig(state),
     sideBarLevel,
   )
   return sideBar

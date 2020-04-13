@@ -1,4 +1,4 @@
-import { IRouterItem } from './index'
+import { IRouterItem } from '@/types/project'
 
 const adminRouter: IRouterItem = {
   route: null,
@@ -9,7 +9,7 @@ const adminRouter: IRouterItem = {
   filePath: 'views/admin/',
   order: null,
   inNav: true,
-  right: ['超级管理员独有权限'],
+  permission: ['超级管理员独有权限'],
   children: [
     {
       route: '/admin/user',
@@ -25,10 +25,10 @@ const adminRouter: IRouterItem = {
           type: 'view',
           name: 'userList',
           route: '/admin/user/list',
-          filePath: 'views/admin/user/user-list/UserList',
+          filePath: 'views/admin/user/UserList',
           inNav: true,
           icon: 'user',
-          right: ['超级管理员独有权限'],
+          permission: ['超级管理员独有权限'],
         },
         {
           title: '添加用户',
@@ -37,8 +37,8 @@ const adminRouter: IRouterItem = {
           route: '/admin/user/add',
           icon: 'user-add',
           name: 'userAdd',
-          filePath: 'views/admin/user/user-add/UserAdd',
-          right: ['超级管理员独有权限'],
+          filePath: 'views/admin/user/UserAdd',
+          permission: ['超级管理员独有权限'],
         },
       ],
     },
@@ -56,20 +56,20 @@ const adminRouter: IRouterItem = {
           type: 'view',
           name: 'groupList',
           inNav: true,
-          filePath: 'views/admin/group/group-list/GroupList',
+          filePath: 'views/admin/group/GroupList',
           title: '分组列表',
           icon: 'team',
-          right: ['超级管理员独有权限'],
+          permission: ['超级管理员独有权限'],
         },
         {
           route: '/admin/group/add',
           type: 'view',
           name: 'groupAdd',
-          filePath: 'views/admin/group/group-add/GroupAdd',
+          filePath: 'views/admin/group/GroupAdd',
           inNav: true,
           title: '添加分组',
           icon: 'usergroup-add',
-          right: ['超级管理员独有权限'],
+          permission: ['超级管理员独有权限'],
         },
       ],
     },

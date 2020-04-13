@@ -13,13 +13,21 @@ interface Options {
   refresh: (...args: any) => void
 }
 
+/**
+ * 执行异步请求方法
+ *
+ * @param request 需要执行的异步方法
+ * @param initialValue 初始化的返回值，后续有参数且无默认值需写 undefined 占位
+ * @param args 该方法的参数，以平铺方式写在最后
+ */
 export default function useAwait<T>(
   request: (...args: any) => Promise<T>,
+  initialValue?: any,
   ...args: any
 ): [T, Options] {
   const [store, setStore] = useState<Store>({
     loading: true,
-    res: null,
+    res: initialValue,
     err: null,
   })
   const { loading, res, err } = store

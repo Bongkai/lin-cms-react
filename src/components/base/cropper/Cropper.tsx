@@ -1,7 +1,6 @@
 import React, { useRef, useImperativeHandle, forwardRef } from 'react'
 import ReactCropper, { ReactCropperProps } from 'react-cropper'
 import lrz from 'lrz'
-import Utils from 'lin/utils/util'
 
 import 'cropperjs/dist/cropper.css'
 
@@ -33,7 +32,7 @@ function Cropper({ src }: ReactCropperProps, ref: any) {
         if (type === 'dataurl') {
           resolve(res)
         }
-        const blob = Utils.dataURLToBlob(res.base64)
+        const blob = dataURLToBlob(res.base64)
         if (type === 'blob') {
           resolve(blob)
         }
@@ -44,6 +43,26 @@ function Cropper({ src }: ReactCropperProps, ref: any) {
         resolve(file)
       })
     })
+  }
+
+  function dataURLToBlob(base64: string): Blob {
+    const block = base64.split(';')
+    const contentType = block[0].split(':')[1]
+    const b64Data = block[1].split(',')[1]
+    const sliceSize = 512
+    const byteCharacters = atob(b64Data)
+    const byteArrays: Uint8Array[] = []
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize)
+      const byteNumbers = new Array(slice.length)
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push(byteArray)
+    }
+    const blob = new Blob(byteArrays, { type: contentType })
+    return blob
   }
 
   return (
