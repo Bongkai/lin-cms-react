@@ -1,7 +1,5 @@
 .group-info-container {
   max-width:800px;
-  // margin-top: 20px;
-  // margin-left: -5px;
 
   .checkbox-all {
     height: 20px;
@@ -16,6 +14,13 @@
     padding: 20px;
     background: #f5f5f6;
     margin-bottom: 20px;
+  }
+
+  .checkbox-item {
+    min-width: 150px;
+    &.ant-checkbox-wrapper {
+      margin-left: 0;
+    }
   }
 
   .submit {

@@ -3,7 +3,7 @@ import { Spin } from 'antd'
 
 import './tinymce-demo.scss'
 
-const Tinymce = lazy(() => import('components/base/tinymce/Tinymce'))
+const Tinymce = lazy(() => import('@/components/base/tinymce/Tinymce'))
 
 export default function TinymceDemo() {
   function handleEditorChange(content: string) {

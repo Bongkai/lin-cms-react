@@ -1,25 +1,6 @@
 import { get } from '@/lin/plugins/axios'
-import { Method } from 'axios'
 
-export interface ILogsInfo {
-  count: number
-  items: ILogItem[]
-  page: number
-  total: number
-  total_page: number
-}
-
-export interface ILogItem {
-  authority: string
-  id: 91865
-  message: string
-  method: Method
-  path: string
-  status_code: number
-  time: number
-  user_id: number
-  user_name: string
-}
+import { ILogUsers, ILogsInfo } from '@/types/model'
 
 class Log {
   name: string | undefined
@@ -82,15 +63,15 @@ class Log {
     // lCount && this.lCount = lCount
   }
 
-  async increseUpage() {
+  async increaseUpage() {
     this.uPage += 1
   }
 
-  async increseLpage() {
+  async increaseLpage() {
     this.lPage += 1
   }
 
-  increseSpage() {
+  increaseSpage() {
     this.sPage += 1
   }
 
@@ -110,11 +91,6 @@ class Log {
     this.keyword = keyword
   }
 
-  // async addTestLog(): Promise<any> {
-  //   const log: any = await get('cms/test/info')
-  //   return log
-  // }
-
   /**
    * 查询已经被记录过日志的用户（分页）
    * @param {number} count 每页个数
@@ -126,8 +102,8 @@ class Log {
   }: {
     count?: number
     page?: number
-  }): Promise<string[]> {
-    const users: string[] = await get('cms/log/users', {
+  }): Promise<ILogUsers> {
+    const users: ILogUsers = await get('cms/log/users', {
       count: count || this.uCount,
       page: page || this.uPage,
     })
@@ -227,17 +203,17 @@ class Log {
   }
 
   // async moreUserPage(): Promise<string[]> {
-  //   await this.increseUpage()
+  //   await this.increaseUpage()
   //   return this.getLoggedUsers({})
   // }
 
-  async moreLogPage(): Promise<ILogsInfo | undefined> {
-    await this.increseLpage()
+  moreLogPage(): Promise<ILogsInfo | undefined> {
+    this.increaseLpage()
     return this.getLogs({ next: true })
   }
 
-  async moreSearchPage(): Promise<ILogsInfo | undefined> {
-    this.increseSpage()
+  moreSearchPage(): Promise<ILogsInfo | undefined> {
+    this.increaseSpage()
     return this.searchLogs({ next: true })
   }
 }

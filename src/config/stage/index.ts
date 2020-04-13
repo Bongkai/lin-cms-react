@@ -2,18 +2,7 @@ import adminConfig from './admin'
 import pluginsConfig from './plugins'
 import Utils from '@/lin/utils/util'
 
-export interface IRouterItem {
-  title: string
-  type: string
-  name: string | symbol | null
-  route: string | null
-  filePath: string
-  inNav: boolean
-  icon: string
-  order?: number | null
-  right?: string[] | null
-  children?: IRouterItem[]
-}
+import { IRouterItem } from '@/types/project'
 
 // router 入口在 AppMain 组件中
 let homeRouter: IRouterItem[] = [
@@ -25,7 +14,7 @@ let homeRouter: IRouterItem[] = [
     filePath: 'views/about/About',
     inNav: true,
     icon: 'home',
-    order: 0,
+    order: 1,
   },
   {
     title: '日志管理',
@@ -35,8 +24,17 @@ let homeRouter: IRouterItem[] = [
     filePath: 'views/log/Log',
     inNav: true,
     icon: 'solution',
-    order: 1,
-    right: ['查询所有日志'],
+    order: 2,
+    permission: ['查询所有日志'],
+  },
+  {
+    title: '个人中心',
+    type: 'view',
+    name: Symbol('center'),
+    route: '/center',
+    filePath: 'views/center/Center',
+    inNav: false,
+    icon: 'solution',
   },
   {
     title: '404',

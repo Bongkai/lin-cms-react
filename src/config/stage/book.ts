@@ -1,4 +1,4 @@
-import { IRouterItem } from './index'
+import { IRouterItem } from '@/types/project'
 
 const bookRouter: IRouterItem = {
   route: null,

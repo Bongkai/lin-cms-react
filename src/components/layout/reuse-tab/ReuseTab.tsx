@@ -2,17 +2,17 @@ import React, { useEffect, useCallback, useRef, MouseEvent } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useLocation, useHistory } from 'react-router-dom'
 import { Icon } from 'antd'
-import Swiper from 'components/base/swiper/Swiper'
-import Utils from 'lin/utils/util'
+import Swiper from '@/components/base/swiper/Swiper'
+import Utils from '@/lin/utils/util'
 import { changeReuseTab } from '@/store/actions/app.actions'
 import {
   getStageByName,
   getStageByRoute,
   getStageList,
 } from '@/store/getters/app.getters'
-import { IStoreState } from '@/store'
-import { IAppState, IHistoryItem } from '@/store/redux/app.redux'
-import { IRouterItem } from '@/config/stage'
+
+import { IStoreState, IAppState, IHistoryItem } from '@/types/store'
+import { IRouterItem } from '@/types/project'
 
 import './reuse-tab.scss'
 
@@ -162,15 +162,16 @@ export default function ReuseTab() {
 
   const visible = histories.length > 1
 
-  return visible ? (
-    <div className='reuse-tab-wrap'>
+  return (
+    <div className='reuse-tab-container' r-if={visible}>
       <Swiper parameters={swiperParameters}>
         {histories.map((item: IHistoryItem, index) => {
           const { stageId, icon, title } = item
-          const stageItem: IRouterItem = stageId ? stageList[stageId] : null
+          const stageItem: IRouterItem =
+            stageId && stageList[stageId] ? stageList[stageId] : {}
           const { route } = stageItem
-          return stageItem && route ? (
-            <div className='swiper-slide reuse-tab-item' key={route}>
+          return route ? (
+            <div className='swiper-slide reuse-tab-item' key={index}>
               {/* 这里用 NavLink 的话删除 Tab 的逻辑会出错 */}
               <div
                 className={`link ${pathname === route && 'active'}`}
@@ -186,10 +187,10 @@ export default function ReuseTab() {
               </div>
             </div>
           ) : (
-            <></> // 这样写用于解决 Swiper 组件的 ts 报错
+            <div key={index}></div> // 这样写用于解决 Swiper 组件的 ts 报错
           )
         })}
       </Swiper>
     </div>
-  ) : null
+  )
 }

@@ -1,5 +1,7 @@
-import stageConfig, { IRouterItem } from '@/config/stage' // 引入舞台配置
+import stageConfig from '@/config/stage' // 引入舞台配置
 import loadable, { LoadableComponent } from '@loadable/component'
+
+import { IRouterItem } from '@/types/project'
 
 export interface IHomeRouterItem {
   path: string | null
@@ -10,13 +12,13 @@ export interface IHomeRouterItem {
   key?: any
   exact?: any
   strict?: any
-  right?: any
+  permission?: any
 }
 
 export interface IHomeRouterItemMeta {
   title: string
   icon: string
-  right: string[] | null | undefined
+  permission: string[] | null | undefined
   type: string
 }
 
@@ -50,7 +52,7 @@ deepTravel<IRouterItem>(stageConfig, viewConfig => {
   viewRouter.meta = {
     title: viewConfig.title,
     icon: viewConfig.icon,
-    right: viewConfig.right,
+    permission: viewConfig.permission,
     type: viewConfig.type,
     // blueBaseColor: viewConfig.blueBaseColor ? 'viewConfig.blueBaseColor' : '',
   }

@@ -1,28 +1,29 @@
 import React, { useState, useRef } from 'react'
 import { Form, Modal, Tabs, Button } from 'antd'
+import GroupInfo from './GroupInfo'
+
 import { ModalProps } from 'antd/lib/modal'
 import { FormComponentProps } from '@/types/antd/Form'
-import UserInfo from '../user-info/UserInfo'
-import { IAdminUserItem } from '@/lin/models/admin'
+import { IGroupItem } from '@/types/model'
 
 interface IProps extends ModalProps, FormComponentProps {
-  data: IAdminUserItem
+  data?: IGroupItem
   refreshData: (...args: any) => void
 }
 
 const formWrapper = Form.create<IProps>({
-  name: 'user_edit',
+  name: 'group_edit',
 })
 
 function FormModal({ form, data, refreshData, ...restProps }: IProps) {
   const [activeTab, setActiveTab] = useState('修改信息')
   const [submitting, setSubmitting] = useState(false)
-  const userInfo = useRef<any>()
-  const userPassword = useRef<any>()
+  const groupInfo = useRef<any>()
+  const groupAuths = useRef<any>()
 
-  function onSubmit() {
+  async function onSubmit() {
     setSubmitting(true)
-    const node = activeTab === '修改信息' ? userInfo : userPassword
+    const node = activeTab === '修改信息' ? groupInfo : groupAuths
     node.current.onSubmit((success: boolean) => {
       setSubmitting(false)
       success && refreshData()
@@ -30,7 +31,7 @@ function FormModal({ form, data, refreshData, ...restProps }: IProps) {
   }
 
   function resetForm() {
-    const node = activeTab === '修改信息' ? userInfo : userPassword
+    const node = activeTab === '修改信息' ? groupInfo : groupAuths
     node.current.onReset()
   }
 
@@ -54,12 +55,12 @@ function FormModal({ form, data, refreshData, ...restProps }: IProps) {
     >
       <Tabs activeKey={activeTab} animated={false} onChange={onTabChange}>
         <Tabs.TabPane tab='修改信息' key='修改信息'>
-          <UserInfo pageType='info' ref={userInfo} form={form} data={data} />
+          <GroupInfo pageType='info' ref={groupInfo} form={form} data={data} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='修改密码' key='修改密码'>
-          <UserInfo
-            pageType='password'
-            ref={userPassword}
+        <Tabs.TabPane tab='配置权限' key='配置权限'>
+          <GroupInfo
+            pageType='permissions'
+            ref={groupAuths}
             form={form}
             data={data}
           />

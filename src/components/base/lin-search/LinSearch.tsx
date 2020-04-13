@@ -5,7 +5,7 @@ import React, {
   ChangeEvent,
 } from 'react'
 import { Input } from 'antd'
-import Utils from 'lin/utils/util'
+import Utils from '@/lin/utils/util'
 
 import './lin-search.scss'
 

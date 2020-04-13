@@ -18,3 +18,14 @@
     padding: 20px;
   }
 }
+
+// directives
+
+.not-display {
+  display: none;
+}
+
+.not-allowed {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

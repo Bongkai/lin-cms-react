@@ -1,12 +1,11 @@
 import * as types from './action-types'
-import { IUserType, IOriginalAuths, IHistoryItem } from '../redux/app.redux'
+import { IUserType, IOriginalPermissions, IHistoryItem } from '@/types/store'
 
 export type IAction =
   | UpdateRoute
   | ClearRoute
   | SetUserAndState
-  | SetUserAuths
-  // | SetRefreshOption
+  | SetUserPermissions
   | LoginOut
   | ChangeReuseTab
 
@@ -41,27 +40,18 @@ export function setUserAndState(user: IUserType): SetUserAndState {
   }
 }
 
-export interface SetUserAuths {
-  type: types.SET_USER_AUTHS
-  payload: IOriginalAuths[]
+export interface SetUserPermissions {
+  type: types.SET_USER_PERMISSIONS
+  payload: IOriginalPermissions[]
 }
-export function setUserAuths(auths: IOriginalAuths[]): SetUserAuths {
+export function setUserPermissions(
+  permissions: IOriginalPermissions[],
+): SetUserPermissions {
   return {
-    type: types.SET_USER_AUTHS,
-    payload: auths,
+    type: types.SET_USER_PERMISSIONS,
+    payload: permissions,
   }
 }
-
-// export interface SetRefreshOption {
-//   type: types.SET_REFRESH_OPTION,
-//   payload: any,
-// }
-// export function setRefreshOption(option): SetRefreshOption {
-//   return {
-//     type: types.SET_REFRESH_OPTION,
-//     payload: option,
-//   }
-// }
 
 export interface LoginOut {
   type: types.REMOVE_LOGINED

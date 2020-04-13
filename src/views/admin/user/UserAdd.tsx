@@ -1,14 +1,14 @@
 import React from 'react'
 import { Form } from 'antd'
-import LinHeader from 'components/base/lin-header/LinHeader'
-import UserInfo from '../user-info/UserInfo'
+import LinHeader from '@/components/base/lin-header/LinHeader'
+import UserInfo from './UserInfo'
 import { FormComponentProps } from '@/types/antd/Form'
 
-import './user-add.scss'
+import './style/user-add.scss'
 
-interface IProps extends FormComponentProps {}
+interface IProps extends FormComponentProps<any> {}
 
-const formWrapper = Form.create<IProps>({
+const formWrapper = Form.create<FormComponentProps<any>>({
   name: 'user_add',
 })
 

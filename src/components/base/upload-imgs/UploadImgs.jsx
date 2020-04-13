@@ -10,7 +10,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Icon, Spin, message } from 'antd'
-import axios from 'lin/plugins/axios'
+import axios from '@/lin/plugins/axios'
 import { PhotoSwipe } from 'react-photoswipe'
 import { getFileType, checkIsAnimated, isEmptyObj, createId } from './utils'
 
@@ -443,10 +443,8 @@ export default class UploadImgs extends React.Component {
           item.cb(false)
         })
         let msg = '图像上传失败, 请重试'
-        if (err.msg) {
+        if (err.message) {
           // eslint-disable-next-line
-          msg = err.msg
-        } else if (err.message) {
           msg = err.message
         }
         console.error(err)
@@ -627,6 +625,7 @@ export default class UploadImgs extends React.Component {
     }
 
     const imgInfoList = await Promise.all(asyncList)
+    console.log('imgInfoList', imgInfoList)
 
     // 检查是否有上传失败的图像
     // 如果有失败的上传, 则返回错误

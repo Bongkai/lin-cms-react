@@ -9,7 +9,7 @@
   <a href="#简介">简介</a>&nbsp;|&nbsp;<a href="#快速上手">快速上手</a>&nbsp;|&nbsp;<a href="#版本日志">版本日志</a>
 </p>
 
-![](https://img.shields.io/badge/版本-0.0.1--alpha.2-3963bc.svg)
+![](https://img.shields.io/badge/版本-0.1.0--beta.1-3963bc.svg)
 ![](https://img.shields.io/badge/node-8.11.0+-3963bc.svg)
 ![](https://img.shields.io/badge/脚手架-create--react--app-3963bc.svg)
 ![](https://img.shields.io/badge/license-MIT-3963bc.svg)
@@ -30,9 +30,13 @@ Lin-CMS 可以有效的帮助开发者提高 CMS 的开发效率。
 
 Lin-CMS 是一套前后端完整的解决方案，后端部署请移步：
 
-[lin-cms-flask](https://github.com/TaleLin/lin-cms-flask)
+[lin-cms-spring-boot](https://github.com/TaleLin/lin-cms-spring-boot)
 
 [lin-cms-koa](https://github.com/TaleLin/lin-cms-koa)
+
+### 注意
+
+**Lin-CMS 是工程类开源项目，不能保证无缝升级**
 
 ### 官方文档地址
 
@@ -102,13 +106,23 @@ QQ群搜索：林间有风 或 643205479
 
 ## 版本日志
 
-最新版本 `0.0.1-alpha.2`
+最新版本 `0.1.0-beta.1`
+
+### 0.1.0-beta.1
+
+1.  `A` 新增一个用户可以属于多个分组
+2.  `F` 权限相关 auth right 统一替换为 permission
+3.  `A` 依赖 babel-plugin-react-directives 添加类 Vue 指令优化部分 tsx 代码
+
+*  核心功能对应 Vue 版 0.3.0
 
 ### 0.0.1-alpha.2
 
 1.  `U` 使用 React Hooks 进行项目重构
 2.  `A` 使用 TypeScript 优化大部分项目代码
 3.  `A` 添加 ESLint 和 Prettier 提升项目代码规范
+
+*  核心功能对应 Vue 版 0.2.x
 
 ### 0.0.1-alpha.1
 

@@ -83,6 +83,12 @@
     }
   }
 
+  @media screen and (max-width: 1000px) {
+    .date {
+      display: none;
+    }
+  }
+
   .content {
     min-height: 400px;
     padding: 40px 60px;
@@ -188,6 +194,11 @@
     }
   }
 
+  .nothing {
+    color: #45526b;
+    font-size: 14px;
+  }
+
   .strong {
     color: #464dd5;
   }
@@ -200,11 +211,5 @@
 
   to {
     transform: rotate(360deg);
-  }
-}
-
-@media screen and (max-width: 1000px) {
-  .date {
-    display: none;
   }
 }

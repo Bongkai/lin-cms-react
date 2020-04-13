@@ -1,8 +1,10 @@
 import React, { useImperativeHandle, forwardRef } from 'react'
 import { Form, Input, message } from 'antd'
-import User from 'lin/models/user'
+import User from '@/lin/models/user'
+import { MAX_SUCCESS_CODE } from '@/config/global'
+
+import { IResponseWithoutData } from '@/types/model'
 import { WrappedFormUtils } from '@/types/antd/Form'
-import { IResponseWithoutData } from '@/lin/models/admin'
 
 interface IProps {
   form: WrappedFormUtils
@@ -11,8 +13,8 @@ interface IProps {
 const { Item } = Form
 
 const layout = {
-  labelCol: { xs: { span: 24 }, sm: { span: 4 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 18 } },
+  labelCol: { xs: { span: 24 }, sm: { span: 3 } },
+  wrapperCol: { xs: { span: 24 }, sm: { span: 21 } },
 }
 
 function PwdForm({ form }: IProps, ref: any) {
@@ -55,11 +57,11 @@ function PwdForm({ form }: IProps, ref: any) {
       return false
     }
 
-    const success = res.error_code === 0
+    const success = res.code < MAX_SUCCESS_CODE
     if (success) {
-      message.success(`${res.msg}`)
+      message.success(`${res.message}`)
     } else {
-      message.error(`${res.msg}`)
+      message.error(`${res.message}`)
     }
     return success
   }

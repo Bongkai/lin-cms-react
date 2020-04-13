@@ -1,54 +1,13 @@
-import { removeToken } from 'lin/utils/token'
+import { removeToken } from '@/lin/utils/token'
 import { getStageInfo } from '../getters/app.getters'
 import * as types from '../actions/action-types'
 import AppConfig from '@/config/index' // 引入项目配置
-import stageConfig, { IRouterItem } from '@/config/stage' // 引入舞台配置
+import stageConfig from '@/config/stage' // 引入舞台配置
+import Config from '@/config/index'
 import { IAction } from '../actions/app.actions'
 
-export interface IUserType {
-  auths: IOriginalAuths[]
-  avatar: string | null
-  email: string | null
-  groupId: number | null
-  groupName: string | null | undefined
-  isActive: boolean
-  isSuper: boolean
-  nickname: string | null
-  username: string
-}
-
-export interface IOriginalAuths {
-  [propName: string]: IOriginalAuthItem[]
-}
-
-export interface IOriginalAuthItem {
-  auth: string
-  module: string
-}
-
-export interface IHistoryItem {
-  icon: string
-  routePath: string | null
-  stageId: symbol | string | null
-  title: string
-}
-
-export interface IAppState {
-  logined: boolean
-  user: IUserType
-  sideBarLevel: number
-  defaultRoute: string
-  // readedMessages: any[],
-  // unreadMessages: any[],
-  auths: string[]
-  stageConfig: IRouterItem[]
-  // refreshOptions: object,
-  currentRoute: {
-    config: IRouterItem
-    treePath: IRouterItem[]
-  }
-  histories: IHistoryItem[]
-}
+import { IAppState, IUserType, IOriginalPermissions } from '@/types/store'
+import { IRouterItem } from '@/types/project'
 
 // 初始 state
 const initState: IAppState = {
@@ -60,7 +19,7 @@ const initState: IAppState = {
   // 推送消息
   // readedMessages: [],
   // unreadMessages: [],
-  auths: [], // 每个用户的所有权限
+  permissions: [], // 每个用户的所有权限
 
   // 舞台配置
   stageConfig,
@@ -100,11 +59,14 @@ export function app(state: IAppState = initState, action: IAction): IAppState {
       return {
         ...state,
         logined: true,
-        user: action.payload,
+        user: {
+          ...action.payload,
+          avatar: handleAvatar(action.payload.avatar),
+        },
       }
-    case types.SET_USER_AUTHS:
-      const auths = handleAuths(action.payload)
-      return { ...state, auths }
+    case types.SET_USER_PERMISSIONS:
+      const permissions = handlePermissions(action.payload)
+      return { ...state, permissions }
     // case types.SET_REFRESH_OPTION:
     //   return { ...state, refreshOptions: action.payload }
     case types.REMOVE_LOGINED:
@@ -117,14 +79,20 @@ export function app(state: IAppState = initState, action: IAction): IAppState {
   }
 }
 
-function handleAuths(_auths: IOriginalAuths[]): string[] {
-  const auths: string[] = []
-  for (let i = 0; i < _auths.length; i++) {
-    for (const key in _auths[i]) {
-      for (let j = 0; j < _auths[i][key].length; j++) {
-        auths.push(_auths[i][key][j].auth)
+function handlePermissions(permissions: IOriginalPermissions[]): string[] {
+  const _permissions: string[] = []
+  for (let i = 0; i < permissions.length; i++) {
+    for (const key in permissions[i]) {
+      for (let j = 0; j < permissions[i][key].length; j++) {
+        _permissions.push(permissions[i][key][j].permission)
       }
     }
   }
-  return auths
+  return _permissions
+}
+
+function handleAvatar(avatar: string | null): string {
+  return avatar?.startsWith('http')
+    ? avatar
+    : `${Config.baseURL}/assets/${avatar}`
 }

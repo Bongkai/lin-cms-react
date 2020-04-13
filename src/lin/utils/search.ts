@@ -1,4 +1,4 @@
-import { ILogItem } from 'lin/models/log'
+import { ILogItem } from '@/types/model'
 
 /**
  *

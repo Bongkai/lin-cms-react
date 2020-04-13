@@ -18,7 +18,7 @@ export default function LinHeader({
   return (
     <div
       style={style}
-      className={`lin-header${divider ? ' header-with-divider' : ''}`}
+      className={`lin-header ${divider ? 'header-with-divider' : ''}`}
     >
       <div>{title}</div>
       {children && <div>{children}</div>}

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { HashRouter, Switch, Route } from 'react-router-dom'
-import Home from 'views/home/Home'
-import Login from 'views/login/Login'
+import Home from '@/views/home/Home'
+import Login from '@/views/login/Login'
 
 import './app.scss'
 
