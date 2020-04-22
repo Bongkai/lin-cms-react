@@ -9,7 +9,7 @@
   <a href="#简介">简介</a>&nbsp;|&nbsp;<a href="#快速上手">快速上手</a>&nbsp;|&nbsp;<a href="#版本日志">版本日志</a>
 </p>
 
-![](https://img.shields.io/badge/版本-0.1.0--beta.1-3963bc.svg)
+![](https://img.shields.io/badge/版本-0.1.0--beta.2-3963bc.svg)
 ![](https://img.shields.io/badge/node-8.11.0+-3963bc.svg)
 ![](https://img.shields.io/badge/脚手架-create--react--app-3963bc.svg)
 ![](https://img.shields.io/badge/license-MIT-3963bc.svg)
@@ -106,13 +106,18 @@ QQ群搜索：林间有风 或 643205479
 
 ## 版本日志
 
-最新版本 `0.1.0-beta.1`
+最新版本 `0.1.0-beta.2`
+
+### 0.1.0-beta.2
+
+1.  `A` 新增消息中心组件
+2.  `A` 新增 useWebSocket 核心代码库
 
 ### 0.1.0-beta.1
 
 1.  `A` 新增一个用户可以属于多个分组
 2.  `F` 权限相关 auth right 统一替换为 permission
-3.  `A` 依赖 babel-plugin-react-directives 添加类 Vue 指令优化部分 tsx 代码
+3.  `A` 使用 babel-plugin-react-directives 添加 r-if 指令优化 tsx 代码
 
 *  核心功能对应 Vue 版 0.3.0
 
