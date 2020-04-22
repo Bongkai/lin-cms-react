@@ -17,14 +17,14 @@ const initState: IAppState = {
   defaultRoute: AppConfig.defaultRoute || '/',
 
   // 推送消息
-  // readedMessages: [],
-  // unreadMessages: [],
+  readedMessages: [],
+  unreadMessages: [],
+
+  // 用户权限
   permissions: [], // 每个用户的所有权限
 
   // 舞台配置
   stageConfig,
-
-  // refreshOptions: {},
 
   // 当前页信息
   currentRoute: {
@@ -67,13 +67,23 @@ export function app(state: IAppState = initState, action: IAction): IAppState {
     case types.SET_USER_PERMISSIONS:
       const permissions = handlePermissions(action.payload)
       return { ...state, permissions }
-    // case types.SET_REFRESH_OPTION:
-    //   return { ...state, refreshOptions: action.payload }
     case types.REMOVE_LOGINED:
       removeToken()
       return { ...state, logined: false }
     case types.CHANGE_REUSE_TAB:
       return { ...state, histories: action.payload }
+    case types.ADD_READED_MESSAGE:
+      state.readedMessages.push(action.payload)
+      return { ...state }
+    case types.ADD_UNREAD_MESSAGE:
+      state.unreadMessages.push(action.payload)
+      return { ...state }
+    case types.REMOVE_UNREAD_MESSAGE:
+      const index = state.unreadMessages.findIndex(
+        item => item.id === action.payload,
+      )
+      state.unreadMessages.splice(index, 1)
+      return { ...state }
     default:
       return state
   }

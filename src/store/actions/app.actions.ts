@@ -1,5 +1,10 @@
 import * as types from './action-types'
-import { IUserType, IOriginalPermissions, IHistoryItem } from '@/types/store'
+import {
+  IUserType,
+  IOriginalPermissions,
+  IHistoryItem,
+  IMessage,
+} from '@/types/store'
 
 export type IAction =
   | UpdateRoute
@@ -8,6 +13,9 @@ export type IAction =
   | SetUserPermissions
   | LoginOut
   | ChangeReuseTab
+  | AddReadedMessage
+  | AddUnreadMessage
+  | RemoveUnreadMessage
 
 export interface UpdateRoute {
   type: types.UPDATE_ROUTE
@@ -70,5 +78,38 @@ export function changeReuseTab(histories: IHistoryItem[]): ChangeReuseTab {
   return {
     type: types.CHANGE_REUSE_TAB,
     payload: histories,
+  }
+}
+
+export interface AddReadedMessage {
+  type: types.ADD_READED_MESSAGE
+  payload: IMessage
+}
+export function addReadedMessage(message: IMessage): AddReadedMessage {
+  return {
+    type: types.ADD_READED_MESSAGE,
+    payload: message,
+  }
+}
+
+export interface AddUnreadMessage {
+  type: types.ADD_UNREAD_MESSAGE
+  payload: IMessage
+}
+export function addUnreadMessage(message: IMessage): AddUnreadMessage {
+  return {
+    type: types.ADD_UNREAD_MESSAGE,
+    payload: message,
+  }
+}
+
+export interface RemoveUnreadMessage {
+  type: types.REMOVE_UNREAD_MESSAGE
+  payload: number
+}
+export function removeUnreadMessage(messageId: number): RemoveUnreadMessage {
+  return {
+    type: types.REMOVE_UNREAD_MESSAGE,
+    payload: messageId,
   }
 }

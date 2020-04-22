@@ -25,11 +25,10 @@ export interface IAppState {
   user: IUserType
   sideBarLevel: number
   defaultRoute: string
-  // readedMessages: any[],
-  // unreadMessages: any[],
+  readedMessages: IMessage[]
+  unreadMessages: IMessage[]
   permissions: string[]
   stageConfig: IRouterItem[]
-  // refreshOptions: object,
   currentRoute: {
     config: IRouterItem
     treePath: IRouterItem[]
@@ -61,4 +60,12 @@ export interface IHistoryItem {
   routePath: string | null
   stageId: symbol | string | null
   title: string
+}
+
+export interface IMessage {
+  is_read: boolean
+  id: number
+  time: string
+  user: string
+  content: string
 }
