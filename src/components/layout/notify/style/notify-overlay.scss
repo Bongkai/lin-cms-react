@@ -1,0 +1,143 @@
+@import 'assets/styles/realize/lin-variables.scss';
+
+.notify-overlay-container {
+  width: 420px;
+  background: #ffffff;
+  border-radius: 4px;
+  transform: translateY(5px);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+  padding: 10px 0 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  .notify-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #45526b;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-bottom: 8px;
+    height: 50px;
+    font-weight: 500;
+    min-width: 386px;
+    border-bottom: 1px solid #dee2e6;
+
+    .button {
+      font-size: 12px;
+      border: 1px solid #596c8e;
+      border-radius: 2px;
+      cursor: pointer;
+      height: 20px;
+      line-height: 20px;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
+
+  .content {
+    height: 370px;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: #ddd;
+    };
+    &::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: $theme;
+      }
+    }
+  }
+
+  .css-nomessage {
+    box-sizing: border-box;
+    min-width: 0px;
+    // min-height: 200px;
+    height: 370px;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    display: flex;
+    margin: 0px;
+    // flex: 1 1 0%;
+    flex: 1;
+  }
+  .css-sumlaa {
+    box-sizing: border-box;
+    min-width: 0px;
+    text-align: center;
+    color: rgb(133, 144, 166);
+    margin: 0px;
+  }
+  .nomessages {
+    padding: 20px 0px;
+    text-align: center;
+  }
+  .message-item {
+    line-height: 36px;
+    padding: 3px 35px;
+    cursor: pointer;
+    color: #596C8E;
+
+    &:hover {
+      background: #eeeeee;
+    }
+
+    &:active {
+      background: #eeeeee;
+    }
+
+    .sketch-information {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+    .unread-messages {
+      position: relative;
+      &:before {
+        content: '';
+        position: absolute;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        top: 50%;
+        left: -15px;
+        transform: translateY(-50%);
+        background: #f4516c;
+      }
+    }
+    .read-messages {
+      position: relative;
+    
+      &:before {
+        content: '';
+        position: absolute;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        top: 50%;
+        left: -15px;
+        transform: translateY(-50%);
+        background: #ebedf2;
+      }
+    }
+  }
+  
+  .notify-footer {
+    padding: 19px 0px;
+    border-top: solid 1px #dee2e6;
+    .view-all {
+      cursor: pointer;
+      font-size: 14px;
+      text-align: center;
+      color: #45526b;
+    }
+  }
+}

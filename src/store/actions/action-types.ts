@@ -1,4 +1,4 @@
-// app.actions
+// -----app.actions-----
 
 export const UPDATE_ROUTE = 'UPDATE_ROUTE'
 export type UPDATE_ROUTE = typeof UPDATE_ROUTE
@@ -17,3 +17,12 @@ export type REMOVE_LOGINED = typeof REMOVE_LOGINED
 
 export const CHANGE_REUSE_TAB = 'CHANGE_REUSE_TAB'
 export type CHANGE_REUSE_TAB = typeof CHANGE_REUSE_TAB
+
+export const ADD_READED_MESSAGE = 'ADD_READED_MESSAGE'
+export type ADD_READED_MESSAGE = typeof ADD_READED_MESSAGE
+
+export const ADD_UNREAD_MESSAGE = 'ADD_UNREAD_MESSAGE'
+export type ADD_UNREAD_MESSAGE = typeof ADD_UNREAD_MESSAGE
+
+export const REMOVE_UNREAD_MESSAGE = 'REMOVE_UNREAD_MESSAGE'
+export type REMOVE_UNREAD_MESSAGE = typeof REMOVE_UNREAD_MESSAGE
