@@ -1,12 +1,12 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  MouseEvent,
-} from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { Dropdown, Menu, Button, Icon, DatePicker, Divider } from 'antd'
+import { Form, Dropdown, Menu, Button, DatePicker, Divider } from 'antd'
+import {
+  UserOutlined,
+  DownOutlined,
+  Loading3QuartersOutlined,
+  DownCircleOutlined,
+} from '@ant-design/icons'
 import { Moment } from 'moment'
 import timeFormatter from '@/lin/utils/time-formatter'
 import { searchLogKeyword } from '@/lin/utils/search'
@@ -18,6 +18,7 @@ import LogModel from '@/lin/models/log'
 import useDeepCompareEffect from '@/hooks/base/useDeepCompareEffect'
 import useFirstMountState from '@/hooks/base/useFirstMountState'
 import { checkPermission } from '@/lin/directives/authorize'
+// import Utils from '@/lin/utils/util'
 
 import { IStoreState, IUserType } from '@/types/store'
 import { ILogUsers, ILogItem, ILogsInfo } from '@/types/model'
@@ -39,15 +40,12 @@ export default function Log() {
   const [searchUser, setSearchUser] = useState('全部人员')
   const [searchKeyword, setSearchKeyword] = useState('')
   const [searchDate, setSearchDate] = useState<[string, string] | []>([])
-  const user = useSelector<IStoreState, IUserType>(state => state.app.user)
+  const [form] = Form.useForm()
+  const { admin } = useSelector<IStoreState, IUserType>(state => state.app.user)
   const permissions = useSelector<IStoreState, string[]>(
     state => state.app.permissions,
   )
-  const linSearch = useRef<any>()
-  const datePicker = useRef<any>()
   const isFirstMount = useFirstMountState()
-
-  const { admin } = user
 
   // 获取条件检索数据
   const getSearchData = useCallback(async () => {
@@ -124,6 +122,7 @@ export default function Log() {
     loading && !isSearch && initPage()
     loading && isSearch && getSearchData()
     moreLoading && getNextPage()
+
     // eslint-disable-next-line
   }, [loading, isSearch, moreLoading, getSearchData, logs, admin, permissions])
 
@@ -165,11 +164,10 @@ export default function Log() {
   }
 
   // 清空检索
-  function backInit(ev: MouseEvent) {
-    // 主动清除 LinSearch 和 DatePicker 组件中的 value 值
-    linSearch.current.setSearchData('')
-    datePicker.current.picker.clearSelection(ev)
-    // 清除搜索相关的 state 值
+  function backInit() {
+    form.resetFields()
+
+    // 重置搜索相关的 state 值
     setIsSearch(false)
     setLogs([])
     setKeyword('')
@@ -201,8 +199,6 @@ export default function Log() {
     setSearchDate(range)
   }
 
-  const { items = [] } = users
-
   const menu = (
     <Menu>
       <Menu.Item
@@ -211,13 +207,13 @@ export default function Log() {
       >
         全部人员
       </Menu.Item>
-      {items.map(item => (
+      {(users.items || []).map(item => (
         <Menu.Item
           key={item}
           style={{ paddingLeft: '17px' }}
           onClick={() => onDropdownChange(item)}
         >
-          <Icon type='user' style={{ marginRight: '6px' }} />
+          <UserOutlined style={{ marginRight: '6px' }} />
           {item}
         </Menu.Item>
       ))}
@@ -239,27 +235,38 @@ export default function Log() {
             className='header-right'
             r-if={checkPermission({ permission: '搜索日志' })}
           >
-            <LinSearch ref={linSearch} onChange={onSearchChange} />
-            <Dropdown
-              className='dropdown'
-              placement='bottomCenter'
-              overlay={menu}
-              disabled={!checkPermission({ permission: '查询日志记录的用户' })}
-            >
-              <Button className='custom-antd'>
-                {searchUser}
-                <Icon type='down' style={{ marginLeft: '10px' }} />
-              </Button>
-            </Dropdown>
-            <DatePicker.RangePicker
-              className='date-picker date'
-              ref={datePicker}
-              dropdownClassName='picker'
-              separator='至'
-              format='YYYY-MM-DD'
-              renderExtraFooter={undefined}
-              onChange={onPickerChange}
-            />
+            <Form form={form} component={false}>
+              <Form.Item name='search' noStyle>
+                <LinSearch onValueChange={onSearchChange} />
+              </Form.Item>
+
+              <Form.Item name='user' noStyle>
+                <Dropdown
+                  className='dropdown'
+                  placement='bottomCenter'
+                  overlay={menu}
+                  disabled={
+                    !checkPermission({ permission: '查询日志记录的用户' })
+                  }
+                >
+                  <Button>
+                    {searchUser}
+                    <DownOutlined style={{ marginLeft: '10px' }} />
+                  </Button>
+                </Dropdown>
+              </Form.Item>
+
+              <Form.Item name='date' noStyle>
+                <DatePicker.RangePicker
+                  className='date-picker'
+                  dropdownClassName='picker'
+                  separator='至'
+                  format='YYYY-MM-DD'
+                  renderExtraFooter={undefined}
+                  onChange={onPickerChange}
+                />
+              </Form.Item>
+            </Form>
           </div>
         </LinHeader>
       </StickyTop>
@@ -300,8 +307,7 @@ export default function Log() {
         <div r-if={!loading}>
           <Divider style={{ height: '2px' }} r-if={logsLength} />
           <div className='more' r-if={logsLength}>
-            <Icon
-              type='loading-3-quarters'
+            <Loading3QuartersOutlined
               className='more-loading-icon'
               r-if={moreLoading}
             />
@@ -310,7 +316,7 @@ export default function Log() {
               r-if={!loading && !moreLoading && !finished}
             >
               <span>查看更多</span>
-              <Icon type='down-circle' className='down-circle-icon' />
+              <DownCircleOutlined className='down-circle-icon' />
             </div>
             <div r-if={finished}>
               <span>{totalCount === 0 ? '暂无数据' : '没有更多数据了'}</span>

@@ -3,8 +3,6 @@
 .log-container {
   .header-right {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
 
     .dropdown {
       height: 36px;
@@ -12,35 +10,15 @@
       margin: 0 10px;
     }
 
-    .date-picker.ant-calendar-picker {
-      .ant-calendar-picker-input.ant-input {
-        width: 350px;
+    .ant-picker.ant-picker-range.date-picker {
+      width: 350px;
 
-        &:hover {
-          border: 1px solid rgba(57, 99, 188, .4);
-        }
-
-        &:focus {
-          border: 1px solid $theme;
-          box-shadow: none;
-        }
-
-        .ant-calendar-range-picker-input {
-          &::-webkit-input-placeholder {
-            color: $theme;
-            opacity: 0.4;
-          }
-        }
-        
-        .ant-calendar-range-picker-separator {
-          line-height: 26px;
-          color: #303133;
-        }
+      &.ant-picker-focused {
+        box-shadow: none;
       }
 
-      .anticon.anticon-calendar.ant-calendar-picker-icon {
-        color: $theme;
-        opacity: 0.4;
+      .ant-picker-input input {
+        text-align: center;
       }
     }
   }
@@ -84,7 +62,7 @@
   }
 
   @media screen and (max-width: 1000px) {
-    .date {
+    .date-picker {
       display: none;
     }
   }

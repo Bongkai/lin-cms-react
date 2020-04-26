@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, message } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import LinHeader from '@/components/base/lin-header/LinHeader'
 import LinTable, {
   ILinTableOperation,
@@ -57,7 +58,7 @@ export default function GroupList() {
   function handleDelete(text: IGroupItem, record: IGroupItem, index: number) {
     Modal.confirm({
       title: '提示',
-      icon: 'exclamation-circle',
+      icon: <ExclamationCircleOutlined />,
       content: '此操作将永久删除该分组, 是否继续?',
       okText: '确定',
       centered: true,

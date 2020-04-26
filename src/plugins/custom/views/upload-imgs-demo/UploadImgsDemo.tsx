@@ -4,12 +4,7 @@ import UploadImgs from '@/components/base/upload-imgs/UploadImgs'
 
 import './upload-imgs-demo.scss'
 
-const { Item } = Form
-
-const formItemLayout = {
-  labelCol: { xs: { span: 24 }, sm: { span: 5 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 19 } },
-}
+const formItemLayout = { labelCol: { span: 5 }, wrapperCol: { span: 19 } }
 
 /** 生成随机字符串 */
 function createId() {
@@ -18,10 +13,7 @@ function createId() {
     .substring(2)
 }
 
-const formWrapper = Form.create({
-  name: 'upload_imgs_demo',
-})
-class UploadImgsDemo extends React.Component {
+export default class UploadImgsDemo extends React.Component {
   readonly state = {
     remoteFuncName: 'remoteFuncAsync',
     fit: 'cover',
@@ -39,23 +31,25 @@ class UploadImgsDemo extends React.Component {
       {
         id: '123',
         display:
-          'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+          'http://hearthstone.nos.netease.com/1/hscards/MAGE__EX1_559_zhCN_.png',
         src:
-          'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+          'http://hearthstone.nos.netease.com/1/hscards/MAGE__EX1_559_zhCN_.png',
         imgId: '12381900',
       },
       {
         id: '12d3',
         display:
-          'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-        src: '/images/index/Lin_cms_%E5%B0%81%E9%9D%A2.png',
+          'http://hearthstone.nos.netease.com/1/hscards/PALADIN__EX1_383_zhCN_.png',
+        src:
+          'http://hearthstone.nos.netease.com/1/hscards/PALADIN__EX1_383_zhCN_.png',
         imgId: '238287',
       },
       {
         id: 'hahah',
         display:
-          'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-        src: '/images/index/Lin_UI_%E5%B0%81%E9%9D%A2.png',
+          'http://hearthstone.nos.netease.com/1/hscards/NEUTRAL__NEW1_030_zhCN_.png',
+        src:
+          'http://hearthstone.nos.netease.com/1/hscards/NEUTRAL__NEW1_030_zhCN_.png',
         imgId: '1232323',
       },
     ],
@@ -63,23 +57,26 @@ class UploadImgsDemo extends React.Component {
       {
         id: '123',
         display:
-          'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-        src: '/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg',
-        imgId: '123dk98',
+          'http://hearthstone.nos.netease.com/1/hscards/MAGE__EX1_559_zhCN_.png',
+        src:
+          'http://hearthstone.nos.netease.com/1/hscards/MAGE__EX1_559_zhCN_.png',
+        imgId: '12381900',
       },
       {
         id: '12d3',
         display:
-          'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-        src: '/images/index/Lin_cms_%E5%B0%81%E9%9D%A2.png',
-        imgId: 'sd9873429',
+          'http://hearthstone.nos.netease.com/1/hscards/PALADIN__EX1_383_zhCN_.png',
+        src:
+          'http://hearthstone.nos.netease.com/1/hscards/PALADIN__EX1_383_zhCN_.png',
+        imgId: '238287',
       },
       {
         id: 'hahah',
         display:
-          'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-        src: '/images/index/Lin_UI_%E5%B0%81%E9%9D%A2.png',
-        imgId: 'ccsd2123',
+          'http://hearthstone.nos.netease.com/1/hscards/NEUTRAL__NEW1_030_zhCN_.png',
+        src:
+          'http://hearthstone.nos.netease.com/1/hscards/NEUTRAL__NEW1_030_zhCN_.png',
+        imgId: '1232323',
       },
     ],
   }
@@ -104,7 +101,7 @@ class UploadImgsDemo extends React.Component {
     return Promise.resolve(false)
   }
 
-  remoteFunc(file, cb) {
+  remoteFunc(file: File, cb: Function) {
     setTimeout(() => {
       cb(false)
     }, 3000)
@@ -118,7 +115,7 @@ class UploadImgsDemo extends React.Component {
     })
   }
 
-  remoteFuncSuccess(file, cb) {
+  remoteFuncSuccess(file: File, cb: Function) {
     setTimeout(() => {
       cb({
         id: createId,
@@ -154,10 +151,10 @@ class UploadImgsDemo extends React.Component {
         <div className='lin-wrap'>
           <Form
             className='upload-imgs-demo-form'
-            {...formItemLayout}
             colon={false}
+            {...formItemLayout}
           >
-            <Item label='普通示例'>
+            <Form.Item label='普通示例'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) => (this['uploadEle3'] = ref)}
                 rules={rules}
@@ -168,8 +165,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='禁用'>
+            </Form.Item>
+            <Form.Item label='禁用'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) => (this['uploadEle4'] = ref)}
                 multiple
@@ -180,8 +177,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='动图检测示例'>
+            </Form.Item>
+            <Form.Item label='动图检测示例'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) =>
                   (this['uploadEle32'] = ref)
@@ -195,8 +192,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='禁用+初始化'>
+            </Form.Item>
+            <Form.Item label='禁用+初始化'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) => (this['uploadEle5'] = ref)}
                 value={initData}
@@ -210,8 +207,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='带初始化, 限制4至7张'>
+            </Form.Item>
+            <Form.Item label='带初始化, 限制4至7张'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) => (this['uploadEle1'] = ref)}
                 value={initData}
@@ -225,8 +222,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='初始化, 可多选, 不立即上传'>
+            </Form.Item>
+            <Form.Item label='初始化, 可多选, 不立即上传'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) => (this['uploadEle2'] = ref)}
                 value={initData}
@@ -239,8 +236,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='禁用+初始化+不预览'>
+            </Form.Item>
+            <Form.Item label='禁用+初始化+不预览'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) => (this['uploadEle7'] = ref)}
                 value={initData}
@@ -254,8 +251,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='排序+固定数量'>
+            </Form.Item>
+            <Form.Item label='排序+固定数量'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) => (this['uploadEle8'] = ref)}
                 rules={rules}
@@ -269,11 +266,11 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='仅最大数量'>
+            </Form.Item>
+            <Form.Item label='仅最大数量'>
               <UploadImgs rules={rules} multiple maxNum={3} />
-            </Item>
-            <Item label='定制宽高+排序'>
+            </Form.Item>
+            <Form.Item label='定制宽高+排序'>
               <UploadImgs
                 value={initData}
                 rules={rules}
@@ -281,8 +278,8 @@ class UploadImgsDemo extends React.Component {
                 width={200}
                 height={150}
               />
-            </Item>
-            <Item label='重新初始化'>
+            </Form.Item>
+            <Form.Item label='重新初始化'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) => (this['uploadEle9'] = ref)}
                 value={initData1}
@@ -311,8 +308,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='远程方法'>
+            </Form.Item>
+            <Form.Item label='远程方法'>
               <Radio.Group
                 value={remoteFuncName}
                 onChange={ev =>
@@ -337,8 +334,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='图像缩略图展示模式'>
+            </Form.Item>
+            <Form.Item label='图像缩略图展示模式'>
               <Radio.Group
                 value={fit}
                 onChange={ev => this.changeState('fit', ev.target.value)}
@@ -365,8 +362,8 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
-            <Item label='自定义校验函数'>
+            </Form.Item>
+            <Form.Item label='自定义校验函数'>
               <UploadImgs
                 ref={(ref: RefObject<UploadImgs>) =>
                   (this['uploadEle33'] = ref)
@@ -380,12 +377,10 @@ class UploadImgsDemo extends React.Component {
                   获取当前图像数据
                 </Button>
               </div>
-            </Item>
+            </Form.Item>
           </Form>
         </div>
       </div>
     )
   }
 }
-
-export default formWrapper(UploadImgsDemo)

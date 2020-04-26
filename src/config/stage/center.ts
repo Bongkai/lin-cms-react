@@ -5,7 +5,7 @@ const centerRouter: IRouterItem = {
   name: null,
   title: '个人',
   type: 'view', // 类型: folder, tab, view
-  icon: 'home',
+  icon: 'HomeOutlined',
   filePath: 'views/center/', // 文件路径
   order: null,
   inNav: true,

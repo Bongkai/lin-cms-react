@@ -1,7 +1,8 @@
 import React, { useEffect, useCallback, useRef, MouseEvent } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useLocation, useHistory } from 'react-router-dom'
-import { Icon } from 'antd'
+import { CloseOutlined } from '@ant-design/icons'
+import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
 import Swiper from '@/components/base/swiper/Swiper'
 import Utils from '@/lin/utils/util'
 import { changeReuseTab } from '@/store/actions/app.actions'
@@ -177,12 +178,12 @@ export default function ReuseTab() {
                 className={`link ${pathname === route && 'active'}`}
                 onClick={() => onLinkClick(route)}
               >
-                <Icon type={icon} style={{ fontSize: '16px' }} />
+                <DynamicIcon type={icon} style={{ fontSize: '16px' }} />
                 <span style={{ padding: '0 5px' }}>
                   {Utils.cutString(title, 8)}
                 </span>
                 <span className='icon-close' onClick={ev => close(ev, index)}>
-                  <Icon className='icon-close-icon' type='close' />
+                  <CloseOutlined className='icon-close-icon' />
                 </span>
               </div>
             </div>

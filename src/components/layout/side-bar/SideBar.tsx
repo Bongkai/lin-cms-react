@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory, NavLink } from 'react-router-dom'
-import { Menu, Select, Icon } from 'antd'
+import { Menu, Select } from 'antd'
+import { SearchOutlined } from '@ant-design/icons'
+import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
 import Utils from '@/lin/utils/util'
 import { getSideBarList, deepTravel } from '@/store/getters/app.getters'
 
@@ -145,7 +147,7 @@ export default function SideBar({ collapsed }) {
   const menuRecursion = (list: ISideBarListItem[]) => {
     return list.map((item, index) => {
       const { name, path } = item
-      const key = idMap[name || index]
+      const key = name ? idMap[name] : index
       // 判断 key 值存在后再渲染，避免出现 unique key 报错
       return key && path ? (
         item.children ? (
@@ -154,7 +156,7 @@ export default function SideBar({ collapsed }) {
             key={key}
             title={
               <>
-                <Icon type={item.icon} style={{ fontSize: '16px' }} />
+                <DynamicIcon type={item.icon} style={{ fontSize: '16px' }} />
                 <span>{Utils.cutString(item.title, 12)}</span>
               </>
             }
@@ -164,7 +166,7 @@ export default function SideBar({ collapsed }) {
         ) : (
           <Item key={key}>
             <NavLink to={path}>
-              <Icon type={item.icon} style={{ fontSize: '16px' }} />
+              <DynamicIcon type={item.icon} style={{ fontSize: '16px' }} />
               <span title={item.title}>{Utils.cutString(item.title, 12)}</span>
             </NavLink>
           </Item>
@@ -206,7 +208,7 @@ export default function SideBar({ collapsed }) {
           ))}
         </Select>
         <div className='search-display' onClick={switchToSearch} r-else>
-          <Icon type='search' style={{ color: 'rgb(185, 190, 195)' }} />
+          <SearchOutlined style={{ color: 'rgb(185, 190, 195)' }} />
         </div>
       </div>
 

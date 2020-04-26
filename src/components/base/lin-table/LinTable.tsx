@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Table, Button } from 'antd'
 import { checkPermission } from '@/lin/directives/authorize'
 
-import { TableProps, ColumnProps } from '@/types/antd/Table'
+import { TableProps } from 'antd/lib/table/Table'
+import { ColumnType } from 'antd/lib/table/interface'
 
 import './lin-table.scss'
 
-export interface IColumnsItem extends ColumnProps<any> {}
+export interface IColumnsItem extends ColumnType<any> {}
 
 interface IOperationCoreItem {
   name: string
@@ -15,7 +16,7 @@ interface IOperationCoreItem {
   permission?: string | string[]
 }
 
-interface IOperation extends ColumnProps<any> {
+interface IOperation extends ColumnType<any> {
   operation: IOperationCoreItem[]
 }
 
@@ -34,8 +35,6 @@ interface ILinTable extends TableProps<any> {
   stripe?: boolean
   /** 生成反斑马条纹背景（奇白偶灰） */
   stripeReverse?: boolean
-  /** 自定义关键字搜索的执行方法（需设置 columns 中对应列的 search 字段） */
-  searchFunc?: (...args: any) => any
 }
 
 LinTable.defaultProps = {
@@ -53,7 +52,6 @@ export default function LinTable(props: ILinTable) {
     stripeReverse,
     columns: originColumns,
     operation,
-    searchFunc,
     ...restProps
   } = props
   const [columns, setColumns] = useState<IColumnsItem[]>([])

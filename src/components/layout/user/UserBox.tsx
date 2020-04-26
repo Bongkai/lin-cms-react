@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Input, Icon, message } from 'antd'
+import { Input, message } from 'antd'
+import { SolutionOutlined, LogoutOutlined } from '@ant-design/icons'
 import { put } from '@/lin/plugins/axios'
 import UserModal from '@/lin/models/user'
 import Avatar from './Avatar'
@@ -63,36 +64,36 @@ export default function UserBox() {
   }
 
   return (
-    <div className='user-box'>
+    <div className='user-box-container'>
       <div className='user-info'>
         <Avatar />
         <div className='text'>
           <div
+            r-if={!nicknameEditing}
             className='nickname'
             onClick={onNicknameClick}
-            r-if={!nicknameEditing}
           >
             {nickname}
           </div>
           <Input
+            r-else
             className='nickname-edit'
             placeholder='请输入内容'
             autoFocus
             defaultValue={nickname}
             onBlur={onNicknameBlur}
             onPressEnter={onNicknameBlur}
-            r-else
           />
         </div>
         <img src={cornerImg} className='corner' alt='' />
       </div>
       <ul className='dropdown-box'>
-        <li className='password' onClick={goToCenter}>
-          <Icon type='solution' />
+        <li className='center' onClick={goToCenter}>
+          <SolutionOutlined />
           <span>个人中心</span>
         </li>
-        <li className='account' onClick={outLogin}>
-          <Icon type='logout' />
+        <li className='logout' onClick={outLogin}>
+          <LogoutOutlined />
           <span>退出账户</span>
         </li>
       </ul>

@@ -2,21 +2,31 @@
  * Component: UploadImgs
  * Describe: 多图片上传组件, 附有预览, 排序, 验证等功能
  *
- * todo: 使用中间件模式优化信息装载和验证功能
- * todo: 文件判断使用 serveWorker 优化性能
+ * TODO: 使用中间件模式优化信息装载和验证功能
+ * TODO: 文件判断使用 serveWorker 优化性能
  *
  */
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Icon, Spin, message } from 'antd'
+import { Spin, message } from 'antd'
+import {
+  CloudUploadOutlined,
+  CloseOutlined,
+  EditOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  EyeOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+} from '@ant-design/icons'
 import axios from '@/lin/plugins/axios'
+import Utils from '@/lin/utils/util'
 import { PhotoSwipe } from 'react-photoswipe'
 import { getFileType, checkIsAnimated, isEmptyObj, createId } from './utils'
 
 import './upload-imgs.scss'
 import 'react-photoswipe/lib/photoswipe.css'
-import Utils from '../../../lin/utils/util'
 
 /**
  * 本地图像通过验证后构造的信息对象
@@ -625,7 +635,7 @@ export default class UploadImgs extends React.Component {
     }
 
     const imgInfoList = await Promise.all(asyncList)
-    console.log('imgInfoList', imgInfoList)
+    // console.log('imgInfoList', imgInfoList)
 
     // 检查是否有上传失败的图像
     // 如果有失败的上传, 则返回错误
@@ -1112,14 +1122,12 @@ export default class UploadImgs extends React.Component {
                 src={item.display}
               />
               <div className='info'>
-                {item.file && (
-                  <Icon type='cloud-upload' className='wait-upload' />
-                )}
+                {item.file && <CloudUploadOutlined className='wait-upload' />}
               </div>
               <div className='control'>
                 {!disabled && (
                   <>
-                    <Icon
+                    <CloseOutlined
                       type='close'
                       className='del'
                       onClick={() => this.delItem(item.id)}
@@ -1129,15 +1137,14 @@ export default class UploadImgs extends React.Component {
                       title='更换图片'
                       onClick={() => this.handleClick(item.id)}
                     >
-                      <Icon type='edit' />
+                      <EditOutlined />
                     </div>
                   </>
                 )}
                 {(sortable || preview) && (
                   <div className='control-bottom'>
                     {sortable && !disabled && (
-                      <Icon
-                        type='arrow-left'
+                      <ArrowLeftOutlined
                         title='前移'
                         className={`control-bottom-btn${
                           index === 0 ? ' disabled' : ''
@@ -1146,16 +1153,14 @@ export default class UploadImgs extends React.Component {
                       />
                     )}
                     {preview && (
-                      <Icon
-                        type='eye'
+                      <EyeOutlined
                         title='预览'
                         className='control-bottom-btn'
                         onClick={() => this.handlePreview(index)}
                       />
                     )}
                     {sortable && !disabled && (
-                      <Icon
-                        type='arrow-right'
+                      <ArrowRightOutlined
                         title='后移'
                         className={`control-bottom-btn${
                           index === itemList.length - 1 ? ' disabled' : ''
@@ -1175,15 +1180,11 @@ export default class UploadImgs extends React.Component {
               style={boxStyle}
               onClick={() => this.handleClick(item.id)}
             >
-              {loading ? (
-                <Spin
-                  indicator={
-                    <Icon type='loading' style={{ fontSize: '32px' }} />
-                  }
-                />
-              ) : (
-                <Icon type='plus' style={{ fontSize: '2.5em' }} />
-              )}
+              <Spin
+                r-if={loading}
+                indicator={<LoadingOutlined style={{ fontSize: '32px' }} />}
+              />
+              <PlusOutlined style={{ fontSize: '2.5em' }} r-else />
               <div style={{ marginTop: '1em', fontSize: '0.75em' }}>
                 {rulesTip.map((item, index) => (
                   <div key={index}>{item}</div>

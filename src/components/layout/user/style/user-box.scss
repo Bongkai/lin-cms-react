@@ -1,6 +1,6 @@
 @import 'assets/styles/realize/lin-variables.scss';
 
-.user-box {
+.user-box-container {
   width: 326px;
   // background-color: none;
   // background: transparent;
@@ -118,8 +118,16 @@
     background: white;
     margin-top: -10px;
 
-    li {
+    .center, .logout {
       cursor: pointer;
+
+      :nth-child(1) {
+        margin-right: 5px;
+      }
+
+      &:hover {
+        color: $theme;
+      }
 
       &:nth-child(1) {
         margin-top: 20px;
@@ -127,18 +135,6 @@
 
       &:nth-child(2) {
         margin-bottom: 20px;
-      }
-
-      i {
-        margin-right: 10px;
-      }
-
-      &:hover {
-        color: $theme !important;
-
-        i {
-          color: $theme !important;
-        }
       }
     }
   }

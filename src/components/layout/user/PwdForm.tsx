@@ -1,116 +1,122 @@
-import React, { useImperativeHandle, forwardRef } from 'react'
-import { Form, Input, message } from 'antd'
+import React, { useMemo } from 'react'
+import { useDispatch } from 'react-redux'
+import { Form, Input, Button, message } from 'antd'
 import User from '@/lin/models/user'
+import { loginOut } from '@/store/actions/app.actions'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
 import { IResponseWithoutData } from '@/types/model'
-import { WrappedFormUtils } from '@/types/antd/Form'
 
-interface IProps {
-  form: WrappedFormUtils
-}
+const formLayout = { labelCol: { span: 3 }, wrapperCol: { span: 18 } }
+const buttonLayout = { wrapperCol: { offset: 3 } }
 
-const { Item } = Form
+export default function PwdForm() {
+  const [form] = Form.useForm()
+  const dispatch = useDispatch()
 
-const layout = {
-  labelCol: { xs: { span: 24 }, sm: { span: 3 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 21 } },
-}
-
-function PwdForm({ form }: IProps, ref: any) {
-  // 对外暴露的方法
-  useImperativeHandle(ref, () => ({
-    onSubmit,
-  }))
-
-  /**
-   * 提交表单信息
-   * @param {function} callback 提交后执行的回调函数
-   */
-  async function onSubmit(callback: (success: boolean) => void) {
-    form.validateFields(async (errors: object | null, values: any) => {
-      if (errors) {
+  // 提交表单
+  function onSubmit() {
+    form
+      .validateFields()
+      .then(async values => {
+        // 校验成功后提交
+        await _submitPassword(values)
+      })
+      .catch(errorInfo => {
         message.error('请填写正确的信息')
-        return
-      }
-      // 校验成功后提交
-      let res = await submitPassword(values)
-      callback && callback(res)
-    })
+      })
   }
 
-  async function submitPassword(fields: any): Promise<boolean> {
-    const { old_password, new_password, confirm_password } = fields
-    if (new_password === '' && confirm_password === '') {
-      return true
-    }
-    if (old_password === new_password) {
-      message.error('新密码不能与原始密码一样')
-      return false
-    }
-
+  async function _submitPassword(fields: any) {
     let res: IResponseWithoutData
     try {
       res = await User.updatePassword(fields)
     } catch (e) {
       console.log(e)
-      return false
+      return
     }
 
-    const success = res.code < MAX_SUCCESS_CODE
-    if (success) {
+    if (res.code < MAX_SUCCESS_CODE) {
       message.success(`${res.message}`)
+      _outLogin()
     } else {
       message.error(`${res.message}`)
     }
-    return success
   }
 
-  const { getFieldDecorator } = form
+  function _outLogin() {
+    setTimeout(() => {
+      dispatch(loginOut())
+    }, 500)
+  }
+
+  // 重置表单
+  function reset() {
+    form.resetFields()
+  }
+
+  // 表单验证规则
+  const rules = useMemo(
+    () => ({
+      old_password: [{ required: true, message: '原始密码不能为空' }],
+      new_password: [
+        { required: true, message: '请输入密码' },
+        { min: 6, message: '密码长度不能少于6位数' },
+      ],
+      confirm_password: [
+        { required: true, message: '请再次输入密码' },
+        {
+          validator: (rule: any, value: string) => {
+            if (value === form.getFieldValue('new_password')) {
+              return Promise.resolve()
+            }
+            return Promise.reject('两次输入密码不一致!')
+          },
+        },
+      ],
+    }),
+    [form],
+  )
 
   return (
-    <Form {...layout} colon={false}>
-      <Item label='原始密码' required>
-        {getFieldDecorator('old_password', {
-          rules: [{ required: true, message: '原始密码不能为空' }],
-        })(<Input type='password' />)}
-      </Item>
-      <Item label='新密码' required>
-        {getFieldDecorator('new_password', {
-          validate: [
-            {
-              trigger: 'onBlur',
-              rules: [
-                { required: true, message: '请输入密码' },
-                { min: 6, message: '密码长度不能少于6位数' },
-              ],
-            },
-          ],
-        })(<Input type='password' />)}
-      </Item>
-      <Item label='确认密码' required>
-        {getFieldDecorator('confirm_password', {
-          validate: [
-            {
-              trigger: 'onBlur',
-              rules: [
-                { required: true, message: '请再次输入密码' },
-                {
-                  validator: (rule: any, value: string, callback: Function) => {
-                    if (value !== form.getFieldValue('new_password')) {
-                      callback('两次输入密码不一致!')
-                    }
-                    // 原组件库的一个 Fixed 代码
-                    callback()
-                  },
-                },
-              ],
-            },
-          ],
-        })(<Input type='password' />)}
-      </Item>
+    <Form form={form} colon={false} {...formLayout}>
+      <Form.Item
+        name='old_password'
+        label='原始密码'
+        validateTrigger='onBlur'
+        rules={rules.old_password}
+        required
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name='new_password'
+        label='新密码'
+        validateTrigger='onBlur'
+        rules={rules.new_password}
+        required
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name='confirm_password'
+        label='确认密码'
+        validateTrigger='onBlur'
+        rules={rules.confirm_password}
+        dependencies={['new_password']}
+        required
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item {...buttonLayout}>
+        <Button type='primary' onClick={onSubmit} style={{ marginRight: 10 }}>
+          确 定
+        </Button>
+        <Button onClick={reset}>重 置</Button>
+      </Form.Item>
     </Form>
   )
 }
-
-export default forwardRef(PwdForm)

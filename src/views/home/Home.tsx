@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { Layout, Icon } from 'antd'
+import { Layout } from 'antd'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import {
   NavBar,
   SideBar,
@@ -62,9 +63,14 @@ export default function Home() {
                 className='operate'
                 style={{ height: reuseLength > 1 ? '45px' : '86px' }}
               >
-                <Icon
+                <MenuUnfoldOutlined
+                  r-if={collapsed}
                   className='fold-icon'
-                  type={collapsed ? 'menu-unfold' : 'menu-fold'}
+                  onClick={changeSidebarState}
+                />
+                <MenuFoldOutlined
+                  r-else
+                  className='fold-icon'
                   onClick={changeSidebarState}
                 />
                 <NavBar />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { Icon } from 'antd'
+import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
 import Utils from '@/lin/utils/util'
 
 import { IStoreState } from '@/types/store'
@@ -46,7 +46,7 @@ export default function MenuTab() {
             <NavLink to={route} key={route}>
               <li className='menu-li'>
                 <div>
-                  <Icon type={item.icon} style={{ fontSize: '16px' }} />
+                  <DynamicIcon type={item.icon} style={{ fontSize: '16px' }} />
                   <span className='title'>
                     {Utils.cutString(item.title, 8)}
                   </span>

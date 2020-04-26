@@ -1,6 +1,7 @@
 import React, { useState, useRef, ChangeEvent } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Modal, Icon, message } from 'antd'
+import { Modal, message } from 'antd'
+import { EditOutlined } from '@ant-design/icons'
 import { post, put } from '@/lin/plugins/axios'
 import Cropper from '@/components/base/cropper/Cropper'
 import UserModal from '@/lin/models/user'
@@ -129,7 +130,7 @@ export default function Avatar() {
     <div className='avatar' title='点击修改头像'>
       <img src={avatar || defaultAvatar} alt='头像' />
       <label className='mask'>
-        <Icon type='edit' style={{ fontSize: '18px' }} />
+        <EditOutlined style={{ fontSize: '18px' }} />
         <input
           ref={avatarInput}
           type='file'

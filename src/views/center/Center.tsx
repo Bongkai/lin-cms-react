@@ -4,7 +4,7 @@ import { Input, message } from 'antd'
 import { put } from '@/lin/plugins/axios'
 import UserModal from '@/lin/models/user'
 import { setUserAndState } from '@/store/actions/app.actions'
-import PwdFormBox from '@/components/layout/user/PwdFormBox'
+import PwdForm from '@/components/layout/user/PwdForm'
 import Avatar from '@/components/layout/user/Avatar'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
@@ -64,7 +64,7 @@ export default function Center() {
         </div>
         <div className='password'>
           <div className='title'>修改密码</div>
-          <PwdFormBox />
+          <PwdForm />
         </div>
       </div>
     </div>

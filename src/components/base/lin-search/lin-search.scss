@@ -1,22 +1,25 @@
 @import 'assets/styles/realize/lin-variables.scss';
 
+.lin-search-container {
+  height: 36px;
+}
+
 .lin-search.ant-input-search.ant-input-search-enter-button.ant-input-group-wrapper {
   .ant-input-wrapper.ant-input-group {
-    .ant-input {
-      width: 150px;
-      height: 36px;
-      padding: 0 30px 0 16px;
-      border-top-left-radius: 20px;
-      border-bottom-left-radius: 20px;
-      border-right: 0;
-      transform: translateX(1px);
-      transition: all 0.2s linear;
-  
-      &:hover {
+    width: 150px;
+    .ant-input-search.lin-search.ant-input-search-enter-button.ant-input-affix-wrapper {
+      &.ant-input-affix-wrapper {
+        width: 150px;
+        height: 36px;
+        padding: 0 0px 0 16px;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
         border-right: 0;
+        // transform: translateX(1px);
+        transition: all 0.2s linear;
       }
-  
-      &:focus {
+      
+      &.ant-input-affix-wrapper-focused {
         width: 250px;
         border: 1px solid $theme;
         box-shadow: none;
@@ -27,9 +30,12 @@
     
     .ant-input-suffix {
       .anticon.anticon-close-circle.ant-input-clear-icon {
-        // font-size: 14px;
+        font-size: 14px;
+        height: 36px;
+        line-height: 36px;
         color: #ccc;
         opacity: 0;
+        transform: translate(-5px, 1px);
         transition: all 0.2s linear;
         &:hover {
           color: #aaa;

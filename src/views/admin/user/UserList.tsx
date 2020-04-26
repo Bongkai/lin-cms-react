@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Select, Pagination, message } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import LinHeader from '@/components/base/lin-header/LinHeader'
 import LinTable, {
   ILinTableOperation,
@@ -114,7 +115,7 @@ export default function UserList() {
   ) {
     Modal.confirm({
       title: '提示',
-      icon: 'exclamation-circle',
+      icon: <ExclamationCircleOutlined />,
       content: '此操作将永久删除该用户, 是否继续?',
       okText: '确定',
       centered: true,
@@ -157,10 +158,11 @@ export default function UserList() {
           placeholder='请选择分组'
           onChange={onGroupChange}
         >
-          {groups &&
-            groups.map(item => (
-              <Select.Option key={item.id}>{item.name}</Select.Option>
-            ))}
+          {groups.map(item => (
+            <Select.Option key={item.id} value={item.id}>
+              {item.name}
+            </Select.Option>
+          ))}
         </Select>
       </LinHeader>
 

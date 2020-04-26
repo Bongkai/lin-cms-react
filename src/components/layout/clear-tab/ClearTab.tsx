@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Icon } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
 import { changeReuseTab } from '@/store/actions/app.actions'
 
 import { IStoreState, IHistoryItem } from '@/types/store'
@@ -33,7 +33,7 @@ export default function ClearTab() {
       onClick={clearAllHistories}
       r-if={reuseLength > 1}
     >
-      <Icon type='delete' style={{ fontSize: '20px' }} />
+      <DeleteOutlined style={{ fontSize: '20px' }} />
     </div>
   )
 }
