@@ -1,13 +1,14 @@
+import { AnyAction } from 'redux'
 import { IRouterItem } from './project'
 import { IGroupItem } from './model'
 
-// -----index-----
+// ----- index -----
 
 export interface IStoreState {
   app: IAppState
 }
 
-// -----getter-----
+// ----- getter -----
 
 export interface ISideBarListItem {
   icon: string
@@ -18,7 +19,14 @@ export interface ISideBarListItem {
   children?: ISideBarListItem[]
 }
 
-// -----app-----
+// ----- action -----
+
+export interface IAction extends AnyAction {
+  type: string
+  payload?: any
+}
+
+// ----- app -----
 
 export interface IAppState {
   logined: boolean

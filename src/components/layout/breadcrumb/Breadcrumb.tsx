@@ -1,15 +1,10 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-
-import { IStoreState } from '@/types/store'
-import { IRouterItem } from '@/types/project'
+import { useAppSelector } from '@/hooks/project/useRedux'
 
 import './breadcrumb.scss'
 
 export default function Breadcrumb() {
-  const stageInfo = useSelector<IStoreState, IRouterItem[]>(
-    state => state.app.currentRoute.treePath,
-  )
+  const stageInfo = useAppSelector().currentRoute.treePath
   const titleArr = stageInfo.map(item => item.title).filter(item => !!item)
 
   return (

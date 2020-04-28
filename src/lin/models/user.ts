@@ -5,61 +5,7 @@ import { store } from '@/store/index'
 import { IUserType } from '@/types/store'
 import { IUserToken, IUserInformation } from '@/types/model'
 
-// const SUPER_VALUE = 2
-// const ACTIVE_VALUE = 1
-
 export default class User {
-  // 当前用户是否在激活状态
-  // isActive: boolean
-
-  // 邮箱
-  // email: string | null = null
-
-  // 权限分组id
-  // groupId: number = null
-
-  // 用户名
-  // username: string = null
-
-  // 是否为超级管理员
-  // isSuper: boolean
-
-  // 用户头像
-  // avatar: string | null = null
-
-  // 拥有的权限
-  // auths: IOriginalPermissions[] = []
-
-  // 昵称
-  // nickname: string | null = null
-
-  // 分组名称
-  // groupName: string | null = null
-
-  // constructor(
-  //   // _super: number,
-  //   // readonly auths: IOriginalPermissions[], // 拥有的权限
-  //   // readonly groupName: string | undefined, // 分组名称
-  //   readonly nickname: string | null, // 昵称
-  //   readonly username: string, // 用户名
-  //   readonly admin: boolean,
-  //   readonly groups: any[], // 所属分组信息
-  //   readonly permissions: IOriginalPermissions[], // 拥有的权限
-  //   readonly email: string | null, // 邮箱
-  //   readonly avatar: string | null, // 用户头像 // active: number, // readonly groupId: number | null, // 权限分组id
-  // ) {
-  //   this.isSuper = admin
-  //   // this.isActive = active === ACTIVE_VALUE
-  //   // this.email = email
-  //   // this.groupId = groupId
-  //   // this.groupId = groupId
-  //   // this.username = username
-  //   // this.avatar = avatar
-  //   // this.auths = auths || []
-  //   // this.nickname = nickname
-  //   // this.groupName = groupName
-  // }
-
   /**
    * 分配用户
    * @param {object} data 注册信息
@@ -90,8 +36,7 @@ export default class User {
    */
   static async getInformation(): Promise<IUserType> {
     const info: IUserInformation = await get('cms/user/information')
-    const storeUser =
-      store.getState().app.user === null ? {} : store.getState().app.user
+    const storeUser = store.getState().app.user || {}
 
     return Object.assign({ ...storeUser }, info)
   }
@@ -101,8 +46,7 @@ export default class User {
    */
   static async getPermissions(): Promise<IUserType> {
     const info: IUserInformation = await get('cms/user/permissions')
-    const storeUser =
-      store.getState().app.user === null ? {} : store.getState().app.user
+    const storeUser = store.getState().app.user || {}
 
     return Object.assign({ ...storeUser }, info)
   }

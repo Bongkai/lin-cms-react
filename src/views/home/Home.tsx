@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
 import { useLocation } from 'react-router-dom'
 import { Layout } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
@@ -12,8 +12,6 @@ import {
 } from '@/components/layout'
 import { updateRoute, clearRoute } from '@/store/actions/app.actions'
 
-import { IStoreState, IHistoryItem } from '@/types/store'
-
 import './home.scss'
 
 const { Header, Sider, Content } = Layout
@@ -23,9 +21,7 @@ const { Header, Sider, Content } = Layout
  */
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false)
-  const reuseLength = useSelector<IStoreState, IHistoryItem[]>(
-    state => state.app.histories,
-  ).length
+  const reuseLength = useAppSelector().histories.length
   const dispatch = useDispatch()
   const { pathname } = useLocation()
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
 import { useHistory } from 'react-router-dom'
 import { Input, message } from 'antd'
 import { SolutionOutlined, LogoutOutlined } from '@ant-design/icons'
@@ -9,7 +9,7 @@ import Avatar from './Avatar'
 import { loginOut, setUserAndState } from '@/store/actions/app.actions'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
-import { IStoreState, IUserType } from '@/types/store'
+import { IUserType } from '@/types/store'
 import { IResponseWithoutData } from '@/types/model'
 
 import './style/user-box.scss'
@@ -17,10 +17,7 @@ import cornerImg from '@/assets/img/user/corner.png'
 
 export default function UserBox() {
   const [nicknameEditing, setNicknameEditing] = useState(false)
-  let { nickname } = useSelector<IStoreState, IUserType>(
-    state => state.app.user,
-  )
-  nickname = nickname || '佚名'
+  const nickname = useAppSelector().user.nickname || '佚名'
   const dispatch = useDispatch()
   const history = useHistory()
 

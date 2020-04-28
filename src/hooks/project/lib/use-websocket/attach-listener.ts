@@ -4,12 +4,12 @@ import { Options, ReadyStateState, SendMessage } from './types'
 
 interface Setters {
   setLastMessage: (message: WebSocketEventMap['message']) => void
-  setReadyState: (callback: (prev: ReadyStateState) => ReadyStateState) => void
+  setReadyState: (callback: (readyState: ReadyStateState) => void) => void
 }
 
 type Subscriber = {
   setLastMessage: (message: WebSocketEventMap['message']) => void
-  setReadyState: (callback: (prev: ReadyStateState) => ReadyStateState) => void
+  setReadyState: (callback: (readyState: ReadyStateState) => void) => void
   options: Options
   reconnect: () => void
   id: string
@@ -34,7 +34,7 @@ export const attachListeners = (
   const { setLastMessage, setReadyState } = setters
   let reconnectTimeout: NodeJS.Timer
 
-  if (subscribers[url] === undefined) {
+  if (typeof subscribers[url] === 'undefined') {
     subscribers[url] = []
 
     // onopen
@@ -42,9 +42,9 @@ export const attachListeners = (
       reconnectCount.current = 0
       subscribers[url]?.forEach(subscriber => {
         if (expectClose.current === false) {
-          subscriber.setReadyState(prev =>
-            Object.assign({}, prev, { [url]: ReadyState.OPEN }),
-          )
+          subscriber.setReadyState(readyState => {
+            readyState[url] = ReadyState.OPEN
+          })
         }
         if (subscriber.options.onOpen) {
           subscriber.options.onOpen(event, sendMessage)
@@ -79,9 +79,9 @@ export const attachListeners = (
 
       subscribers[url]?.forEach(subscriber => {
         if (expectClose.current === false) {
-          subscriber.setReadyState(prev =>
-            Object.assign({}, prev, { [url]: ReadyState.CLOSED }),
-          )
+          subscriber.setReadyState(readyState => {
+            readyState[url] = ReadyState.CLOSED
+          })
         }
         if (subscriber.options.onClose) {
           subscriber.options.onClose(event)
@@ -128,9 +128,9 @@ export const attachListeners = (
     }
   } else {
     // 为当前 wsInstance 设置已存在的相同 url 对应的 readyState
-    setReadyState(prev =>
-      Object.assign({}, prev, { [url]: sharedWebSockets[url]?.readyState }),
-    )
+    setReadyState(readyState => {
+      readyState[url] = (sharedWebSockets[url] as WebSocket).readyState
+    })
   }
 
   const subscriber = {
@@ -159,9 +159,9 @@ export const attachListeners = (
         return
       }
       if (subsArr.length === 1) {
-        subsArr[0].setReadyState(prev =>
-          Object.assign({}, prev, { [url]: ReadyState.CLOSING }),
-        )
+        subsArr[0].setReadyState((readyState: ReadyStateState) => {
+          readyState[url] = ReadyState.CLOSING
+        })
         wsInstance.close()
       } else {
         subsArr.splice(index, 1)

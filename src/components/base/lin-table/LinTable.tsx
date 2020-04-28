@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { useImmer } from 'use-immer'
 import { Table, Button } from 'antd'
 import { checkPermission } from '@/lin/directives/authorize'
 
@@ -9,7 +10,7 @@ import './lin-table.scss'
 
 export interface IColumnsItem extends ColumnType<any> {}
 
-interface IOperationCoreItem {
+interface IOperationCore {
   name: string
   type: 'primary' | 'danger'
   func?: (...args: any) => any
@@ -17,10 +18,10 @@ interface IOperationCoreItem {
 }
 
 interface IOperation extends ColumnType<any> {
-  operation: IOperationCoreItem[]
+  operation: IOperationCore[]
 }
 
-export type ILinTableOperation = IOperation | IOperationCoreItem[]
+export type ILinTableOperation = IOperation | IOperationCore[]
 
 interface ILinTable extends TableProps<any> {
   /** Table 的 columns 属性，新增自定义字段 */
@@ -54,56 +55,64 @@ export default function LinTable(props: ILinTable) {
     operation,
     ...restProps
   } = props
-  const [columns, setColumns] = useState<IColumnsItem[]>([])
+  const [columns, setColumns] = useImmer<IColumnsItem[]>(originColumns)
 
+  // 初始化时加载 operationColumn
   useEffect(() => {
     function handleColumns() {
       // props.operation 可能是包含 operationCore 的对象，也可能是 operationCore 本身
       const operationArr =
-        (operation as IOperation).operation ||
-        (operation as IOperationCoreItem[])
-      const _columns = [...originColumns]
-      if (Array.isArray(operationArr)) {
-        _columns.push({
-          title: (operation as IOperation).title || '操作',
-          width: (operation as IOperation).width || 175,
-          fixed: (operation as IOperation).fixed,
-          render: (text: any, record: any, index: number) => (
-            <div>
-              {operationArr.map((item: IOperationCoreItem) => (
-                <Button
-                  className='custom-antd btn-plain'
-                  style={{ marginRight: 10 }}
-                  size='small'
-                  type={item.type}
-                  key={item.name}
-                  disabled={
-                    !checkPermission({
-                      permission: item.permission ? item.permission : '',
-                      // type: 'disabled',
-                    })
-                  }
-                  onClick={() => {
-                    item.func && item.func(text, record, index)
-                  }}
-                >
-                  {item.name}
-                </Button>
-              ))}
-            </div>
-          ),
-        })
+        (operation as IOperation).operation || (operation as IOperationCore[])
+
+      if (typeof operationArr === 'undefined') return
+
+      const operationColumn = {
+        title: (operation as IOperation).title || '操作',
+        width: (operation as IOperation).width || 175,
+        fixed: (operation as IOperation).fixed,
+        render: (text: any, record: any, index: number) => (
+          <div>
+            {operationArr.map((item: IOperationCore) => (
+              <Button
+                className='custom-antd btn-plain'
+                style={{ marginRight: 10 }}
+                size='small'
+                type={item.type}
+                key={item.name}
+                disabled={
+                  !checkPermission({
+                    permission: item.permission ? item.permission : '',
+                  })
+                }
+                onClick={() => {
+                  item.func && item.func(text, record, index)
+                }}
+              >
+                {item.name}
+              </Button>
+            ))}
+          </div>
+        ),
       }
-      setColumns(_columns)
+
+      setColumns(columns => {
+        columns.push(operationColumn)
+      })
     }
     handleColumns()
   }, []) // eslint-disable-line
 
-  const noVDivider = verticalDivider === 'none' ? 'no-v-divider' : ''
-  const noHDivider = horizonalDivider === 'none' ? 'no-h-divider' : ''
-  const stripeType = stripe ? 'stripe' : stripeReverse ? 'stripe-reverse' : ''
-
-  const classes = `lin-table ${noVDivider} ${noHDivider} ${stripeType}`
-
-  return <Table className={classes} columns={columns} {...restProps} />
+  return (
+    <Table
+      className='lin-table'
+      r-class={{
+        'no-v-divider': verticalDivider === 'none',
+        'no-h-divider': horizonalDivider === 'none',
+        stripe: stripe,
+        'stripe-reverse': stripeReverse && !stripe,
+      }}
+      columns={columns}
+      {...restProps}
+    />
+  )
 }

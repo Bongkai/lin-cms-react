@@ -1,3 +1,4 @@
+import { store } from '@/store'
 import Util from '@/lin/utils/util'
 import { IAppState, IUserType, ISideBarListItem } from '@/types/store'
 import { IRouterItem } from '@/types/project'
@@ -40,7 +41,7 @@ function IterationDelateMenuChildren(arr: IRouterItem[]): IRouterItem[] {
     for (const i in arr) {
       const children = arr[i].children
       if (children && !children.length) {
-        delete arr[i] // eslint-disable-line
+        delete arr[i]
       } else if (children && children.length) {
         IterationDelateMenuChildren(children)
       }
@@ -67,8 +68,8 @@ function permissionShaking(
 }
 
 // 获取有权限的舞台配置
-export const permissionStageConfig = (state: IAppState): IRouterItem[] => {
-  const { stageConfig, permissions, user } = state
+export const permissionStageConfig = (): IRouterItem[] => {
+  const { stageConfig, permissions, user } = store.getState().app
   const tempStageConfig = Util.deepClone(stageConfig)
   const shookConfig = permissionShaking(tempStageConfig, permissions, user)
 
@@ -84,8 +85,8 @@ export const permissionStageConfig = (state: IAppState): IRouterItem[] => {
 }
 
 // 获取侧边栏配置
-export const getSideBarList = (state: IAppState): ISideBarListItem[] => {
-  const { sideBarLevel } = state
+export const getSideBarList = (): ISideBarListItem[] => {
+  const { sideBarLevel } = store.getState().app
 
   // TODO: 优化函数返回值的类型
   function deepGetSideBar(
@@ -171,7 +172,7 @@ export const getSideBarList = (state: IAppState): ISideBarListItem[] => {
   }
 
   const sideBar: ISideBarListItem[] = deepGetSideBar(
-    permissionStageConfig(state),
+    permissionStageConfig(),
     sideBarLevel,
   )
   return sideBar

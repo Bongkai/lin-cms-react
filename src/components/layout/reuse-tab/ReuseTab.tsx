@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useRef, MouseEvent } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
 import { useLocation, useHistory } from 'react-router-dom'
 import { CloseOutlined } from '@ant-design/icons'
 import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
@@ -12,7 +12,7 @@ import {
   getStageList,
 } from '@/store/getters/app.getters'
 
-import { IStoreState, IAppState, IHistoryItem } from '@/types/store'
+import { IHistoryItem } from '@/types/store'
 import { IRouterItem } from '@/types/project'
 
 import './reuse-tab.scss'
@@ -31,14 +31,13 @@ const swiperParameters = {
 }
 
 export default function ReuseTab() {
-  const appState = useSelector<IStoreState, IAppState>(state => state.app)
-  const { logined, histories, defaultRoute } = appState
-  const stageConfig = appState.currentRoute.config
-  const dispatch = useDispatch()
+  const { logined, histories, defaultRoute, currentRoute } = useAppSelector()
+  const stageConfig = currentRoute.config
   const { pathname } = useLocation()
   const history = useHistory()
   const stageList = getStageList()
   const historiesRef = useRef<IHistoryItem[]>()
+  const dispatch = useDispatch()
 
   const changeRoute = useCallback(
     config => {

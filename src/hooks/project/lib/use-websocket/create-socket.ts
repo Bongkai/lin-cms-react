@@ -5,12 +5,12 @@ import { ReadyStateState } from './types'
 export const createSocket = (
   webSocketRef: MutableRefObject<WebSocket | null>,
   url: string,
-  setReadyState: (callback: (prev: ReadyStateState) => ReadyStateState) => void,
+  setReadyState: (callback: (readyState: ReadyStateState) => void) => void,
 ) => {
   if (sharedWebSockets[url] === undefined) {
-    setReadyState(prev =>
-      Object.assign({}, prev, { [url]: ReadyState.CONNECTING }),
-    )
+    setReadyState(readyState => {
+      readyState[url] = ReadyState.CONNECTING
+    })
     sharedWebSockets[url] = new WebSocket(url)
   }
   webSocketRef.current = sharedWebSockets[url] || null

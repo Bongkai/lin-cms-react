@@ -1,7 +1,7 @@
 import { Method } from 'axios'
 import { IOriginalPermissions } from './store'
 
-// -----admin-----
+// ----- admin -----
 
 export interface IAllPermissions {
   [propName: string]: IPermissionItem[]
@@ -51,7 +51,7 @@ export interface IResponseWithoutData {
   request: string
 }
 
-// -----user-----
+// ----- user -----
 
 export interface IUserToken {
   access_token: string
@@ -68,7 +68,7 @@ export interface IUserInformation {
   avatar: string | null
 }
 
-// -----log-----
+// ----- log -----
 
 export interface ILogUsers {
   total: number

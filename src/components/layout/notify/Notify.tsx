@@ -1,19 +1,15 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from '@/hooks/project/useRedux'
 import { Dropdown, Badge } from 'antd'
 import { WarningFilled, BellOutlined } from '@ant-design/icons'
 import NotifyOverlay from './NotifyOverlay'
 // import { useWebSocket } from '@/hooks/project/useWebSocket'
 // import { addUnreadMessage } from '@/store/actions/app.actions'
 
-import { IStoreState, IAppState } from '@/types/store'
-
 import './style/notify.scss'
 
 export default function Notify() {
-  const { unreadMessages } = useSelector<IStoreState, IAppState>(
-    state => state.app,
-  )
+  const { unreadMessages } = useAppSelector()
   // const dispatch = useDispatch()
 
   // const { message, readyState } = useWebSocket()
@@ -22,6 +18,7 @@ export default function Notify() {
   //   message && dispatch(addUnreadMessage(JSON.parse(message.data)))
   // }, [message]) // eslint-disable-line
 
+  // ws 连接异常时的 warning 图标组件
   const WarningIcon = (
     <WarningFilled
       title='消息中心已离线，请刷新页面'

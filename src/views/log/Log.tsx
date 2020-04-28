@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from '@/hooks/project/useRedux'
 import { Form, Dropdown, Menu, Button, DatePicker, Divider } from 'antd'
 import {
   UserOutlined,
@@ -18,9 +18,7 @@ import LogModel from '@/lin/models/log'
 import useDeepCompareEffect from '@/hooks/base/useDeepCompareEffect'
 import useFirstMountState from '@/hooks/base/useFirstMountState'
 import { checkPermission } from '@/lin/directives/authorize'
-// import Utils from '@/lin/utils/util'
 
-import { IStoreState, IUserType } from '@/types/store'
 import { ILogUsers, ILogItem, ILogsInfo } from '@/types/model'
 
 import './log.scss'
@@ -41,10 +39,7 @@ export default function Log() {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [searchDate, setSearchDate] = useState<[string, string] | []>([])
   const [form] = Form.useForm()
-  const { admin } = useSelector<IStoreState, IUserType>(state => state.app.user)
-  const permissions = useSelector<IStoreState, string[]>(
-    state => state.app.permissions,
-  )
+  const { user, permissions } = useAppSelector()
   const isFirstMount = useFirstMountState()
 
   // 获取条件检索数据
@@ -79,7 +74,7 @@ export default function Log() {
     async function initPage() {
       try {
         if (logs.length > 0) return
-        if (admin || permissions.includes('查询日志记录的用户')) {
+        if (user.admin || permissions.includes('查询日志记录的用户')) {
           const users: ILogUsers = await LogModel.getLoggedUsers({})
           const res: ILogsInfo | undefined = await LogModel.getLogs({ page: 0 })
           if (typeof res === 'undefined') return
@@ -124,7 +119,15 @@ export default function Log() {
     moreLoading && getNextPage()
 
     // eslint-disable-next-line
-  }, [loading, isSearch, moreLoading, getSearchData, logs, admin, permissions])
+  }, [
+    loading,
+    isSearch,
+    moreLoading,
+    getSearchData,
+    logs,
+    user.admin,
+    permissions,
+  ])
 
   // 开启条件检索
   useEffect(() => {

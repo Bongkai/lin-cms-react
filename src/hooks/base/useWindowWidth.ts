@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
  * 获取当前视窗宽度
  * @returns {Object}
  */
-export default function useWindowWidth() {
+export default function useWindowWidth(): number {
   const [width, setWidth] = useState(window.innerWidth)
 
   useEffect(() => {

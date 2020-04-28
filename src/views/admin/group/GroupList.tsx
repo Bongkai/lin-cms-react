@@ -35,7 +35,7 @@ export default function GroupList() {
 
   useEffect(() => {
     getAllGroups()
-  }, [])
+  }, []) // eslint-disable-line
 
   async function getAllGroups() {
     try {

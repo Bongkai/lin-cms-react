@@ -47,14 +47,12 @@ deepTravel<IRouterItem>(stageConfig, viewConfig => {
   const viewRouter = {} as IHomeRouterItem
   viewRouter.path = viewConfig.route
   viewRouter.name = viewConfig.name
-  // viewRouter.component = viewConfig.component
   viewRouter.component = loadable(() => import(`@/${viewConfig.filePath}`))
   viewRouter.meta = {
     title: viewConfig.title,
     icon: viewConfig.icon,
     permission: viewConfig.permission,
     type: viewConfig.type,
-    // blueBaseColor: viewConfig.blueBaseColor ? 'viewConfig.blueBaseColor' : '',
   }
   homeRouter.push(viewRouter)
 })

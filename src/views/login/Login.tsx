@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
 import { useHistory } from 'react-router-dom'
 import { message } from 'antd'
 import LoadingWrapper from '@/components/base/loading-wrapper/LoadingWrapper'
@@ -8,8 +8,6 @@ import {
   setUserAndState,
   setUserPermissions,
 } from '@/store/actions/app.actions'
-
-import { IStoreState, IUserType } from '@/types/store'
 
 import './login.scss'
 import teamNameImg from '@/assets/img/login/team-name.png'
@@ -21,9 +19,7 @@ export default function Login() {
   const [username, setUsername] = useState('root')
   const [password, setPassword] = useState('123456')
   const [loading, setLoading] = useState(false)
-  const defaultRoute = useSelector<IStoreState, string>(
-    state => state.app.defaultRoute,
-  )
+  const { defaultRoute } = useAppSelector()
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -50,7 +46,7 @@ export default function Login() {
     try {
       // 尝试获取当前用户信息
       const user = await User.getPermissions()
-      dispatch(setUserAndState(user as IUserType))
+      dispatch(setUserAndState(user))
       dispatch(setUserPermissions(user.permissions))
     } catch (err) {
       console.log(err)

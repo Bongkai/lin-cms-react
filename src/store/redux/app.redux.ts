@@ -1,16 +1,21 @@
+import { produce } from 'immer'
 import { removeToken } from '@/lin/utils/token'
 import { getStageInfo } from '../getters/app.getters'
 import * as types from '../actions/action-types'
 import AppConfig from '@/config/index' // 引入项目配置
 import stageConfig from '@/config/stage' // 引入舞台配置
 import Config from '@/config/index'
-import { IAction } from '../actions/app.actions'
 
-import { IAppState, IUserType, IOriginalPermissions } from '@/types/store'
+import {
+  IAppState,
+  IAction,
+  IUserType,
+  IOriginalPermissions,
+} from '@/types/store'
 import { IRouterItem } from '@/types/project'
 
 // 初始 state
-const initState: IAppState = {
+export const initState: IAppState = {
   logined: false, // 是否登录
   user: {} as IUserType, // 当前用户
   sideBarLevel: AppConfig.sideBarLevel || 3,
@@ -36,57 +41,59 @@ const initState: IAppState = {
   histories: [],
 }
 
-export function app(state: IAppState = initState, action: IAction): IAppState {
-  switch (action.type) {
-    case types.UPDATE_ROUTE:
-      const stageInfo = getStageInfo(state)(action.payload)
-      return {
-        ...state,
-        currentRoute: {
+export function appReducer(state: IAppState = initState, action: IAction) {
+  return produce(state, draft => {
+    switch (action.type) {
+      case types.UPDATE_ROUTE:
+        const stageInfo = getStageInfo(draft)(action.payload)
+        draft.currentRoute = {
           config: stageInfo[stageInfo.length - 1],
           treePath: stageInfo,
-        },
-      }
-    case types.CLEAR_ROUTE:
-      return {
-        ...state,
-        currentRoute: {
+        }
+        break
+
+      case types.CLEAR_ROUTE:
+        draft.currentRoute = {
           config: {} as IRouterItem,
           treePath: [],
-        },
-      }
-    case types.SET_USER_AND_STATE:
-      return {
-        ...state,
-        logined: true,
-        user: {
-          ...action.payload,
-          avatar: handleAvatar(action.payload.avatar),
-        },
-      }
-    case types.SET_USER_PERMISSIONS:
-      const permissions = handlePermissions(action.payload)
-      return { ...state, permissions }
-    case types.REMOVE_LOGINED:
-      removeToken()
-      return { ...state, logined: false }
-    case types.CHANGE_REUSE_TAB:
-      return { ...state, histories: action.payload }
-    case types.ADD_READED_MESSAGE:
-      state.readedMessages.push(action.payload)
-      return { ...state }
-    case types.ADD_UNREAD_MESSAGE:
-      state.unreadMessages.push(action.payload)
-      return { ...state }
-    case types.REMOVE_UNREAD_MESSAGE:
-      const index = state.unreadMessages.findIndex(
-        item => item.id === action.payload,
-      )
-      state.unreadMessages.splice(index, 1)
-      return { ...state }
-    default:
-      return state
-  }
+        }
+        break
+
+      case types.SET_USER_AND_STATE:
+        action.payload.avatar = handleAvatar(action.payload.avatar)
+        draft.logined = true
+        draft.user = action.payload
+        break
+
+      case types.SET_USER_PERMISSIONS:
+        draft.permissions = handlePermissions(action.payload)
+        break
+
+      case types.REMOVE_LOGINED:
+        removeToken()
+        draft.logined = false
+        break
+
+      case types.CHANGE_REUSE_TAB:
+        draft.histories = action.payload
+        break
+
+      case types.ADD_READED_MESSAGE:
+        draft.readedMessages.push(action.payload)
+        break
+
+      case types.ADD_UNREAD_MESSAGE:
+        draft.unreadMessages.push(action.payload)
+        break
+
+      case types.REMOVE_UNREAD_MESSAGE:
+        const index = draft.unreadMessages.findIndex(
+          item => item.id === action.payload,
+        )
+        draft.unreadMessages.splice(index, 1)
+        break
+    }
+  })
 }
 
 function handlePermissions(permissions: IOriginalPermissions[]): string[] {
