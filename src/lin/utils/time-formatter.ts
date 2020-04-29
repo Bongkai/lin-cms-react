@@ -1,5 +1,10 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 
-export default function timeFormatter(time: number): string {
-  return moment(time).format('YYYY-MM-DD HH:mm:ss')
+const DEFAULT_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss'
+
+export function timeFormatter(
+  time: number,
+  format: string = DEFAULT_TIME_FORMAT,
+) {
+  return dayjs(time).format(format)
 }

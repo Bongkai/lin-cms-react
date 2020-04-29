@@ -29,8 +29,9 @@ const eslint = require('eslint')
 
 const postcssNormalize = require('postcss-normalize')
 
-// 自己加的 ---
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// 【自己加的】 ---
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const antdModifyVars = require('../src/assets/styles/antd/modifyVars')
 // ---
 
@@ -54,9 +55,11 @@ const cssRegex = /\.css$/
 const cssModuleRegex = /\.module\.css$/
 const sassRegex = /\.(scss|sass)$/
 const sassModuleRegex = /\.module\.(scss|sass)$/
-// 自己加的
+
+// 【自己加的】 ---
 const lessRegex = /\.(less)$/
 const lessModuleRegex = /\.module\.(less)$/
+// ---
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -423,7 +426,7 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
-                  // 自己加的
+                  // 【自己加的】 ---
                   [
                     '@babel/plugin-proposal-decorators',
                     {
@@ -437,6 +440,7 @@ module.exports = function(webpackEnv) {
                       pragmaType: 'React',
                     },
                   ],
+                  // ---
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -474,11 +478,14 @@ module.exports = function(webpackEnv) {
                 sourceMaps: false,
               },
             },
-            // 自己加的
+
+            // 【自己加的】 ---
             {
               test: /\.(ts|tsx)$/,
               loader: require.resolve('awesome-typescript-loader'),
             },
+            // ---
+
             // "postcss" loader applies autoprefixer to our CSS.
             // "css" loader resolves paths in CSS and adds assets as dependencies.
             // "style" loader turns CSS into JS modules that inject <style> tags.
@@ -543,7 +550,8 @@ module.exports = function(webpackEnv) {
                 'sass-loader',
               ),
             },
-            // 自己加的
+
+            // 【自己加的】 ---
             {
               test: lessRegex,
               exclude: lessModuleRegex,
@@ -560,7 +568,6 @@ module.exports = function(webpackEnv) {
               // See https://github.com/webpack/webpack/issues/6571
               sideEffects: true,
             },
-            // 自己加的
             {
               test: lessModuleRegex,
               use: getStyleLoaders(
@@ -573,6 +580,8 @@ module.exports = function(webpackEnv) {
                 getLessLoader,
               ),
             },
+            // ---
+
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
@@ -687,8 +696,10 @@ module.exports = function(webpackEnv) {
       // You can remove this if you don't use Moment.js:
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 
-      // 自己加的
+      // 【自己加的】---
       // new BundleAnalyzerPlugin(),
+      new AntdDayjsWebpackPlugin(),
+      // ---
 
       // Generate a service worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the Webpack build.

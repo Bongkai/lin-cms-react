@@ -7,8 +7,7 @@ import {
   Loading3QuartersOutlined,
   DownCircleOutlined,
 } from '@ant-design/icons'
-import { Moment } from 'moment'
-import timeFormatter from '@/lin/utils/time-formatter'
+import { timeFormatter } from '@/lin/utils/time-formatter'
 import { searchLogKeyword } from '@/lin/utils/search'
 import StickyTop from '@/components/base/sticky-top/StickyTop'
 import LinHeader from '@/components/base/lin-header/LinHeader'
@@ -190,7 +189,7 @@ export default function Log() {
     setSearchUser(value)
   }
 
-  function onPickerChange(value: [Moment, Moment], valueStr: [string, string]) {
+  function onPickerChange(value: [any, any], valueStr: [string, string]) {
     let begin: string,
       end: string,
       range: [string, string] | [] = []

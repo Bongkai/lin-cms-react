@@ -54,31 +54,6 @@ export default function SideBar({ collapsed }) {
     setIdMap(idMap)
   }, []) // eslint-disable-line
 
-  // const initialList: ISideBarListItem[] = useMemo(() => {
-  //   return getSideBarList()
-  // }, []) // eslint-disable-line
-
-  // // 暂时先设置成只有首次渲染时生成 list
-  // useEffect(() => {
-  //   setList(initialList)
-  // }, []) // eslint-disable-line
-
-  // // 当 list 创建完毕后生成 idMap
-  // useEffect(() => {
-  //   function createIdMap(list: ISideBarListItem[]) {
-  //     const mapData = {} as IIdMap
-  //     deepTravel<ISideBarListItem>(list, item => {
-  //       if (item.name) {
-  //         mapData[item.name] = Utils.getRandomStr()
-  //       }
-  //     })
-  //     return mapData
-  //   }
-
-  //   const idMap = createIdMap(list)
-  //   setIdMap(idMap)
-  // }, [list])
-
   useEffect(() => {
     // 根据当前路由设置激活侧边栏
     function getSeletedKey(): string {
@@ -119,6 +94,8 @@ export default function SideBar({ collapsed }) {
   function onOpenChange(openKeys: string[]) {
     setOpenKeys(() => openKeys)
   }
+
+  // search 相关
 
   function switchToSearch() {
     setShowSearchList(true)

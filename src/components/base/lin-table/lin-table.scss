@@ -2,13 +2,6 @@
   .ant-table-thead > tr > th {
     padding: 20px 16px;
   }
-  // .ant-table-thead > tr > th, .ant-table-tbody {
-  //   background: #fff;
-
-  //   > tr > td {
-  //     padding: 14px 16px;
-  //   }
-  // }
 
   &.no-v-divider {
     .ant-table-bordered .ant-table-thead > tr > th,
@@ -23,7 +16,6 @@
     }
   }
   &.no-h-divider {
-    // .ant-table-bordered .ant-table-thead > tr > th,
     .ant-table-bordered .ant-table-tbody > tr > td {
       border-bottom: 0;
     }

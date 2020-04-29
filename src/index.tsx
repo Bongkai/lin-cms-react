@@ -7,6 +7,9 @@ import { store, persistor } from './store/index'
 import { PersistGate } from 'redux-persist/integration/react'
 import App from './App'
 
+// 导入 dayjs 的汉化文件
+import 'dayjs/locale/zh-cn'
+
 // 设置热更新
 if (module.hot) {
   module.hot.accept(err => {
