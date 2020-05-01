@@ -8,17 +8,12 @@ export interface IHomeRouterItem {
   name: symbol | string | null
   component: LoadableComponent<any>
   meta: IHomeRouterItemMeta
-  // TODO: 确定下面字段的类型
-  key?: any
-  exact?: any
-  strict?: any
-  permission?: any
 }
 
 export interface IHomeRouterItemMeta {
   title: string
   icon: string
-  permission: string[] | null | undefined
+  permission?: string[]
   type: string
 }
 
@@ -47,7 +42,16 @@ deepTravel<IRouterItem>(stageConfig, viewConfig => {
   const viewRouter = {} as IHomeRouterItem
   viewRouter.path = viewConfig.route
   viewRouter.name = viewConfig.name
-  viewRouter.component = loadable(() => import(`@/${viewConfig.filePath}`))
+
+  // 动态加载细化到 views 和 plugins 文件夹，使 src 的其余文件夹可以正常 Tree Shaking
+  const filePath = viewConfig.filePath.match(/^(\w+\/)(.+)$/)?.[2]
+  if (filePath) {
+    viewRouter.component = viewConfig.filePath.startsWith('views/')
+      ? loadable(() => import(`@/views/${filePath}`))
+      : loadable(() => import(`@/plugins/${filePath}`))
+  }
+  // viewRouter.component = loadable(() => import(`@/${viewConfig.filePath}`))
+
   viewRouter.meta = {
     title: viewConfig.title,
     icon: viewConfig.icon,

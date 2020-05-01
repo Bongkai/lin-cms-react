@@ -50,10 +50,8 @@ function RenderRoutes({
           route.path &&
           route.name && (
             <Route
-              key={route.key || index}
+              key={index}
               path={route.path}
-              exact={route.exact}
-              strict={route.strict}
               render={props => {
                 if (!route.name) return
 

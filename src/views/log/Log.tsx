@@ -19,6 +19,7 @@ import useFirstMountState from '@/hooks/base/useFirstMountState'
 import { checkPermission } from '@/lin/directives/authorize'
 
 import { ILogUsers, ILogItem, ILogsInfo } from '@/types/model'
+import { Moment } from '@/types/project'
 
 import './log.scss'
 
@@ -189,7 +190,7 @@ export default function Log() {
     setSearchUser(value)
   }
 
-  function onPickerChange(value: [any, any], valueStr: [string, string]) {
+  function onPickerChange(value: [Moment, Moment], valueStr: [string, string]) {
     let begin: string,
       end: string,
       range: [string, string] | [] = []

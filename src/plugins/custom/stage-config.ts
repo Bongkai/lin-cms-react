@@ -18,7 +18,6 @@ const CustomRouter: IRouterItem = {
       filePath: 'plugins/custom/views/upload-imgs-demo/UploadImgsDemo',
       inNav: true,
       icon: 'ToolOutlined',
-      permission: null,
     },
     {
       title: '富文本',
@@ -28,7 +27,6 @@ const CustomRouter: IRouterItem = {
       filePath: 'plugins/custom/views/tinymce-demo/TinymceDemo',
       inNav: true,
       icon: 'ToolOutlined',
-      permission: null,
     },
   ],
 }

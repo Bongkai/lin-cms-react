@@ -29,16 +29,33 @@ const eslint = require('eslint')
 
 const postcssNormalize = require('postcss-normalize')
 
-// 【自己加的】 ---
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// ---【添加】---
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
+const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
+const ProgressbarWebpackPlugin = require('progress-bar-webpack-plugin')
+const WebpackBuildNotifier = require('webpack-build-notifier')
+
+// 自定义 antd 全局样式
 const antdModifyVars = require('../src/assets/styles/antd/modifyVars')
-// ---
+// ------
+
+// ---【功能开关】---
+// 是否开启 ParallelUglify，开启后会减少打包体积，但会增加打包时间
+const shouldParallelUglify = true
+// 是否开启 BundleAnalyzer，开启后会在打包完成后弹出分析页面
+const shouldBundleAnalyze = false
+// ------
 
 const appPackageJson = require(paths.appPackageJson)
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
+// ---【修改】---
+// const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
+const shouldUseSourceMap = false
+// ------
+
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false'
@@ -56,10 +73,10 @@ const cssModuleRegex = /\.module\.css$/
 const sassRegex = /\.(scss|sass)$/
 const sassModuleRegex = /\.module\.(scss|sass)$/
 
-// 【自己加的】 ---
+// ---【添加】---
 const lessRegex = /\.(less)$/
 const lessModuleRegex = /\.module\.(less)$/
-// ---
+// ------
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -124,6 +141,8 @@ module.exports = function(webpackEnv) {
         },
       },
     ].filter(Boolean)
+
+    // ---【修改】---
     // if (preProcessor) {
     //   loaders.push(
     //     {
@@ -140,6 +159,7 @@ module.exports = function(webpackEnv) {
     //     }
     //   );
     // }
+
     if (preProcessor) {
       let loader = '',
         options = {}
@@ -161,6 +181,7 @@ module.exports = function(webpackEnv) {
           options: Object.assign({ sourceMap: true }, options),
         },
       )
+      // ------
     }
     return loaders
   }
@@ -177,14 +198,13 @@ module.exports = function(webpackEnv) {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
-    // devtool: isEnvProduction
-    //   ? shouldUseSourceMap
-    //     ? 'source-map'
-    //     : false
-    //   : isEnvDevelopment && 'cheap-module-source-map',
+
     devtool: isEnvProduction
-      ? false
+      ? shouldUseSourceMap
+        ? 'source-map'
+        : false
       : isEnvDevelopment && 'cheap-module-source-map',
+
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
     entry: [
@@ -338,11 +358,6 @@ module.exports = function(webpackEnv) {
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
         '@': paths.appSrc,
-        // lin: path.resolve(paths.appSrc, 'lin'),
-        // assets: path.resolve(paths.appSrc, 'assets'),
-        // views: path.resolve(paths.appSrc, 'views'),
-        // components: path.resolve(paths.appSrc, 'components'),
-        // hooks: path.resolve(paths.appSrc, 'hooks'),
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -413,7 +428,6 @@ module.exports = function(webpackEnv) {
                 customize: require.resolve(
                   'babel-preset-react-app/webpack-overrides',
                 ),
-
                 plugins: [
                   [
                     require.resolve('babel-plugin-named-asset-import'),
@@ -426,7 +440,7 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
-                  // 【自己加的】 ---
+                  // ---【添加】---
                   [
                     '@babel/plugin-proposal-decorators',
                     {
@@ -440,7 +454,7 @@ module.exports = function(webpackEnv) {
                       pragmaType: 'React',
                     },
                   ],
-                  // ---
+                  // ------
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -479,12 +493,12 @@ module.exports = function(webpackEnv) {
               },
             },
 
-            // 【自己加的】 ---
-            {
-              test: /\.(ts|tsx)$/,
-              loader: require.resolve('awesome-typescript-loader'),
-            },
-            // ---
+            // ---【添加】---
+            // {
+            //   test: /\.(ts|tsx)$/,
+            //   loader: require.resolve('awesome-typescript-loader'),
+            // },
+            // ------
 
             // "postcss" loader applies autoprefixer to our CSS.
             // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -504,7 +518,7 @@ module.exports = function(webpackEnv) {
               // containing package claims to have no side effects.
               // Remove this when webpack adds a warning or an error for this.
               // See https://github.com/webpack/webpack/issues/6571
-              sideEffects: true,
+              sideEffects: false,
             },
             // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
             // using the extension .module.css
@@ -551,7 +565,7 @@ module.exports = function(webpackEnv) {
               ),
             },
 
-            // 【自己加的】 ---
+            // ---【添加】---
             {
               test: lessRegex,
               exclude: lessModuleRegex,
@@ -580,7 +594,7 @@ module.exports = function(webpackEnv) {
                 getLessLoader,
               ),
             },
-            // ---
+            // ------
 
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
@@ -605,6 +619,44 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
+      // ---【添加】---
+
+      // 显示打包进度条
+      new ProgressbarWebpackPlugin(),
+
+      // 打包完成弹窗提示
+      isEnvProduction &&
+        new WebpackBuildNotifier({
+          title: 'Webpack Build',
+          suppressSuccess: true,
+        }),
+
+      // 打包完成弹出构建包详情分析页面
+      shouldBundleAnalyze && new BundleAnalyzerPlugin(),
+
+      // 将 antd 里面用到 moment 的内容替换成 dayjs
+      new AntdDayjsWebpackPlugin(),
+
+      // 并行压缩输出的 JS 代码
+      isEnvProduction &&
+        shouldParallelUglify &&
+        new WebpackParallelUglifyPlugin({
+          // 传递给 UglifyJS 的参数，开启多进程
+          uglifyJS: {
+            output: {
+              beautify: false,
+              comments: false,
+            },
+            compress: {
+              drop_console: true,
+              collapse_vars: true,
+              reduce_vars: true,
+            },
+          },
+        }),
+
+      // ------
+
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
@@ -695,11 +747,6 @@ module.exports = function(webpackEnv) {
       // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
       // You can remove this if you don't use Moment.js:
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-
-      // 【自己加的】---
-      // new BundleAnalyzerPlugin(),
-      new AntdDayjsWebpackPlugin(),
-      // ---
 
       // Generate a service worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the Webpack build.

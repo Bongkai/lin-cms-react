@@ -1,6 +1,13 @@
 import { store } from '@/store'
+import Config from '@/config/index'
 import Util from '@/lin/utils/util'
-import { IAppState, IUserType, ISideBarListItem } from '@/types/store'
+
+import {
+  IAppState,
+  IUserType,
+  ISideBarListItem,
+  IOriginalPermissions,
+} from '@/types/store'
 import { IRouterItem } from '@/types/project'
 
 const name: unique symbol = Symbol()
@@ -201,6 +208,7 @@ export const getStageInfo = (
 ): ((name: string) => IRouterItem[]) => {
   const { stageConfig } = state
   const cache = {} as IRouterItem[]
+
   const findStage = (
     stages: IRouterItem | IRouterItem[],
     name: String,
@@ -231,6 +239,7 @@ export const getStageInfo = (
     // return false
     return null
   }
+
   return (name: string) => {
     if (cache[name]) {
       return cache[name]
@@ -243,4 +252,24 @@ export const getStageInfo = (
     }
     return stageInfo
   }
+}
+
+export function handlePermissions(
+  permissions: IOriginalPermissions[],
+): string[] {
+  const _permissions: string[] = []
+  for (let i = 0; i < permissions.length; i++) {
+    for (const key in permissions[i]) {
+      for (let j = 0; j < permissions[i][key].length; j++) {
+        _permissions.push(permissions[i][key][j].permission)
+      }
+    }
+  }
+  return _permissions
+}
+
+export function handleAvatar(avatar: string | null): string {
+  return avatar?.startsWith('http')
+    ? avatar
+    : `${Config.baseURL}/assets/${avatar}`
 }

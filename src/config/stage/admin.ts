@@ -6,7 +6,7 @@ const adminRouter: IRouterItem = {
   title: '权限管理',
   type: 'folder',
   icon: 'SafetyOutlined',
-  filePath: 'views/admin/',
+  filePath: '',
   order: null,
   inNav: true,
   permission: ['超级管理员独有权限'],

@@ -1,17 +1,15 @@
 import { produce } from 'immer'
 import { removeToken } from '@/lin/utils/token'
-import { getStageInfo } from '../getters/app.getters'
+import {
+  getStageInfo,
+  handleAvatar,
+  handlePermissions,
+} from '../getters/app.getters'
 import * as types from '../actions/action-types'
 import AppConfig from '@/config/index' // 引入项目配置
 import stageConfig from '@/config/stage' // 引入舞台配置
-import Config from '@/config/index'
 
-import {
-  IAppState,
-  IAction,
-  IUserType,
-  IOriginalPermissions,
-} from '@/types/store'
+import { IAppState, IAction, IUserType } from '@/types/store'
 import { IRouterItem } from '@/types/project'
 
 // 初始 state
@@ -94,22 +92,4 @@ export function appReducer(state: IAppState = initState, action: IAction) {
         break
     }
   })
-}
-
-function handlePermissions(permissions: IOriginalPermissions[]): string[] {
-  const _permissions: string[] = []
-  for (let i = 0; i < permissions.length; i++) {
-    for (const key in permissions[i]) {
-      for (let j = 0; j < permissions[i][key].length; j++) {
-        _permissions.push(permissions[i][key][j].permission)
-      }
-    }
-  }
-  return _permissions
-}
-
-function handleAvatar(avatar: string | null): string {
-  return avatar?.startsWith('http')
-    ? avatar
-    : `${Config.baseURL}/assets/${avatar}`
 }
