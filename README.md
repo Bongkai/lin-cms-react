@@ -9,7 +9,7 @@
   <a href="#简介">简介</a>&nbsp;|&nbsp;<a href="#快速上手">快速上手</a>&nbsp;|&nbsp;<a href="#版本日志">版本日志</a>
 </p>
 
-![](https://img.shields.io/badge/版本-0.1.0--beta.2-3963bc.svg)
+![](https://img.shields.io/badge/版本-0.1.1--beta.1-3963bc.svg)
 ![](https://img.shields.io/badge/node-8.11.0+-3963bc.svg)
 ![](https://img.shields.io/badge/脚手架-create--react--app-3963bc.svg)
 ![](https://img.shields.io/badge/license-MIT-3963bc.svg)
@@ -106,7 +106,13 @@ QQ群搜索：林间有风 或 643205479
 
 ## 版本日志
 
-最新版本 `0.1.0-beta.2`
+最新版本 `0.1.1-beta.1`
+
+### 0.1.1-beta.1
+
+1.  `U` 升级 antd v4
+2.  `U` 使用 Immer 和自定义 hook 优化 Redux 代码，简化使用方法
+3.  `U` 修改项目构建配置，优化动态加载功能
 
 ### 0.1.0-beta.2
 
