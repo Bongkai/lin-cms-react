@@ -1,5 +1,13 @@
+import { store } from '@/store'
+import Config from '@/config/index'
 import Util from '@/lin/utils/util'
-import { IAppState, IUserType, ISideBarListItem } from '@/types/store'
+
+import {
+  IAppState,
+  IUserType,
+  ISideBarListItem,
+  IOriginalPermissions,
+} from '@/types/store'
 import { IRouterItem } from '@/types/project'
 
 const name: unique symbol = Symbol()
@@ -40,7 +48,7 @@ function IterationDelateMenuChildren(arr: IRouterItem[]): IRouterItem[] {
     for (const i in arr) {
       const children = arr[i].children
       if (children && !children.length) {
-        delete arr[i] // eslint-disable-line
+        delete arr[i]
       } else if (children && children.length) {
         IterationDelateMenuChildren(children)
       }
@@ -67,8 +75,8 @@ function permissionShaking(
 }
 
 // 获取有权限的舞台配置
-export const permissionStageConfig = (state: IAppState): IRouterItem[] => {
-  const { stageConfig, permissions, user } = state
+export const permissionStageConfig = (): IRouterItem[] => {
+  const { stageConfig, permissions, user } = store.getState().app
   const tempStageConfig = Util.deepClone(stageConfig)
   const shookConfig = permissionShaking(tempStageConfig, permissions, user)
 
@@ -84,8 +92,8 @@ export const permissionStageConfig = (state: IAppState): IRouterItem[] => {
 }
 
 // 获取侧边栏配置
-export const getSideBarList = (state: IAppState): ISideBarListItem[] => {
-  const { sideBarLevel } = state
+export const getSideBarList = (): ISideBarListItem[] => {
+  const { sideBarLevel } = store.getState().app
 
   // TODO: 优化函数返回值的类型
   function deepGetSideBar(
@@ -171,7 +179,7 @@ export const getSideBarList = (state: IAppState): ISideBarListItem[] => {
   }
 
   const sideBar: ISideBarListItem[] = deepGetSideBar(
-    permissionStageConfig(state),
+    permissionStageConfig(),
     sideBarLevel,
   )
   return sideBar
@@ -200,6 +208,7 @@ export const getStageInfo = (
 ): ((name: string) => IRouterItem[]) => {
   const { stageConfig } = state
   const cache = {} as IRouterItem[]
+
   const findStage = (
     stages: IRouterItem | IRouterItem[],
     name: String,
@@ -230,6 +239,7 @@ export const getStageInfo = (
     // return false
     return null
   }
+
   return (name: string) => {
     if (cache[name]) {
       return cache[name]
@@ -242,4 +252,24 @@ export const getStageInfo = (
     }
     return stageInfo
   }
+}
+
+export function handlePermissions(
+  permissions: IOriginalPermissions[],
+): string[] {
+  const _permissions: string[] = []
+  for (let i = 0; i < permissions.length; i++) {
+    for (const key in permissions[i]) {
+      for (let j = 0; j < permissions[i][key].length; j++) {
+        _permissions.push(permissions[i][key][j].permission)
+      }
+    }
+  }
+  return _permissions
+}
+
+export function handleAvatar(avatar: string | null): string {
+  return avatar?.startsWith('http')
+    ? avatar
+    : `${Config.baseURL}/assets/${avatar}`
 }

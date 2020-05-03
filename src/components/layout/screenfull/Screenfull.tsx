@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Icon, message } from 'antd'
+import { message } from 'antd'
+import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
 import screenfull, { Screenfull as IScreenfull } from 'screenfull'
 
 import './screenfull.scss'
@@ -27,8 +28,13 @@ export default function Screenfull() {
 
   return (
     <div className='screenfull-container' title='全屏/正常'>
-      <Icon
-        type={isFullscreen ? 'fullscreen-exit' : 'fullscreen'}
+      <FullscreenExitOutlined
+        r-if={isFullscreen}
+        className='screenfull-icon'
+        onClick={handleFullScreen}
+      />
+      <FullscreenOutlined
+        r-else
         className='screenfull-icon'
         onClick={handleFullScreen}
       />

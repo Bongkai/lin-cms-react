@@ -13,7 +13,7 @@ let homeRouter: IRouterItem[] = [
     route: '/about',
     filePath: 'views/about/About',
     inNav: true,
-    icon: 'home',
+    icon: 'HomeOutlined',
     order: 1,
   },
   {
@@ -23,7 +23,7 @@ let homeRouter: IRouterItem[] = [
     route: '/log',
     filePath: 'views/log/Log',
     inNav: true,
-    icon: 'solution',
+    icon: 'SolutionOutlined',
     order: 2,
     permission: ['查询所有日志'],
   },
@@ -34,7 +34,7 @@ let homeRouter: IRouterItem[] = [
     route: '/center',
     filePath: 'views/center/Center',
     inNav: false,
-    icon: 'solution',
+    icon: 'SolutionOutlined',
   },
   {
     title: '404',
@@ -43,7 +43,7 @@ let homeRouter: IRouterItem[] = [
     route: '/404',
     filePath: 'views/error-page/ErrorPage',
     inNav: false,
-    icon: 'stop',
+    icon: 'StopOutlined',
   },
   adminConfig,
 ]

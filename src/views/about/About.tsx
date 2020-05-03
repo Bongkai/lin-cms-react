@@ -10,11 +10,11 @@ import avatarImg from 'assets/img/about/avatar.png'
 import openSourceImg from 'assets/img/about/open-source.jpg'
 
 export default function About() {
-  const [showTeam, setShowTeam] = useState(true)
+  const [showTeam, setShowTeam] = useState(false)
 
   useEffect(() => {
-    if (document.body.clientWidth > 1200 && document.body.clientWidth < 1330) {
-      setShowTeam(false)
+    if (document.body.clientWidth > 1330) {
+      setShowTeam(true)
     }
   }, [])
 
@@ -63,21 +63,18 @@ export default function About() {
                   </span>
                   <span className='team-role'>研发</span>
                   <span className='team-name'>
-                    {showTeam ? (
-                      <ul>
-                        <li>Pedro</li>
-                        <li>一飞</li>
-                        <li>凉面</li>
-                        <li>圈圈</li>
-                        <li>家乐</li>
-                        <li>Jocky</li>
-                        <li>流乔</li>
-                      </ul>
-                    ) : (
-                      <ul>
-                        <li>林间有风 CMS 组</li>
-                      </ul>
-                    )}
+                    <ul r-if={showTeam}>
+                      <li>Pedro</li>
+                      <li>一飞</li>
+                      <li>凉面</li>
+                      <li>圈圈</li>
+                      <li>家乐</li>
+                      <li>Jocky</li>
+                      <li>流乔</li>
+                    </ul>
+                    <ul r-else>
+                      <li>林间有风 CMS 组</li>
+                    </ul>
                   </span>
                 </li>
                 <li>

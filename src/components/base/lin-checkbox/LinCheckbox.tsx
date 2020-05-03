@@ -1,94 +1,89 @@
 import React, { useState, useEffect } from 'react'
-import { Checkbox } from 'antd'
-import useFirstMountState from '@/hooks/base/useFirstMountState'
+import { Checkbox, Form } from 'antd'
 
 import { CheckboxChangeEvent } from 'antd/lib/checkbox'
-import { WrappedFormUtils } from 'antd/lib/form/Form'
+import { FormInstance } from 'antd/lib/form'
 
 interface ILinCheckbox {
   /** Checkbox 的选项数据 */
   options: object[]
   /** CheckboxItem 的 value 和 key 对应的 option 字段 */
-  valueKey: string
+  itemValueKey: string
   /** CheckboxItem 的 name 对应的 option 字段 */
-  nameKey: string
+  itemNameKey: string
   /** 全选按钮的文字说明 */
   moduleName?: string
   /** Form.create() 得到的实例 */
-  form?: WrappedFormUtils
-  /** form.getFieldDecorator(id, options) 的第一个参数 */
-  decoratorId?: string
-  /** form.getFieldDecorator(id, options) 的第二个参数 */
-  decoratorOptions?: object
-  /** 自定义全选行的 class 名 */
+  form?: FormInstance
+  /** form fields 里的字段名 */
+  name?: string
+  /** 自定义 CheckAll 的类名 */
   checkAllClassName?: string
-  /** 自定义选项行的 class 名 */
+  /** 自定义 CheckGroup 的类名 */
   checkGroupClassName?: string
-  /** 自定义选项子项的 class 名 */
+  /** 自定义 CheckItem 的类名 */
   checkItemClassName?: string
-  /** 自定义 Checkbox.Group 的 onChange 方法，方法参数与原生相同 */
-  onChange?: (value: object[]) => void
+  /** 自定义 Checkbox.Group 的 onChange 方法，方法参数与 antd 相同 */
+  onChange?: (value: (string | number)[]) => void
 }
 
 export default function LinCheckbox(props: ILinCheckbox) {
-  let {
+  const {
     form,
-    decoratorId = 'checkbox',
-    decoratorOptions = {},
-    options = [],
-    valueKey,
-    nameKey,
+    name = '$default_checkbox',
+    itemValueKey,
+    itemNameKey,
     moduleName,
     onChange,
-    checkAllClassName = '',
-    checkGroupClassName = '',
-    checkItemClassName = '',
+    checkAllClassName,
+    checkGroupClassName,
+    checkItemClassName,
   } = props
-  const [checkedList, setCheckedList] = useState<any[]>([])
-  const isFirstMount = useFirstMountState()
-
-  // options 为 null 时设为空数组
-  options = options || []
+  const options = props.options || []
 
   // 是否全部选中
-  const checkAll = checkedList.length === options.length
+  const [checkAll, setCheckAll] = useState(false)
   // 是否部分选中
-  const indeterminate = !checkAll && checkedList.length > 0
+  const [indeterminate, setIndeterminate] = useState(false)
 
-  // 作为受控组件时同步外部数据
+  // 最新的选中数据
+  const newChecked: (string | number)[] =
+    (form ? form.getFieldValue(name) : []) || []
+
+  // 同步外部数据
   useEffect(() => {
-    // 不受 form 控制时跳过
-    if (!form) return
+    const checkAll = newChecked.length === options.length
 
-    const newChecked: any[] = form ? form.getFieldValue(decoratorId) : []
+    setCheckAll(newChecked.length ? checkAll : false)
+    setIndeterminate(!checkAll && newChecked.length > 0)
+  }, [newChecked]) // eslint-disable-line
 
-    if (checkedList.length === newChecked.length) return
-
-    setCheckedList(newChecked)
-  }, [form, decoratorId, checkedList, isFirstMount])
-
-  // 手动点击全选按钮时执行
+  // 手动点击 CheckAll 时执行
   function onCheckAllChange(ev: CheckboxChangeEvent) {
     const { checked } = ev.target
-    const newCheckedList = checked ? options.map(item => item[valueKey]) : []
+    const newCheckedList = checked
+      ? options.map(item => item[itemValueKey])
+      : []
     form &&
       form.setFieldsValue({
-        [decoratorId]: newCheckedList,
+        [name]: newCheckedList,
       })
-    setCheckedList(newCheckedList)
+    setCheckAll(checked)
+    setIndeterminate(false)
     onChange && onChange(newCheckedList)
   }
 
-  // 手动点击改变 checkbox group 的选中状态时执行
-  function onValueChange(value: any[]) {
-    setCheckedList(value)
-    onChange && onChange(value)
-  }
+  // 手动点击改变 CheckItem 的选中状态时执行
+  function onValueChange(value: (string | number)[]) {
+    form &&
+      form.setFieldsValue({
+        [name]: value,
+      })
+    const checkAll = value.length === options.length
 
-  let decorator = (f: any) => f,
-    groupProps = {}
-  if (form) {
-    decorator = form.getFieldDecorator(decoratorId, decoratorOptions)
+    setCheckAll(checkAll)
+    setIndeterminate(!checkAll && value.length > 0)
+    onChange && onChange(value)
   }
 
   return (
@@ -102,24 +97,22 @@ export default function LinCheckbox(props: ILinCheckbox) {
       >
         {moduleName}
       </Checkbox>
-
-      {decorator(
+      <Form.Item name={name} noStyle>
         <Checkbox.Group
           className={checkGroupClassName}
           onChange={onValueChange}
-          {...groupProps}
         >
           {options.map(item => (
             <Checkbox
               className={checkItemClassName}
-              key={item[valueKey]}
-              value={item[valueKey]}
+              key={item[itemValueKey]}
+              value={item[itemValueKey]}
             >
-              {item[nameKey]}
+              {item[itemNameKey]}
             </Checkbox>
           ))}
-        </Checkbox.Group>,
-      )}
+        </Checkbox.Group>
+      </Form.Item>
     </div>
   )
 }

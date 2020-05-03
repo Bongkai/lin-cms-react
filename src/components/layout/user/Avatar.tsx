@@ -1,13 +1,14 @@
 import React, { useState, useRef, ChangeEvent } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Modal, Icon, message } from 'antd'
+import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import { Modal, message } from 'antd'
+import { EditOutlined } from '@ant-design/icons'
 import { post, put } from '@/lin/plugins/axios'
 import Cropper from '@/components/base/cropper/Cropper'
 import UserModal from '@/lin/models/user'
 import { setUserAndState } from '@/store/actions/app.actions'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
-import { IStoreState, IUserType } from '@/types/store'
+import { IUserType } from '@/types/store'
 import { IResponseWithoutData } from '@/types/model'
 
 import defaultAvatar from '@/assets/img/user/user.png'
@@ -23,12 +24,10 @@ export default function Avatar() {
   const [cropVisible, setCropVisible] = useState(false)
   const [cropImg, setCropImg] = useState<string | undefined>(undefined)
   const [submitting, setSubmitting] = useState(false)
-  const avatar = useSelector<IStoreState, string | null>(
-    state => state.app.user.avatar,
-  )
-  const dispatch = useDispatch()
+  const { avatar } = useAppSelector().user
   const cropper = useRef<any>()
   const avatarInput = useRef<HTMLInputElement | null>(null)
+  const dispatch = useDispatch()
 
   // 读取本地图片并进入截图界面
   function onFileChange(ev: ChangeEvent<HTMLInputElement>) {
@@ -129,7 +128,7 @@ export default function Avatar() {
     <div className='avatar' title='点击修改头像'>
       <img src={avatar || defaultAvatar} alt='头像' />
       <label className='mask'>
-        <Icon type='edit' style={{ fontSize: '18px' }} />
+        <EditOutlined style={{ fontSize: '18px' }} />
         <input
           ref={avatarInput}
           type='file'

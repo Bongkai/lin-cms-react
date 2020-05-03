@@ -6,108 +6,61 @@ import {
   IMessage,
 } from '@/types/store'
 
-export type IAction =
-  | UpdateRoute
-  | ClearRoute
-  | SetUserAndState
-  | SetUserPermissions
-  | LoginOut
-  | ChangeReuseTab
-  | AddReadedMessage
-  | AddUnreadMessage
-  | RemoveUnreadMessage
-
-export interface UpdateRoute {
-  type: types.UPDATE_ROUTE
-  payload: string
-}
-export function updateRoute(pathname: string): UpdateRoute {
+export function updateRoute(pathname: string) {
   return {
     type: types.UPDATE_ROUTE,
     payload: pathname,
   }
 }
 
-export interface ClearRoute {
-  type: types.CLEAR_ROUTE
-}
-export function clearRoute(): ClearRoute {
+export function clearRoute() {
   return {
     type: types.CLEAR_ROUTE,
   }
 }
 
-export interface SetUserAndState {
-  type: types.SET_USER_AND_STATE
-  payload: IUserType
-}
-export function setUserAndState(user: IUserType): SetUserAndState {
+export function setUserAndState(user: IUserType) {
   return {
     type: types.SET_USER_AND_STATE,
     payload: user,
   }
 }
 
-export interface SetUserPermissions {
-  type: types.SET_USER_PERMISSIONS
-  payload: IOriginalPermissions[]
-}
-export function setUserPermissions(
-  permissions: IOriginalPermissions[],
-): SetUserPermissions {
+export function setUserPermissions(permissions: IOriginalPermissions[]) {
   return {
     type: types.SET_USER_PERMISSIONS,
     payload: permissions,
   }
 }
 
-export interface LoginOut {
-  type: types.REMOVE_LOGINED
-}
-export function loginOut(): LoginOut {
+export function loginOut() {
   return {
     type: types.REMOVE_LOGINED,
   }
 }
 
-export interface ChangeReuseTab {
-  type: types.CHANGE_REUSE_TAB
-  payload: IHistoryItem[]
-}
-export function changeReuseTab(histories: IHistoryItem[]): ChangeReuseTab {
+export function changeReuseTab(histories: IHistoryItem[]) {
   return {
     type: types.CHANGE_REUSE_TAB,
     payload: histories,
   }
 }
 
-export interface AddReadedMessage {
-  type: types.ADD_READED_MESSAGE
-  payload: IMessage
-}
-export function addReadedMessage(message: IMessage): AddReadedMessage {
+export function addReadedMessage(message: IMessage) {
   return {
     type: types.ADD_READED_MESSAGE,
     payload: message,
   }
 }
 
-export interface AddUnreadMessage {
-  type: types.ADD_UNREAD_MESSAGE
-  payload: IMessage
-}
-export function addUnreadMessage(message: IMessage): AddUnreadMessage {
+export function addUnreadMessage(message: IMessage) {
   return {
     type: types.ADD_UNREAD_MESSAGE,
     payload: message,
   }
 }
 
-export interface RemoveUnreadMessage {
-  type: types.REMOVE_UNREAD_MESSAGE
-  payload: number
-}
-export function removeUnreadMessage(messageId: number): RemoveUnreadMessage {
+export function removeUnreadMessage(messageId: number) {
   return {
     type: types.REMOVE_UNREAD_MESSAGE,
     payload: messageId,

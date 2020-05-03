@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useImmer } from 'use-immer'
+import { useAppSelector } from '@/hooks/project/useRedux'
 import { useHistory, NavLink } from 'react-router-dom'
-import { Menu, Select, Icon } from 'antd'
+import { Menu, Select } from 'antd'
+import { SearchOutlined } from '@ant-design/icons'
+import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
 import Utils from '@/lin/utils/util'
 import { getSideBarList, deepTravel } from '@/store/getters/app.getters'
 
-import { IStoreState, IAppState, ISideBarListItem } from '@/types/store'
-import { IRouterItem } from '@/types/project'
+import { ISideBarListItem } from '@/types/store'
 
 import './side-bar.scss'
 import logoImg from '@/assets/img/logo.png'
@@ -29,26 +31,15 @@ interface IViewRouter {
 export default function SideBar({ collapsed }) {
   const [list, setList] = useState<ISideBarListItem[]>([])
   const [idMap, setIdMap] = useState<IIdMap>({} as IIdMap)
-  const [openKeys, setOpenKeys] = useState<string[]>([])
+  const [openKeys, setOpenKeys] = useImmer<string[]>([])
   const [showSearchList, setShowSearchList] = useState(false)
   const [groups, setGroups] = useState<IViewRouter[]>([])
   const [selectedKey, setSelectedKey] = useState('')
-  const appState = useSelector<IStoreState, IAppState>(state => state.app)
-  const stageInfo: IRouterItem[] = appState.currentRoute.treePath
+  const stageInfo = useAppSelector().currentRoute.treePath
   const history = useHistory()
 
-  const initialList: ISideBarListItem[] = useMemo(() => {
-    return getSideBarList(appState)
-  }, []) // eslint-disable-line
-
-  // 暂时先设置成只有首次渲染时生成 list
   useEffect(() => {
-    setList(initialList)
-  }, []) // eslint-disable-line
-
-  // 当 list 创建完毕后生成 idMap
-  useEffect(() => {
-    function createIdMap(list: ISideBarListItem[]): IIdMap {
+    function createIdMap(list: ISideBarListItem[]) {
       const mapData = {} as IIdMap
       deepTravel<ISideBarListItem>(list, item => {
         if (item.name) {
@@ -57,10 +48,11 @@ export default function SideBar({ collapsed }) {
       })
       return mapData
     }
-
+    const list = getSideBarList()
     const idMap = createIdMap(list)
+    setList(list)
     setIdMap(idMap)
-  }, [list])
+  }, []) // eslint-disable-line
 
   useEffect(() => {
     // 根据当前路由设置激活侧边栏
@@ -84,24 +76,26 @@ export default function SideBar({ collapsed }) {
   useEffect(() => {
     // 其他组件切换路由时同步侧边栏的展开情况
     function syncOpenKeys() {
-      const _openKeys = [...openKeys]
-      stageInfo.forEach((item: IRouterItem) => {
-        if (item.type === 'folder') {
-          if (!item.name) return true
-          const openKey = idMap[item.name]
-          if (!_openKeys.some(item => item === openKey)) {
-            _openKeys.push(openKey)
+      setOpenKeys(openKeys => {
+        stageInfo.forEach(item => {
+          if (item.type === 'folder') {
+            if (!item.name) return true
+            const openKey = idMap[item.name]
+            if (!openKeys.some(item => item === openKey)) {
+              openKeys.push(openKey)
+            }
           }
-        }
+        })
       })
-      setOpenKeys(_openKeys)
     }
     syncOpenKeys()
-  }, [stageInfo, idMap]) // eslint-disable-line
+  }, [stageInfo, idMap, setOpenKeys])
 
   function onOpenChange(openKeys: string[]) {
-    setOpenKeys(openKeys)
+    setOpenKeys(() => openKeys)
   }
+
+  // search 相关
 
   function switchToSearch() {
     setShowSearchList(true)
@@ -145,7 +139,7 @@ export default function SideBar({ collapsed }) {
   const menuRecursion = (list: ISideBarListItem[]) => {
     return list.map((item, index) => {
       const { name, path } = item
-      const key = idMap[name || index]
+      const key = name ? idMap[name] : index
       // 判断 key 值存在后再渲染，避免出现 unique key 报错
       return key && path ? (
         item.children ? (
@@ -154,7 +148,7 @@ export default function SideBar({ collapsed }) {
             key={key}
             title={
               <>
-                <Icon type={item.icon} style={{ fontSize: '16px' }} />
+                <DynamicIcon type={item.icon} style={{ fontSize: '16px' }} />
                 <span>{Utils.cutString(item.title, 12)}</span>
               </>
             }
@@ -164,7 +158,7 @@ export default function SideBar({ collapsed }) {
         ) : (
           <Item key={key}>
             <NavLink to={path}>
-              <Icon type={item.icon} style={{ fontSize: '16px' }} />
+              <DynamicIcon type={item.icon} style={{ fontSize: '16px' }} />
               <span title={item.title}>{Utils.cutString(item.title, 12)}</span>
             </NavLink>
           </Item>
@@ -206,7 +200,7 @@ export default function SideBar({ collapsed }) {
           ))}
         </Select>
         <div className='search-display' onClick={switchToSearch} r-else>
-          <Icon type='search' style={{ color: 'rgb(185, 190, 195)' }} />
+          <SearchOutlined style={{ color: 'rgb(185, 190, 195)' }} />
         </div>
       </div>
 

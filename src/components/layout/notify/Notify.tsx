@@ -1,18 +1,15 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { Dropdown, Icon, Badge } from 'antd'
+import { useAppSelector } from '@/hooks/project/useRedux'
+import { Dropdown, Badge } from 'antd'
+import { WarningFilled, BellOutlined } from '@ant-design/icons'
 import NotifyOverlay from './NotifyOverlay'
 // import { useWebSocket } from '@/hooks/project/useWebSocket'
 // import { addUnreadMessage } from '@/store/actions/app.actions'
 
-import { IStoreState, IAppState } from '@/types/store'
-
 import './style/notify.scss'
 
 export default function Notify() {
-  const { unreadMessages } = useSelector<IStoreState, IAppState>(
-    state => state.app,
-  )
+  const { unreadMessages } = useAppSelector()
   // const dispatch = useDispatch()
 
   // const { message, readyState } = useWebSocket()
@@ -21,10 +18,9 @@ export default function Notify() {
   //   message && dispatch(addUnreadMessage(JSON.parse(message.data)))
   // }, [message]) // eslint-disable-line
 
+  // ws 连接异常时的 warning 图标组件
   const WarningIcon = (
-    <Icon
-      type='warning'
-      theme='filled'
+    <WarningFilled
       title='消息中心已离线，请刷新页面'
       style={{ color: 'red', fontSize: 18 }}
     />
@@ -46,7 +42,7 @@ export default function Notify() {
           overflowCount={9}
           title={`你有${length}条未读消息`}
         >
-          <Icon type={'bell'} style={{ fontSize: 20 }} />
+          <BellOutlined style={{ fontSize: 20 }} />
         </Badge>
       </Dropdown>
     </div>

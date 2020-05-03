@@ -5,7 +5,7 @@ const CustomRouter: IRouterItem = {
   name: null,
   title: '自定义组件',
   type: 'folder',
-  icon: 'tool',
+  icon: 'ToolOutlined',
   filePath: 'views/custom/',
   order: null,
   inNav: true,
@@ -17,8 +17,7 @@ const CustomRouter: IRouterItem = {
       route: '/imgs-upload/stage1',
       filePath: 'plugins/custom/views/upload-imgs-demo/UploadImgsDemo',
       inNav: true,
-      icon: 'tool',
-      permission: null,
+      icon: 'ToolOutlined',
     },
     {
       title: '富文本',
@@ -27,8 +26,7 @@ const CustomRouter: IRouterItem = {
       route: '/custom/tinymce',
       filePath: 'plugins/custom/views/tinymce-demo/TinymceDemo',
       inNav: true,
-      icon: 'tool',
-      permission: null,
+      icon: 'ToolOutlined',
     },
   ],
 }

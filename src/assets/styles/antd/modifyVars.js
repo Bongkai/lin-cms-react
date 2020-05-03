@@ -5,19 +5,12 @@ const modifyVars = {
   'primary-color': themeColor,
   'info-color': themeColor,
 
-  // Background color for `<body>`
-  // 'text-color': 'rgb(196, 201, 210)',
-
   // Buttons
   'btn-font-size-sm': '12px',
   'btn-padding-sm': '0 10px',
   'btn-height-base': '32px',
   'btn-height-lg': '36px',
   'btn-height-sm': '24px',
-
-  // z-index list, order by `z-index`
-  // 'zindex-modal': 1051,
-  // 'zindex-modal-mask': 1051,
 
   // Form
   // ---
@@ -39,32 +32,16 @@ const modifyVars = {
   'menu-item-boundary-margin': '0px',
   // dark theme
   'menu-dark-color': 'rgb(196, 201, 210)',
-  'menu-dark-bg': '#192A5E',
+  'menu-dark-bg': '#192a5e',
   'menu-dark-submenu-bg': '#122150',
   'menu-dark-item-active-bg': themeColor,
-
-  // Menu (backup)
-  // ---
-  // 'menu-inline-toplevel-item-height': '50px',
-  // 'menu-item-height': '50px',
-  // 'menu-collapsed-width': '64px',
-
-  // 'menu-item-vertical-margin': '0px',
-  // 'menu-item-boundary-margin': '0px',
-  // // dark theme
-  // 'menu-dark-color': 'rgb(196, 201, 210)',
-  // 'menu-dark-bg': '#192A5E',
-  // 'menu-dark-submenu-bg': '#122150',
-  // 'menu-dark-highlight-color': 'rgb(196, 201, 210)',
-  // 'menu-dark-item-active-bg': 'transparent',
-  // 'menu-dark-selected-item-text-color': '#1890ff',
-  // 'menu-dark-item-hover-bg': '#0a1949',
 
   // Table
   // ---
   'table-header-bg': '#fff',
   'table-padding-vertical': '14px',
   'table-footer-bg': '#fff',
+  'table-row-hover-bg': '#ecf5ff',
 
   // Message
   // ---

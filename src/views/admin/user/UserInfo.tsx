@@ -1,10 +1,15 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react'
+import React, {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+} from 'react'
 import { Form, Input, Button, message } from 'antd'
 import LinCheckbox from '@/components/base/lin-checkbox/LinCheckbox'
-import { WrappedFormUtils } from '@/types/antd/Form'
 import Admin from '@/lin/models/admin'
 import User from '@/lin/models/user'
 import useAwait from '@/hooks/base/useAwait'
+import useFirstMountState from '@/hooks/base/useFirstMountState'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
 import { IAdminUserItem, IResponseWithoutData } from '@/types/model'
@@ -12,35 +17,29 @@ import { IAdminUserItem, IResponseWithoutData } from '@/types/model'
 import './style/user-info.scss'
 
 interface IProps {
-  form: WrappedFormUtils
   pageType: string
   data?: IAdminUserItem
 }
 
-const { Item } = Form
+const addLayout = { labelCol: { span: 3 }, wrapperCol: { span: 21 } }
+const modalLayout = { labelCol: { span: 4 }, wrapperCol: { span: 19 } }
 
-const layout_add = {
-  labelCol: { xs: { span: 24 }, sm: { span: 3 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 21 } },
-}
-const layout_modal = {
-  labelCol: { xs: { span: 24 }, sm: { span: 4 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 19 } },
-}
+const buttonLayout = { wrapperCol: { offset: 3 } }
 
-function UserInfo(
-  { form, pageType, data = {} as IAdminUserItem }: IProps,
-  ref: any,
-) {
+function UserInfo({ pageType, data = {} as IAdminUserItem }: IProps, ref: any) {
   const [submitting, setSubmitting] = useState(false)
-  const [isEdited] = useState(false)
+  const [form] = Form.useForm()
+  const isFirstMount = useFirstMountState()
+
   const isAddPage = pageType === 'add'
   const isInfoPage = pageType === 'info'
   const isPwdPage = pageType === 'password'
 
+  const formLayout = isAddPage ? addLayout : modalLayout
+
   let fieldNames: string[], submitFunc: (fields: any) => Promise<boolean>
   if (pageType === 'add') {
-    fieldNames = Object.keys(form.getFieldsValue())
+    fieldNames = isFirstMount ? [] : Object.keys(form.getFieldsValue())
     submitFunc = submitAdd
   } else if (pageType === 'info') {
     fieldNames = ['username', 'email', 'group_ids']
@@ -76,21 +75,19 @@ function UserInfo(
    * @param {*} finalFunc 处理提交后执行的函数，传入 true 时为提交成功或无修改，传入 false 为提交失败
    */
   async function onSubmit(finalFunc?: (success: boolean) => void) {
-    form.validateFields(
-      fieldNames,
-      async (errors: object | null, values: any) => {
-        if (errors) {
-          const errMsg = isAddPage ? '请将信息填写完整' : '请填写正确的信息'
-          message.error(errMsg)
-          finalFunc && finalFunc(false)
-          return
-        }
+    form
+      .validateFields(fieldNames)
+      .then(async values => {
         setSubmitting(true)
         // 通知父组件提交后续操作的类型，返回 true 则关闭 Modal 并刷新数据
         const success = await submitFunc(values)
         finalFunc && finalFunc(success)
-      },
-    )
+      })
+      .catch(errorInfo => {
+        const errMsg = isAddPage ? '请将信息填写完整' : '请填写正确的信息'
+        message.error(errMsg)
+        finalFunc && finalFunc(false)
+      })
   }
 
   async function submitAdd(fields: any): Promise<boolean> {
@@ -172,100 +169,128 @@ function UserInfo(
     return success
   }
 
-  const { getFieldDecorator } = form
-  const layout = isAddPage ? layout_add : layout_modal
+  // 表单验证规则
+  const rules = useMemo(
+    () => ({
+      username: [{ required: true, message: '用户名不能为空' }],
+      email: [
+        {
+          pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/,
+          message: '请输入正确的邮箱地址或者不填',
+        },
+      ],
+      password: [
+        { required: true, message: '请输入密码' },
+        { min: 6, message: '密码长度不能少于6位数' },
+      ],
+      confirm_password: [
+        { required: true, message: '请再次输入密码' },
+        {
+          validator: (rule: any, value: string) => {
+            if (value === form.getFieldValue('password')) {
+              return Promise.resolve()
+            }
+            return Promise.reject('两次输入密码不一致!')
+          },
+        },
+      ],
+    }),
+    [form],
+  )
+
+  // 表单默认数据
+  const initialValues = useMemo(
+    () => {
+      const infoValues = isPwdPage
+        ? {}
+        : {
+            username: isInfoPage ? data.username : null,
+            email: isInfoPage ? data.email : null,
+          }
+
+      const groupValues = {
+        group_ids: isInfoPage ? data.group_ids.map(item => item.id) : [],
+      }
+      return Object.assign(infoValues, groupValues)
+    },
+    [], // eslint-disable-line
+  )
 
   return (
     <div className='user-info-container'>
-      <Form className='custom-antd' {...layout} colon={false}>
-        <Item label='用户名' required r-if={!isPwdPage}>
-          {getFieldDecorator('username', {
-            rules: [{ required: true, message: '用户名不能为空' }],
-            initialValue: isInfoPage ? data.username : null,
-          })(<Input disabled={!isAddPage} />)}
-        </Item>
+      <Form
+        form={form}
+        initialValues={initialValues}
+        colon={false}
+        {...formLayout}
+      >
+        <Form.Item
+          name='username'
+          label='用户名'
+          validateTrigger='onBlur'
+          rules={rules.username}
+          required
+          r-if={!isPwdPage}
+        >
+          <Input disabled={isInfoPage} />
+        </Form.Item>
 
-        <Item label='邮箱' r-if={!isPwdPage}>
-          {getFieldDecorator('email', {
-            validate: [
-              {
-                trigger: 'onBlur',
-                rules: [
-                  {
-                    pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/,
-                    message: '请输入正确的邮箱地址或者不填',
-                  },
-                ],
-              },
-            ],
-            initialValue: isInfoPage ? data.email : null,
-          })(<Input disabled={isEdited} />)}
-        </Item>
+        <Form.Item
+          name='email'
+          label='邮箱'
+          validateTrigger='onBlur'
+          rules={rules.email}
+          r-if={!isPwdPage}
+        >
+          <Input disabled={isInfoPage} />
+        </Form.Item>
 
-        <Item label='密码' required r-if={!isInfoPage}>
-          {getFieldDecorator('password', {
-            validate: [
-              {
-                trigger: 'onBlur',
-                rules: [
-                  { required: true, message: '请输入密码' },
-                  { min: 6, message: '密码长度不能少于6位数' },
-                ],
-              },
-            ],
-          })(<Input type='password' />)}
-        </Item>
+        <Form.Item
+          name='password'
+          label='密码'
+          validateTrigger='onBlur'
+          rules={rules.password}
+          required
+          r-if={!isInfoPage}
+        >
+          <Input.Password />
+        </Form.Item>
 
-        <Item label='确认密码' required r-if={!isInfoPage}>
-          {getFieldDecorator('confirm_password', {
-            validate: [
-              {
-                trigger: 'onBlur',
-                rules: [
-                  { required: true, message: '请再次输入密码' },
-                  {
-                    validator: (rule, value, callback) => {
-                      if (value !== form.getFieldValue('password')) {
-                        callback('两次输入密码不一致!')
-                      }
-                      // 原组件库的一个 Fixed 代码
-                      callback()
-                    },
-                  },
-                ],
-              },
-            ],
-          })(<Input type='password' />)}
-        </Item>
+        <Form.Item
+          name='confirm_password'
+          label='确认密码'
+          validateTrigger='onBlur'
+          rules={rules.confirm_password}
+          dependencies={['password']}
+          required
+          r-if={!isInfoPage}
+        >
+          <Input.Password />
+        </Form.Item>
 
-        <Item label='选择分组' r-if={!isPwdPage}>
+        <Form.Item label='选择分组' r-if={!isPwdPage}>
           <LinCheckbox
+            name='group_ids'
             options={groups}
-            valueKey='id'
-            nameKey='name'
-            checkAllClassName='checkbox-all'
+            form={form}
+            itemValueKey='id'
+            itemNameKey='name'
             checkGroupClassName='checkbox-group'
             checkItemClassName='checkbox-item'
-            form={form}
-            decoratorId='group_ids'
-            decoratorOptions={{
-              initialValue: isInfoPage
-                ? data.group_ids.map(item => item.id)
-                : [],
-            }}
           />
-        </Item>
+        </Form.Item>
 
-        <Item className='submit' label=' ' r-if={isAddPage}>
+        <Form.Item r-if={isAddPage} {...buttonLayout}>
           <Button
             type='primary'
             loading={submitting}
             onClick={() => onSubmit()}
+            style={{ marginRight: 10 }}
           >
             确 定
           </Button>
           <Button onClick={onReset}>重 置</Button>
-        </Item>
+        </Form.Item>
       </Form>
     </div>
   )

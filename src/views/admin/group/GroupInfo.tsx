@@ -3,12 +3,14 @@ import React, {
   useEffect,
   forwardRef,
   useImperativeHandle,
+  useMemo,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, message } from 'antd'
 import LinCheckbox from '@/components/base/lin-checkbox/LinCheckbox'
 import LoadingWrapper from '@/components/base/loading-wrapper/LoadingWrapper'
 import Admin from '@/lin/models/admin'
+import useFirstMountState from '@/hooks/base/useFirstMountState'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
 import {
@@ -18,12 +20,10 @@ import {
   IPermissionItem,
   IResponseWithoutData,
 } from '@/types/model'
-import { WrappedFormUtils } from '@/types/antd/Form'
 
 import './style/group-info.scss'
 
 interface IProps {
-  form: WrappedFormUtils
   pageType: string
   data?: IGroupItem
 }
@@ -32,24 +32,13 @@ interface IPermissionModuleFormedIds {
   [propName: string]: number[]
 }
 
-const { Item } = Form
+const addLayout = { labelCol: { span: 3 }, wrapperCol: { span: 16 } }
+const infoLayout = { labelCol: { span: 4 }, wrapperCol: { span: 19 } }
+const permissionsLayout = { labelCol: { span: 24 }, wrapperCol: { span: 24 } }
 
-const layout_add = {
-  labelCol: { xs: { span: 24 }, sm: { span: 3 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 16 } },
-}
-const layout_info = {
-  labelCol: { xs: { span: 24 }, sm: { span: 4 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 19 } },
-}
-const layout_auths = {
-  wrapperCol: { xs: { span: 24 }, sm: { span: 24 } },
-}
+const buttonLayout = { wrapperCol: { offset: 3 } }
 
-function GroupInfo(
-  { form, pageType, data = {} as IGroupItem }: IProps,
-  ref: any,
-) {
+function GroupInfo({ pageType, data = {} as IGroupItem }: IProps, ref: any) {
   // 所有分组权限
   const [allPermissions, setAllPermissions] = useState<IAllPermissions>({})
   // 权限组 module name
@@ -62,18 +51,25 @@ function GroupInfo(
   >({})
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [form] = Form.useForm()
+  const history = useHistory()
+  const isFirstMount = useFirstMountState()
+
   const isAddPage = pageType === 'add'
   const isInfoPage = pageType === 'info'
-  const isAuthsPage = pageType === 'permissions'
+  const isPermissionsPage = pageType === 'permissions'
+
   const { id } = data
+
   // prettier-ignore
-  const layout = isAddPage ? layout_add : (isAuthsPage ? layout_auths : layout_info)
-  const history = useHistory()
+  const formLayout = isAddPage
+    ? addLayout
+    : (isPermissionsPage ? permissionsLayout : infoLayout)
 
   let fieldNames: string[], submitFunc: (fields: any) => Promise<boolean>
 
   if (pageType === 'add') {
-    fieldNames = Object.keys(form.getFieldsValue())
+    fieldNames = isFirstMount ? [] : Object.keys(form.getFieldsValue())
     submitFunc = submitAdd
   } else if (pageType === 'info') {
     fieldNames = ['name', 'info']
@@ -83,7 +79,7 @@ function GroupInfo(
     submitFunc = submitPermissions
   }
 
-  // 获取
+  // 初始化时获取全部权限组
   useEffect(() => {
     async function getGroupAuths() {
       const allPermissions: IAllPermissions = await Admin.getAllPermissions()
@@ -91,14 +87,14 @@ function GroupInfo(
 
       if (id || id === 0) {
         const groupInfo: IGroupItemWithPermissions = await Admin.getOneGroup(id)
-        const formedIds = getFormedPermissionIds(groupInfo.permissions)
+        const formedIds = _getFormedPermissionIds(groupInfo.permissions)
         setPermissionModuleIds(formedIds)
       }
       setAllPermissions(allPermissions)
       setLoading(false)
     }
 
-    function getFormedPermissionIds(
+    function _getFormedPermissionIds(
       permissions: IPermissionItem[],
     ): IPermissionModuleFormedIds {
       const formedIds = {} as IPermissionModuleFormedIds
@@ -137,30 +133,28 @@ function GroupInfo(
    * @param {*} submitType 添加分组/修改信息/配置权限
    * @param {*} finalFunc 处理提交后执行的函数，传入 true 时为提交成功或无修改，传入 false 为提交失败
    */
-  async function onSubmit(finalFunc?: (success: boolean | null) => void) {
-    form.validateFields(
-      fieldNames,
-      async (errors: object | null, values: any) => {
-        if (errors) {
-          const errMsg = isAddPage ? '请将信息填写完整' : '请填写正确的信息'
-          message.error(errMsg)
-          finalFunc && finalFunc(false)
-          return
-        }
-
+  async function onSubmit(finalFunc?: (success?: boolean) => void) {
+    form
+      .validateFields(fieldNames)
+      .then(async values => {
+        console.log(values)
         setSubmitting(true)
         // 通知父组件提交后续操作的类型，返回 true 则关闭 Modal 并刷新数据
         const success = await submitFunc(values)
         finalFunc && finalFunc(success)
-      },
-    )
+      })
+      .catch(errorInfo => {
+        const errMsg = isAddPage ? '请将信息填写完整' : '请填写正确的信息'
+        message.error(errMsg)
+        finalFunc && finalFunc(false)
+      })
   }
 
   async function submitAdd(fields: any): Promise<boolean> {
     const { name, info, ...permissionsObj } = fields
     let res: IResponseWithoutData
     try {
-      const permissions = getPermissionsIds(permissionsObj)
+      const permissions = _getPermissionsIds(permissionsObj)
       res = await Admin.createOneGroup(name, info, permissions)
     } catch (e) {
       console.log(e)
@@ -194,9 +188,9 @@ function GroupInfo(
 
   async function submitPermissions(fields: any): Promise<boolean> {
     const { name, info, ...permissionsObj } = fields
-    const permissions = getPermissionsIds(permissionsObj)
-    const IOriginalAuths = getPermissionsIds(permission_module_ids)
-    const { addPermissions, deletePermissions } = diffPermissions(
+    const permissions = _getPermissionsIds(permissionsObj)
+    const IOriginalAuths = _getPermissionsIds(permission_module_ids)
+    const { addPermissions, deletePermissions } = _diffPermissions(
       IOriginalAuths,
       permissions,
     )
@@ -220,7 +214,7 @@ function GroupInfo(
   }
 
   // 处理权限数据格式
-  function getPermissionsIds(
+  function _getPermissionsIds(
     permissionsObj: IPermissionModuleFormedIds,
   ): number[] {
     const permissions: number[] = []
@@ -234,7 +228,7 @@ function GroupInfo(
     return permissions
   }
 
-  function diffPermissions(
+  function _diffPermissions(
     oldPermissions: number[],
     newPermissions: number[],
   ): {
@@ -258,65 +252,95 @@ function GroupInfo(
     return { addPermissions, deletePermissions }
   }
 
-  const { getFieldDecorator } = form
+  // 表单默认数据
+  const initialValues = useMemo(
+    () => {
+      const infoValues = isPermissionsPage
+        ? {}
+        : {
+            name: isInfoPage ? data.name : null,
+            info: isInfoPage ? data.info : null,
+          }
+
+      const permissionsValues = {}
+      !isInfoPage &&
+        permission_module_name.forEach(name => {
+          permissionsValues[name] = isPermissionsPage
+            ? permission_module_ids[name] || []
+            : []
+        })
+
+      return Object.assign(infoValues, permissionsValues)
+    },
+    [permission_module_ids], // eslint-disable-line
+  )
+
+  useEffect(() => {
+    form.resetFields()
+  }, [permission_module_ids]) // eslint-disable-line
 
   return (
     <div className='group-info-container'>
-      <Form className='custom-antd' {...layout} colon={false}>
-        <Item label='分组名称' required r-if={!isAuthsPage}>
-          {getFieldDecorator('name', {
-            validate: [
-              {
-                trigger: 'onBlur',
-                rules: [{ required: true, message: '分组名称不能为空' }],
-              },
-            ],
-            initialValue: isInfoPage ? data.name : null,
-          })(<Input className='custom-antd' />)}
-        </Item>
+      <Form
+        form={form}
+        initialValues={initialValues}
+        colon={false}
+        {...formLayout}
+      >
+        <Form.Item
+          name='name'
+          label='分组名称'
+          validateTrigger='onBlur'
+          rules={[{ required: true, message: '分组名称不能为空' }]}
+          required
+          r-if={!isPermissionsPage}
+        >
+          <Input />
+        </Form.Item>
 
-        <Item label='分组描述' r-if={!isAuthsPage}>
-          {getFieldDecorator('info', {
-            initialValue: isInfoPage ? data.info : null,
-          })(<Input className='custom-antd' />)}
-        </Item>
+        <Form.Item name='info' label='分组描述' r-if={!isPermissionsPage}>
+          <Input />
+        </Form.Item>
 
-        <Item label={isAddPage ? '分配权限' : ''} r-if={!isInfoPage}>
-          <LoadingWrapper loading={loading}>
-            <div className='permissions-box'>
-              {permission_module_name.map(name => (
-                <LinCheckbox
-                  key={name}
-                  moduleName={name}
-                  options={allPermissions[name]}
-                  valueKey='id'
-                  nameKey='name'
-                  checkAllClassName='checkbox-all'
-                  checkGroupClassName='checkbox-group'
-                  checkItemClassName='checkbox-item'
-                  form={form}
-                  decoratorId={name}
-                  decoratorOptions={{
-                    initialValue: isAuthsPage
-                      ? permission_module_ids[name] || []
-                      : [],
-                  }}
-                />
-              ))}
-            </div>
+        <Form.Item label={isAddPage ? '分配权限' : ''} r-if={!isInfoPage}>
+          <LoadingWrapper loading={loading} style={{ marginTop: 8 }}>
+            {permission_module_name.map(name => (
+              <Form.Item key={name} shouldUpdate noStyle>
+                {/* 这里要使用一个返回 JSX 的方法来配合 shouldUpdate 实现重置时重渲染 */}
+                {() => (
+                  <LinCheckbox
+                    name={name}
+                    moduleName={name}
+                    options={allPermissions[name]}
+                    form={form}
+                    itemValueKey='id' // 将 allPermissions[name].id 当作 CheckItem 的 value 和 key
+                    itemNameKey='name' // 将 allPermissions[name].name 当作 CheckItem 的 name
+                    checkAllClassName='checkbox-all'
+                    checkGroupClassName='checkbox-group'
+                    checkItemClassName='checkbox-item'
+                  />
+                )}
+              </Form.Item>
+            ))}
           </LoadingWrapper>
-        </Item>
+        </Form.Item>
 
-        <Item className='submit' label=' ' r-if={isAddPage}>
+        <Form.Item
+          r-if={isAddPage}
+          validateTrigger='onBlur'
+          required
+          {...buttonLayout}
+        >
           <Button
             type='primary'
             loading={submitting}
             onClick={() => onSubmit()}
+            style={{ marginRight: 10 }}
           >
             确 定
           </Button>
           <Button onClick={onReset}>重 置</Button>
-        </Item>
+        </Form.Item>
       </Form>
     </div>
   )

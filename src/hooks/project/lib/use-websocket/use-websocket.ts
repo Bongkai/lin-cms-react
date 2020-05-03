@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { useImmer } from 'use-immer'
 import { attachListeners } from './attach-listener'
 import { createSocket } from './create-socket'
 import websocketWrapper from './proxy'
@@ -27,7 +28,7 @@ export const useWebSocket = (
     WebSocketEventMap['message'] | null
   >(null)
   // 多个 ws 实例的 readyState 集合
-  const [readyState, setReadyState] = useState<ReadyStateState>({})
+  const [readyState, setReadyState] = useImmer<ReadyStateState>({})
   // ws 连接的最终 url
   const convertedUrl = useRef<string | null>(null)
   // 原始 ws 实例

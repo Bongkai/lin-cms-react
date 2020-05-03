@@ -1,29 +1,27 @@
 import React, { useState, useRef } from 'react'
-import { Form, Modal, Tabs, Button } from 'antd'
+import { Modal, Tabs, Button } from 'antd'
 import UserInfo from './UserInfo'
 
 import { ModalProps } from 'antd/lib/modal'
 import { IAdminUserItem } from '@/types/model'
-import { FormComponentProps } from '@/types/antd/Form'
 
-interface IProps extends ModalProps, FormComponentProps {
+interface IProps extends ModalProps {
   data: IAdminUserItem
   refreshData: (...args: any) => void
 }
 
-const formWrapper = Form.create<IProps>({
-  name: 'user_edit',
-})
+const TAB_INFO = '修改信息'
+const TAB_PASSWORD = '修改密码'
 
-function FormModal({ form, data, refreshData, ...restProps }: IProps) {
-  const [activeTab, setActiveTab] = useState('修改信息')
+export default function FormModal({ data, refreshData, ...restProps }: IProps) {
+  const [activeTab, setActiveTab] = useState(TAB_INFO)
   const [submitting, setSubmitting] = useState(false)
   const userInfo = useRef<any>()
   const userPassword = useRef<any>()
 
   function onSubmit() {
     setSubmitting(true)
-    const node = activeTab === '修改信息' ? userInfo : userPassword
+    const node = activeTab === TAB_INFO ? userInfo : userPassword
     node.current.onSubmit((success: boolean) => {
       setSubmitting(false)
       success && refreshData()
@@ -31,7 +29,7 @@ function FormModal({ form, data, refreshData, ...restProps }: IProps) {
   }
 
   function resetForm() {
-    const node = activeTab === '修改信息' ? userInfo : userPassword
+    const node = activeTab === TAB_INFO ? userInfo : userPassword
     node.current.onReset()
   }
 
@@ -54,20 +52,13 @@ function FormModal({ form, data, refreshData, ...restProps }: IProps) {
       {...restProps}
     >
       <Tabs activeKey={activeTab} animated={false} onChange={onTabChange}>
-        <Tabs.TabPane tab='修改信息' key='修改信息'>
-          <UserInfo pageType='info' ref={userInfo} form={form} data={data} />
+        <Tabs.TabPane tab={TAB_INFO} key={TAB_INFO}>
+          <UserInfo pageType='info' ref={userInfo} data={data} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='修改密码' key='修改密码'>
-          <UserInfo
-            pageType='password'
-            ref={userPassword}
-            form={form}
-            data={data}
-          />
+        <Tabs.TabPane tab={TAB_PASSWORD} key={TAB_PASSWORD}>
+          <UserInfo pageType='password' ref={userPassword} data={data} />
         </Tabs.TabPane>
       </Tabs>
     </Modal>
   )
 }
-
-export default formWrapper(FormModal)

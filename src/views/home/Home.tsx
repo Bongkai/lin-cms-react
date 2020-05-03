@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
 import { useLocation } from 'react-router-dom'
-import { Layout, Icon } from 'antd'
+import { Layout } from 'antd'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import {
   NavBar,
   SideBar,
@@ -10,8 +11,6 @@ import {
   // BackTop,
 } from '@/components/layout'
 import { updateRoute, clearRoute } from '@/store/actions/app.actions'
-
-import { IStoreState, IHistoryItem } from '@/types/store'
 
 import './home.scss'
 
@@ -22,9 +21,7 @@ const { Header, Sider, Content } = Layout
  */
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false)
-  const reuseLength = useSelector<IStoreState, IHistoryItem[]>(
-    state => state.app.histories,
-  ).length
+  const reuseLength = useAppSelector().histories.length
   const dispatch = useDispatch()
   const { pathname } = useLocation()
 
@@ -62,9 +59,14 @@ export default function Home() {
                 className='operate'
                 style={{ height: reuseLength > 1 ? '45px' : '86px' }}
               >
-                <Icon
+                <MenuUnfoldOutlined
+                  r-if={collapsed}
                   className='fold-icon'
-                  type={collapsed ? 'menu-unfold' : 'menu-fold'}
+                  onClick={changeSidebarState}
+                />
+                <MenuFoldOutlined
+                  r-else
+                  className='fold-icon'
                   onClick={changeSidebarState}
                 />
                 <NavBar />

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from '@/hooks/project/useRedux'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { notification } from 'antd'
 import AppConfig from '@/config/index'
@@ -7,8 +7,6 @@ import Utils from '@/lin/utils/util'
 import { isLoginRequired } from './login-required'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { IHomeRouterItem } from './home-router'
-
-import { IStoreState, IAppState } from '@/types/store'
 
 const { defaultRoute } = AppConfig
 
@@ -43,9 +41,7 @@ function RenderRoutes({
   switchProps = {},
   location,
 }: RenderRoutesProps) {
-  const { logined, permissions, user } = useSelector<IStoreState, IAppState>(
-    state => state.app,
-  )
+  const { logined, permissions, user } = useAppSelector()
   return (
     <Switch r-if={routes} location={location} {...switchProps}>
       <Redirect exact from='/' to={defaultRoute} />
@@ -54,10 +50,8 @@ function RenderRoutes({
           route.path &&
           route.name && (
             <Route
-              key={route.key || index}
+              key={index}
               path={route.path}
-              exact={route.exact}
-              strict={route.strict}
               render={props => {
                 if (!route.name) return
 

@@ -1,29 +1,27 @@
 import React, { useState, useRef } from 'react'
-import { Form, Modal, Tabs, Button } from 'antd'
+import { Modal, Tabs, Button } from 'antd'
 import GroupInfo from './GroupInfo'
 
 import { ModalProps } from 'antd/lib/modal'
-import { FormComponentProps } from '@/types/antd/Form'
 import { IGroupItem } from '@/types/model'
 
-interface IProps extends ModalProps, FormComponentProps {
+interface IProps extends ModalProps {
   data?: IGroupItem
   refreshData: (...args: any) => void
 }
 
-const formWrapper = Form.create<IProps>({
-  name: 'group_edit',
-})
+const TAB_INFO = '修改信息'
+const TAB_PERMISSIONS = '配置权限'
 
-function FormModal({ form, data, refreshData, ...restProps }: IProps) {
-  const [activeTab, setActiveTab] = useState('修改信息')
+export default function FormModal({ data, refreshData, ...restProps }: IProps) {
+  const [activeTab, setActiveTab] = useState(TAB_INFO)
   const [submitting, setSubmitting] = useState(false)
   const groupInfo = useRef<any>()
   const groupAuths = useRef<any>()
 
   async function onSubmit() {
     setSubmitting(true)
-    const node = activeTab === '修改信息' ? groupInfo : groupAuths
+    const node = activeTab === TAB_INFO ? groupInfo : groupAuths
     node.current.onSubmit((success: boolean) => {
       setSubmitting(false)
       success && refreshData()
@@ -31,7 +29,7 @@ function FormModal({ form, data, refreshData, ...restProps }: IProps) {
   }
 
   function resetForm() {
-    const node = activeTab === '修改信息' ? groupInfo : groupAuths
+    const node = activeTab === TAB_INFO ? groupInfo : groupAuths
     node.current.onReset()
   }
 
@@ -54,20 +52,13 @@ function FormModal({ form, data, refreshData, ...restProps }: IProps) {
       {...restProps}
     >
       <Tabs activeKey={activeTab} animated={false} onChange={onTabChange}>
-        <Tabs.TabPane tab='修改信息' key='修改信息'>
-          <GroupInfo pageType='info' ref={groupInfo} form={form} data={data} />
+        <Tabs.TabPane tab={TAB_INFO} key={TAB_INFO}>
+          <GroupInfo pageType='info' ref={groupInfo} data={data} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='配置权限' key='配置权限'>
-          <GroupInfo
-            pageType='permissions'
-            ref={groupAuths}
-            form={form}
-            data={data}
-          />
+        <Tabs.TabPane tab={TAB_PERMISSIONS} key={TAB_PERMISSIONS}>
+          <GroupInfo pageType='permissions' ref={groupAuths} data={data} />
         </Tabs.TabPane>
       </Tabs>
     </Modal>
   )
 }
-
-export default formWrapper(FormModal)

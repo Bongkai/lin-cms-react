@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useImmer } from 'use-immer'
 
 interface Store {
   loading: boolean
@@ -23,9 +24,9 @@ interface Options {
 export default function useAwait<T>(
   request: (...args: any) => Promise<T>,
   initialValue?: any,
-  ...args: any
+  ...args: any[]
 ): [T, Options] {
-  const [store, setStore] = useState<Store>({
+  const [store, setStore] = useImmer<Store>({
     loading: true,
     res: initialValue,
     err: null,
@@ -36,23 +37,32 @@ export default function useAwait<T>(
     loading && getData(args)
   }, [loading, args]) // eslint-disable-line
 
-  function getData(args: any) {
+  function getData(args: any[]) {
     const response = request(...args)
     response
       .then(res => {
-        setStore({ ...store, res, loading: false, err: null })
+        setStore(store => {
+          store.res = res
+          store.loading = false
+          store.err = null
+        })
       })
       .catch(e => {
-        setStore({ ...store, loading: false, err: e })
+        setStore(store => {
+          store.loading = false
+          store.err = e
+        })
       })
   }
 
-  function refresh(...args: any) {
+  function refresh(...args: any[]) {
     getData(args)
   }
 
   function setLoading(loading: boolean) {
-    setStore({ ...store, loading })
+    setStore(store => {
+      store.loading = loading
+    })
   }
 
   return [

@@ -1,7 +1,8 @@
 import React, { useEffect, useCallback, useRef, MouseEvent } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
 import { useLocation, useHistory } from 'react-router-dom'
-import { Icon } from 'antd'
+import { CloseOutlined } from '@ant-design/icons'
+import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
 import Swiper from '@/components/base/swiper/Swiper'
 import Utils from '@/lin/utils/util'
 import { changeReuseTab } from '@/store/actions/app.actions'
@@ -11,7 +12,7 @@ import {
   getStageList,
 } from '@/store/getters/app.getters'
 
-import { IStoreState, IAppState, IHistoryItem } from '@/types/store'
+import { IHistoryItem } from '@/types/store'
 import { IRouterItem } from '@/types/project'
 
 import './reuse-tab.scss'
@@ -30,14 +31,13 @@ const swiperParameters = {
 }
 
 export default function ReuseTab() {
-  const appState = useSelector<IStoreState, IAppState>(state => state.app)
-  const { logined, histories, defaultRoute } = appState
-  const stageConfig = appState.currentRoute.config
-  const dispatch = useDispatch()
+  const { logined, histories, defaultRoute, currentRoute } = useAppSelector()
+  const stageConfig = currentRoute.config
   const { pathname } = useLocation()
   const history = useHistory()
   const stageList = getStageList()
   const historiesRef = useRef<IHistoryItem[]>()
+  const dispatch = useDispatch()
 
   const changeRoute = useCallback(
     config => {
@@ -177,12 +177,12 @@ export default function ReuseTab() {
                 className={`link ${pathname === route && 'active'}`}
                 onClick={() => onLinkClick(route)}
               >
-                <Icon type={icon} style={{ fontSize: '16px' }} />
+                <DynamicIcon type={icon} style={{ fontSize: '16px' }} />
                 <span style={{ padding: '0 5px' }}>
                   {Utils.cutString(title, 8)}
                 </span>
                 <span className='icon-close' onClick={ev => close(ev, index)}>
-                  <Icon className='icon-close-icon' type='close' />
+                  <CloseOutlined className='icon-close-icon' />
                 </span>
               </div>
             </div>
