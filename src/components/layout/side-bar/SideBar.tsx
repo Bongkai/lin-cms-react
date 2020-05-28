@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useImmer } from 'use-immer'
-import { useAppSelector } from '@/hooks/project/useRedux'
+import { useAppSelector } from '@/store'
 import { useHistory, NavLink } from 'react-router-dom'
 import { Menu, Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'

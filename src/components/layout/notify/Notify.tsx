@@ -1,21 +1,19 @@
 import React from 'react'
-import { useAppSelector } from '@/hooks/project/useRedux'
+import { useAppSelector } from '@/store'
 import { Dropdown, Badge } from 'antd'
 import { WarningFilled, BellOutlined } from '@ant-design/icons'
 import NotifyOverlay from './NotifyOverlay'
 // import { useWebSocket } from '@/hooks/project/useWebSocket'
-// import { addUnreadMessage } from '@/store/actions/app.actions'
+// import { addUnreadMessage } from '@/store/mutations/app.mutations'
 
 import './style/notify.scss'
 
 export default function Notify() {
   const { unreadMessages } = useAppSelector()
-  // const dispatch = useDispatch()
-
   // const { message, readyState } = useWebSocket()
 
   // useEffect(() => {
-  //   message && dispatch(addUnreadMessage(JSON.parse(message.data)))
+  //   message && commitMutation(addUnreadMessage(JSON.parse(message.data)))
   // }, [message]) // eslint-disable-line
 
   // ws 连接异常时的 warning 图标组件

@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
+import { Provider, PersistGate } from 'dream-redux'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN'
-import { store, persistor } from './store/index'
-import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from '@/store'
 import App from './App'
 
 // 导入 dayjs 的汉化文件

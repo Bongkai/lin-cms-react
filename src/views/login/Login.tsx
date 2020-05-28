@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import { useAppSelector, commitMutation } from '@/store'
 import { useHistory } from 'react-router-dom'
 import { message } from 'antd'
 import LoadingWrapper from '@/components/base/loading-wrapper/LoadingWrapper'
@@ -7,7 +7,7 @@ import User from '@/lin/models/user'
 import {
   setUserAndState,
   setUserPermissions,
-} from '@/store/actions/app.actions'
+} from '@/store/mutations/app.mutations'
 
 import './login.scss'
 import teamNameImg from '@/assets/img/login/team-name.png'
@@ -20,7 +20,6 @@ export default function Login() {
   const [password, setPassword] = useState('123456')
   const [loading, setLoading] = useState(false)
   const { defaultRoute } = useAppSelector()
-  const dispatch = useDispatch()
   const history = useHistory()
 
   function onSubmitClick() {
@@ -46,8 +45,9 @@ export default function Login() {
     try {
       // 尝试获取当前用户信息
       const user = await User.getPermissions()
-      dispatch(setUserAndState(user))
-      dispatch(setUserPermissions(user.permissions))
+
+      commitMutation(setUserAndState(user))
+      commitMutation(setUserPermissions(user.permissions))
     } catch (err) {
       console.log(err)
     }

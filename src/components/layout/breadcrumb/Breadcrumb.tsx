@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector } from '@/hooks/project/useRedux'
+import { useAppSelector } from '@/store'
 
 import './breadcrumb.scss'
 

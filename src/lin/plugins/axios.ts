@@ -4,8 +4,8 @@ import axios, { Method } from 'axios'
 import { message as antdMessage, notification } from 'antd'
 import Config from '@/config'
 import ErrorCode from '@/config/error-code'
-import { store } from '@/store'
-import { loginOut } from '@/store/actions/app.actions'
+import { commitMutation } from '@/store'
+import { loginOut } from '@/store/mutations/app.mutations'
 import { getToken, saveAccessToken } from '@/lin/utils/token'
 
 // Full config:  https://github.com/axios/axios#request-config
@@ -139,7 +139,7 @@ _axios.interceptors.response.use(
       // refresh_token 异常，直接登出
       if (code === 10000 || code === 10100) {
         setTimeout(() => {
-          store.dispatch(loginOut())
+          commitMutation(loginOut())
           const { origin } = window.location
           window.location.href = origin
         }, 1500)

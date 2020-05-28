@@ -1,4 +1,3 @@
-import { AnyAction } from 'redux'
 import { IRouterItem } from './project'
 import { IGroupItem } from './model'
 
@@ -17,13 +16,6 @@ export interface ISideBarListItem {
   title: string
   type?: string
   children?: ISideBarListItem[]
-}
-
-// ----- action -----
-
-export interface IAction extends AnyAction {
-  type: string
-  payload?: any
 }
 
 // ----- app -----

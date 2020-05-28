@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector } from '@/hooks/project/useRedux'
+import { useAppSelector } from '@/store'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { notification } from 'antd'
 import AppConfig from '@/config/index'

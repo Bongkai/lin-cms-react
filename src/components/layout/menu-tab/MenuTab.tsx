@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAppSelector } from '@/hooks/project/useRedux'
+import { useAppSelector } from '@/store'
 import { NavLink } from 'react-router-dom'
 import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
 import Utils from '@/lin/utils/util'

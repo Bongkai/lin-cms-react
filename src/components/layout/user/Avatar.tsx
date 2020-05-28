@@ -1,11 +1,11 @@
 import React, { useState, useRef, ChangeEvent } from 'react'
-import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import { useAppSelector, commitMutation } from '@/store'
 import { Modal, message } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import { post, put } from '@/lin/plugins/axios'
 import Cropper from '@/components/base/cropper/Cropper'
 import UserModal from '@/lin/models/user'
-import { setUserAndState } from '@/store/actions/app.actions'
+import { setUserAndState } from '@/store/mutations/app.mutations'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
 import { IUserType } from '@/types/store'
@@ -27,7 +27,6 @@ export default function Avatar() {
   const { avatar } = useAppSelector().user
   const cropper = useRef<any>()
   const avatarInput = useRef<HTMLInputElement | null>(null)
-  const dispatch = useDispatch()
 
   // 读取本地图片并进入截图界面
   function onFileChange(ev: ChangeEvent<HTMLInputElement>) {
@@ -108,7 +107,7 @@ export default function Avatar() {
           // eslint-disable-line
           // 尝试获取当前用户信息
           const user = res
-          dispatch(setUserAndState(user))
+          commitMutation(setUserAndState(user))
         })
         .catch(err => {
           setSubmitting(false)
