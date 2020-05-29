@@ -1,10 +1,10 @@
 import React from 'react'
-import { useAppSelector } from '@/store'
+import { useSelector } from '@/store'
 
 import './breadcrumb.scss'
 
 export default function Breadcrumb() {
-  const stageInfo = useAppSelector().currentRoute.treePath
+  const stageInfo = useSelector(state => state.app.currentRoute.treePath)
   const titleArr = stageInfo.map(item => item.title).filter(item => !!item)
 
   return (

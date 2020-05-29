@@ -1,17 +1,16 @@
 import { config } from './config'
 
 import { StoreCreator } from 'dream-redux'
-import { IStoreState, IAppState } from '@/types/store'
+import { IStoreState } from '@/types/store'
 
 export const {
   store,
   persistor,
-  useSelector,
-  setReducer,
+  useSelector: useDefaultSelector,
   commitMutation,
 } = new StoreCreator(config)
 
-// 快速获取 store.state.app
-export function useAppSelector() {
-  return useSelector<IStoreState, IAppState>(state => state.app)
+// 封装 useSelector，省略指定泛型步骤
+export function useSelector<T>(selector: (state: IStoreState) => T) {
+  return useDefaultSelector<IStoreState, T>(selector)
 }

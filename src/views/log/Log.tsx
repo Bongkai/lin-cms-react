@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useAppSelector } from '@/store'
+import { useSelector } from '@/store'
 import { Form, Dropdown, Menu, Button, DatePicker, Divider } from 'antd'
 import {
   UserOutlined,
@@ -39,7 +39,8 @@ export default function Log() {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [searchDate, setSearchDate] = useState<[string, string] | []>([])
   const [form] = Form.useForm()
-  const { user, permissions } = useAppSelector()
+  const user = useSelector(state => state.app.user)
+  const permissions = useSelector(state => state.app.permissions)
   const isFirstMount = useFirstMountState()
 
   // 获取条件检索数据

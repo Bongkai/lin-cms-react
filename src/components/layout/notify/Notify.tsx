@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector } from '@/store'
+import { useSelector } from '@/store'
 import { Dropdown, Badge } from 'antd'
 import { WarningFilled, BellOutlined } from '@ant-design/icons'
 import NotifyOverlay from './NotifyOverlay'
@@ -9,7 +9,7 @@ import NotifyOverlay from './NotifyOverlay'
 import './style/notify.scss'
 
 export default function Notify() {
-  const { unreadMessages } = useAppSelector()
+  const unreadMessages = useSelector(state => state.app.unreadMessages)
   // const { message, readyState } = useWebSocket()
 
   // useEffect(() => {

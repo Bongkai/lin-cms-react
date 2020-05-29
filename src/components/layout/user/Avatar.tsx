@@ -1,5 +1,5 @@
 import React, { useState, useRef, ChangeEvent } from 'react'
-import { useAppSelector, commitMutation } from '@/store'
+import { useSelector, commitMutation } from '@/store'
 import { Modal, message } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import { post, put } from '@/lin/plugins/axios'
@@ -24,7 +24,7 @@ export default function Avatar() {
   const [cropVisible, setCropVisible] = useState(false)
   const [cropImg, setCropImg] = useState<string | undefined>(undefined)
   const [submitting, setSubmitting] = useState(false)
-  const { avatar } = useAppSelector().user
+  const avatar = useSelector(state => state.app.user.avatar) || defaultAvatar
   const cropper = useRef<any>()
   const avatarInput = useRef<HTMLInputElement | null>(null)
 
@@ -125,7 +125,7 @@ export default function Avatar() {
 
   return (
     <div className='avatar' title='点击修改头像'>
-      <img src={avatar || defaultAvatar} alt='头像' />
+      <img src={avatar} alt='头像' />
       <label className='mask'>
         <EditOutlined style={{ fontSize: '18px' }} />
         <input

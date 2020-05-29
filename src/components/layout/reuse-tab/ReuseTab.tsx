@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useRef, MouseEvent } from 'react'
-import { useAppSelector, commitMutation } from '@/store'
+import { useSelector, commitMutation } from '@/store'
 import { useLocation, useHistory } from 'react-router-dom'
 import { CloseOutlined } from '@ant-design/icons'
 import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
@@ -31,8 +31,10 @@ const swiperParameters = {
 }
 
 export default function ReuseTab() {
-  const { logined, histories, defaultRoute, currentRoute } = useAppSelector()
-  const stageConfig = currentRoute.config
+  const logined = useSelector(state => state.app.logined)
+  const histories = useSelector(state => state.app.histories)
+  const defaultRoute = useSelector(state => state.app.defaultRoute)
+  const stageConfig = useSelector(state => state.app.currentRoute.config)
   const { pathname } = useLocation()
   const history = useHistory()
   const stageList = getStageList()

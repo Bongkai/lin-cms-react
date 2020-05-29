@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAppSelector, commitMutation } from '@/store'
+import { useSelector, commitMutation } from '@/store'
 import { useHistory } from 'react-router-dom'
 import { Input, message } from 'antd'
 import { SolutionOutlined, LogoutOutlined } from '@ant-design/icons'
@@ -17,7 +17,7 @@ import cornerImg from '@/assets/img/user/corner.png'
 
 export default function UserBox() {
   const [nicknameEditing, setNicknameEditing] = useState(false)
-  const nickname = useAppSelector().user.nickname || '佚名'
+  const nickname = useSelector(state => state.app.user.nickname) || '佚名'
   const history = useHistory()
 
   function onNicknameClick() {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector, commitMutation } from '@/store'
+import { useSelector, commitMutation } from '@/store'
 import { DeleteOutlined } from '@ant-design/icons'
 import { changeReuseTab } from '@/store/mutations/app.mutations'
 
@@ -8,9 +8,9 @@ import { IHistoryItem } from '@/types/store'
 import './clear-tab.scss'
 
 export default function ClearTab() {
-  const appState = useAppSelector()
-  const config = appState.currentRoute.config
-  const reuseLength = appState.histories.length
+  const config = useSelector(state => state.app.currentRoute.config)
+  const histories = useSelector(state => state.app.histories)
+  const reuseLength = histories.length
 
   function clearAllHistories() {
     const ele = {} as IHistoryItem

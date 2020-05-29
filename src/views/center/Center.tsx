@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector, commitMutation } from '@/store'
+import { useSelector, commitMutation } from '@/store'
 import { Input, message } from 'antd'
 import { put } from '@/lin/plugins/axios'
 import UserModal from '@/lin/models/user'
@@ -14,7 +14,7 @@ import { IResponseWithoutData } from '@/types/model'
 import './center.scss'
 
 export default function Center() {
-  const nickname = useAppSelector().user.nickname || '佚名'
+  const nickname = useSelector(state => state.app.user.nickname) || '佚名'
 
   function onNicknameBlur(ev: any) {
     const value: string = ev.target.value

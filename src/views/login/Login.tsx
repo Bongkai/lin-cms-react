@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAppSelector, commitMutation } from '@/store'
+import { useSelector, commitMutation } from '@/store'
 import { useHistory } from 'react-router-dom'
 import { message } from 'antd'
 import LoadingWrapper from '@/components/base/loading-wrapper/LoadingWrapper'
@@ -19,7 +19,7 @@ export default function Login() {
   const [username, setUsername] = useState('root')
   const [password, setPassword] = useState('123456')
   const [loading, setLoading] = useState(false)
-  const { defaultRoute } = useAppSelector()
+  const defaultRoute = useSelector(state => state.app.defaultRoute)
   const history = useHistory()
 
   function onSubmitClick() {

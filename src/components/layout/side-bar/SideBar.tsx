@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useImmer } from 'use-immer'
-import { useAppSelector } from '@/store'
+import { useSelector } from '@/store'
 import { useHistory, NavLink } from 'react-router-dom'
 import { Menu, Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
@@ -35,7 +35,7 @@ export default function SideBar({ collapsed }) {
   const [showSearchList, setShowSearchList] = useState(false)
   const [groups, setGroups] = useState<IViewRouter[]>([])
   const [selectedKey, setSelectedKey] = useState('')
-  const stageInfo = useAppSelector().currentRoute.treePath
+  const stageInfo = useSelector(state => state.app.currentRoute.treePath)
   const history = useHistory()
 
   useEffect(() => {

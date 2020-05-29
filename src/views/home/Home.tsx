@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAppSelector, commitMutation } from '@/store'
+import { useSelector, commitMutation } from '@/store'
 import { useLocation } from 'react-router-dom'
 import { Layout } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
@@ -17,11 +17,12 @@ import './home.scss'
 const { Header, Sider, Content } = Layout
 
 /**
- * Home 首页
+ * Home 主页面
  */
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false)
-  const reuseLength = useAppSelector().histories.length
+  const histories = useSelector(state => state.app.histories)
+  const reuseLength = histories.length
   const { pathname } = useLocation()
 
   useEffect(() => {
