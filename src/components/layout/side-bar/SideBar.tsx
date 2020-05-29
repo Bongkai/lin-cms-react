@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { useImmer } from 'use-immer'
 import { useSelector } from '@/store'
 import { useHistory, NavLink } from 'react-router-dom'
@@ -28,7 +28,7 @@ interface IViewRouter {
   key: number
 }
 
-export default function SideBar({ collapsed }) {
+function SideBar({ collapsed }) {
   const [list, setList] = useState<ISideBarListItem[]>([])
   const [idMap, setIdMap] = useState<IIdMap>({} as IIdMap)
   const [openKeys, setOpenKeys] = useImmer<string[]>([])
@@ -219,3 +219,5 @@ export default function SideBar({ collapsed }) {
     </div>
   )
 }
+
+export default memo(SideBar)

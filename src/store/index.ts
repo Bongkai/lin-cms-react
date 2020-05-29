@@ -12,5 +12,5 @@ export const {
 
 // 封装 useSelector，省略指定泛型步骤
 export function useSelector<T>(selector: (state: IStoreState) => T) {
-  return useDefaultSelector<IStoreState, T>(selector)
+  return useDefaultSelector(selector)
 }

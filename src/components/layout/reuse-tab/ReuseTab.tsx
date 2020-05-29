@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef, MouseEvent } from 'react'
+import React, { useEffect, useCallback, useRef, MouseEvent, memo } from 'react'
 import { useSelector, commitMutation } from '@/store'
 import { useLocation, useHistory } from 'react-router-dom'
 import { CloseOutlined } from '@ant-design/icons'
@@ -30,7 +30,7 @@ const swiperParameters = {
   observer: true,
 }
 
-export default function ReuseTab() {
+export default memo(function ReuseTab() {
   const logined = useSelector(state => state.app.logined)
   const histories = useSelector(state => state.app.histories)
   const defaultRoute = useSelector(state => state.app.defaultRoute)
@@ -194,4 +194,4 @@ export default function ReuseTab() {
       </Swiper>
     </div>
   )
-}
+})
