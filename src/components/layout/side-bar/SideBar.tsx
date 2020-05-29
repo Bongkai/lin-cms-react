@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { useImmer } from 'use-immer'
-import { useAppSelector } from '@/hooks/project/useRedux'
+import { useSelector } from '@/store'
 import { useHistory, NavLink } from 'react-router-dom'
 import { Menu, Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
@@ -28,14 +28,14 @@ interface IViewRouter {
   key: number
 }
 
-export default function SideBar({ collapsed }) {
+function SideBar({ collapsed }) {
   const [list, setList] = useState<ISideBarListItem[]>([])
   const [idMap, setIdMap] = useState<IIdMap>({} as IIdMap)
   const [openKeys, setOpenKeys] = useImmer<string[]>([])
   const [showSearchList, setShowSearchList] = useState(false)
   const [groups, setGroups] = useState<IViewRouter[]>([])
   const [selectedKey, setSelectedKey] = useState('')
-  const stageInfo = useAppSelector().currentRoute.treePath
+  const stageInfo = useSelector(state => state.app.currentRoute.treePath)
   const history = useHistory()
 
   useEffect(() => {
@@ -219,3 +219,5 @@ export default function SideBar({ collapsed }) {
     </div>
   )
 }
+
+export default memo(SideBar)

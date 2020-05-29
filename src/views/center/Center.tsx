@@ -1,9 +1,9 @@
 import React from 'react'
-import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import { useSelector, commitMutation } from '@/store'
 import { Input, message } from 'antd'
 import { put } from '@/lin/plugins/axios'
 import UserModal from '@/lin/models/user'
-import { setUserAndState } from '@/store/actions/app.actions'
+import { setUserAndState } from '@/store/mutations/app.mutations'
 import PwdForm from '@/components/layout/user/PwdForm'
 import Avatar from '@/components/layout/user/Avatar'
 import { MAX_SUCCESS_CODE } from '@/config/global'
@@ -14,8 +14,7 @@ import { IResponseWithoutData } from '@/types/model'
 import './center.scss'
 
 export default function Center() {
-  const nickname = useAppSelector().user.nickname || '佚名'
-  const dispatch = useDispatch()
+  const nickname = useSelector(state => state.app.user.nickname) || '佚名'
 
   function onNicknameBlur(ev: any) {
     const value: string = ev.target.value
@@ -35,7 +34,7 @@ export default function Center() {
       })
       .then((res: IUserType | undefined) => {
         if (typeof res === 'undefined') return
-        dispatch(setUserAndState(res))
+        commitMutation(setUserAndState(res))
       })
   }
 

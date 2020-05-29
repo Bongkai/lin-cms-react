@@ -1,11 +1,11 @@
-import React, { useEffect, useCallback, useRef, MouseEvent } from 'react'
-import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import React, { useEffect, useCallback, useRef, MouseEvent, memo } from 'react'
+import { useSelector, commitMutation } from '@/store'
 import { useLocation, useHistory } from 'react-router-dom'
 import { CloseOutlined } from '@ant-design/icons'
 import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
 import Swiper from '@/components/base/swiper/Swiper'
 import Utils from '@/lin/utils/util'
-import { changeReuseTab } from '@/store/actions/app.actions'
+import { changeReuseTab } from '@/store/mutations/app.mutations'
 import {
   getStageByName,
   getStageByRoute,
@@ -30,17 +30,18 @@ const swiperParameters = {
   observer: true,
 }
 
-export default function ReuseTab() {
-  const { logined, histories, defaultRoute, currentRoute } = useAppSelector()
-  const stageConfig = currentRoute.config
+export default memo(function ReuseTab() {
+  const logined = useSelector(state => state.app.logined)
+  const histories = useSelector(state => state.app.histories)
+  const defaultRoute = useSelector(state => state.app.defaultRoute)
+  const stageConfig = useSelector(state => state.app.currentRoute.config)
   const { pathname } = useLocation()
   const history = useHistory()
   const stageList = getStageList()
   const historiesRef = useRef<IHistoryItem[]>()
-  const dispatch = useDispatch()
 
   const changeRoute = useCallback(
-    config => {
+    async config => {
       if (!config) {
         return
       }
@@ -62,9 +63,9 @@ export default function ReuseTab() {
       ele.routePath = config.route
       ele.title = config.title
       ele.icon = config.icon
-      dispatch(changeReuseTab([ele, ...histories]))
+      commitMutation(changeReuseTab([ele, ...histories]))
     },
-    [histories, dispatch],
+    [histories],
   )
 
   // 保持一个可给 useEffect 使用的最新的 histories 值
@@ -120,7 +121,7 @@ export default function ReuseTab() {
         changeRoute(stageConfig)
       } else {
         // 其他情况直接更新 histories 数据
-        dispatch(changeReuseTab(histories))
+        commitMutation(changeReuseTab(histories))
       }
     }
     init()
@@ -151,7 +152,7 @@ export default function ReuseTab() {
     // 删除该历史记录
     const _histories = [...histories]
     _histories.splice(index, 1)
-    dispatch(changeReuseTab(_histories))
+    commitMutation(changeReuseTab(_histories))
   }
 
   function onLinkClick(route: string) {
@@ -193,4 +194,4 @@ export default function ReuseTab() {
       </Swiper>
     </div>
   )
-}
+})

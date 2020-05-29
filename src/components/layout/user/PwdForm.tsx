@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import { commitMutation } from '@/store'
 import { Form, Input, Button, message } from 'antd'
 import User from '@/lin/models/user'
-import { loginOut } from '@/store/actions/app.actions'
+import { loginOut } from '@/store/mutations/app.mutations'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
 import { IResponseWithoutData } from '@/types/model'
@@ -12,7 +12,6 @@ const buttonLayout = { wrapperCol: { offset: 3 } }
 
 export default function PwdForm() {
   const [form] = Form.useForm()
-  const dispatch = useDispatch()
 
   // 提交表单
   function onSubmit() {
@@ -46,7 +45,7 @@ export default function PwdForm() {
 
   function _outLogin() {
     setTimeout(() => {
-      dispatch(loginOut())
+      commitMutation(loginOut())
     }, 500)
   }
 

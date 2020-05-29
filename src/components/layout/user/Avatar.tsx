@@ -1,11 +1,11 @@
 import React, { useState, useRef, ChangeEvent } from 'react'
-import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import { useSelector, commitMutation } from '@/store'
 import { Modal, message } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import { post, put } from '@/lin/plugins/axios'
 import Cropper from '@/components/base/cropper/Cropper'
 import UserModal from '@/lin/models/user'
-import { setUserAndState } from '@/store/actions/app.actions'
+import { setUserAndState } from '@/store/mutations/app.mutations'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
 import { IUserType } from '@/types/store'
@@ -24,10 +24,9 @@ export default function Avatar() {
   const [cropVisible, setCropVisible] = useState(false)
   const [cropImg, setCropImg] = useState<string | undefined>(undefined)
   const [submitting, setSubmitting] = useState(false)
-  const { avatar } = useAppSelector().user
+  const avatar = useSelector(state => state.app.user.avatar) || defaultAvatar
   const cropper = useRef<any>()
   const avatarInput = useRef<HTMLInputElement | null>(null)
-  const dispatch = useDispatch()
 
   // 读取本地图片并进入截图界面
   function onFileChange(ev: ChangeEvent<HTMLInputElement>) {
@@ -108,7 +107,7 @@ export default function Avatar() {
           // eslint-disable-line
           // 尝试获取当前用户信息
           const user = res
-          dispatch(setUserAndState(user))
+          commitMutation(setUserAndState(user))
         })
         .catch(err => {
           setSubmitting(false)
@@ -126,7 +125,7 @@ export default function Avatar() {
 
   return (
     <div className='avatar' title='点击修改头像'>
-      <img src={avatar || defaultAvatar} alt='头像' />
+      <img src={avatar} alt='头像' />
       <label className='mask'>
         <EditOutlined style={{ fontSize: '18px' }} />
         <input

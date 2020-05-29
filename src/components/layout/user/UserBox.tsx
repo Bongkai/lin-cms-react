@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import { useSelector, commitMutation } from '@/store'
 import { useHistory } from 'react-router-dom'
 import { Input, message } from 'antd'
 import { SolutionOutlined, LogoutOutlined } from '@ant-design/icons'
 import { put } from '@/lin/plugins/axios'
 import UserModal from '@/lin/models/user'
 import Avatar from './Avatar'
-import { loginOut, setUserAndState } from '@/store/actions/app.actions'
+import { loginOut, setUserAndState } from '@/store/mutations/app.mutations'
 import { MAX_SUCCESS_CODE } from '@/config/global'
 
 import { IUserType } from '@/types/store'
@@ -17,8 +17,7 @@ import cornerImg from '@/assets/img/user/corner.png'
 
 export default function UserBox() {
   const [nicknameEditing, setNicknameEditing] = useState(false)
-  const nickname = useAppSelector().user.nickname || '佚名'
-  const dispatch = useDispatch()
+  const nickname = useSelector(state => state.app.user.nickname) || '佚名'
   const history = useHistory()
 
   function onNicknameClick() {
@@ -48,7 +47,7 @@ export default function UserBox() {
       })
       .then((res: IUserType | undefined) => {
         if (typeof res === 'undefined') return
-        dispatch(setUserAndState(res))
+        commitMutation(setUserAndState(res))
       })
   }
 
@@ -57,7 +56,7 @@ export default function UserBox() {
   }
 
   function outLogin() {
-    dispatch(loginOut())
+    commitMutation(loginOut())
   }
 
   return (

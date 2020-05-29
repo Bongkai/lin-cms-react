@@ -1,17 +1,16 @@
 import React from 'react'
-import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import { useSelector, commitMutation } from '@/store'
 import { DeleteOutlined } from '@ant-design/icons'
-import { changeReuseTab } from '@/store/actions/app.actions'
+import { changeReuseTab } from '@/store/mutations/app.mutations'
 
 import { IHistoryItem } from '@/types/store'
 
 import './clear-tab.scss'
 
 export default function ClearTab() {
-  const appState = useAppSelector()
-  const config = appState.currentRoute.config
-  const reuseLength = appState.histories.length
-  const dispatch = useDispatch()
+  const config = useSelector(state => state.app.currentRoute.config)
+  const histories = useSelector(state => state.app.histories)
+  const reuseLength = histories.length
 
   function clearAllHistories() {
     const ele = {} as IHistoryItem
@@ -19,7 +18,7 @@ export default function ClearTab() {
     ele.routePath = config.route
     ele.title = config.title
     ele.icon = config.icon
-    dispatch(changeReuseTab([ele]))
+    commitMutation(changeReuseTab([ele]))
   }
 
   return (

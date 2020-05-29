@@ -7,6 +7,7 @@ import {
   IUserType,
   ISideBarListItem,
   IOriginalPermissions,
+  IStoreState,
 } from '@/types/store'
 import { IRouterItem } from '@/types/project'
 
@@ -76,7 +77,12 @@ function permissionShaking(
 
 // 获取有权限的舞台配置
 export const permissionStageConfig = (): IRouterItem[] => {
-  const { stageConfig, permissions, user } = store.getState().app
+  // console.log('permissionStageConfig')
+  const {
+    stageConfig,
+    permissions,
+    user,
+  } = (store.getState() as IStoreState).app
   const tempStageConfig = Util.deepClone(stageConfig)
   const shookConfig = permissionShaking(tempStageConfig, permissions, user)
 
@@ -93,7 +99,7 @@ export const permissionStageConfig = (): IRouterItem[] => {
 
 // 获取侧边栏配置
 export const getSideBarList = (): ISideBarListItem[] => {
-  const { sideBarLevel } = store.getState().app
+  const { sideBarLevel } = (store.getState() as IStoreState).app
 
   // TODO: 优化函数返回值的类型
   function deepGetSideBar(

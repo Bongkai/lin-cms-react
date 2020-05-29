@@ -9,7 +9,7 @@
   <a href="#简介">简介</a>&nbsp;|&nbsp;<a href="#快速上手">快速上手</a>&nbsp;|&nbsp;<a href="#版本日志">版本日志</a>
 </p>
 
-![](https://img.shields.io/badge/版本-0.1.1--beta.1-3963bc.svg)
+![](https://img.shields.io/badge/版本-0.2.0-3963bc.svg)
 ![](https://img.shields.io/badge/node-8.11.0+-3963bc.svg)
 ![](https://img.shields.io/badge/脚手架-create--react--app-3963bc.svg)
 ![](https://img.shields.io/badge/license-MIT-3963bc.svg)
@@ -106,7 +106,12 @@ QQ群搜索：林间有风 或 643205479
 
 ## 版本日志
 
-最新版本 `0.1.1-beta.1`
+最新版本 `0.2.0`
+
+### 0.2.0
+
+1.  `U` 使用 [dream-redux](https://github.com/Bongkai/dream-redux) 重构 Redux 代码，极大简化 Redux 的使用
+2.  `U` 调整 useSelector 的用法，保证代码性能的同时简化 ts 写法
 
 ### 0.1.1-beta.1
 

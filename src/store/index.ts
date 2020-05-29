@@ -1,11 +1,16 @@
-import { createStore, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import { persistStore } from 'redux-persist'
-import reducers from './reducers'
+import { config } from './config'
 
-const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)))
+import { StoreCreator } from 'dream-redux'
+import { IStoreState } from '@/types/store'
 
-const persistor = persistStore(store)
+export const {
+  store,
+  persistor,
+  useSelector: useDefaultSelector,
+  commitMutation,
+} = new StoreCreator(config)
 
-export { store, persistor }
+// 封装 useSelector，省略指定泛型步骤
+export function useSelector<T>(selector: (state: IStoreState) => T) {
+  return useDefaultSelector(selector)
+}

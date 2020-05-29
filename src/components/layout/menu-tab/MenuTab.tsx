@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAppSelector } from '@/hooks/project/useRedux'
+import { useSelector } from '@/store'
 import { NavLink } from 'react-router-dom'
 import DynamicIcon from '@/components/base/dynamic-icon/DynamicIcon'
 import Utils from '@/lin/utils/util'
@@ -11,8 +11,8 @@ import './menu-tab.scss'
 export default function MenuTab() {
   const [visible, setVisible] = useState(false)
   const [tabArr, setTabArr] = useState<IRouterItem[]>([])
-  const { currentRoute, sideBarLevel } = useAppSelector()
-  const stageInfo = currentRoute.treePath
+  const sideBarLevel = useSelector(state => state.app.sideBarLevel)
+  const stageInfo = useSelector(state => state.app.currentRoute.treePath)
 
   useEffect(() => {
     let _tabArr: IRouterItem[] = [],

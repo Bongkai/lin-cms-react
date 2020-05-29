@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { memo } from 'react'
 import Routes from '@/router/Routes'
 import homeRouter from '@/router/home-router'
 import { MenuTab } from '@/components/layout'
 
 import './app-main.scss'
 
-export default function AppMain() {
+export default memo(function AppMain() {
   return (
     <section className='appmain-container'>
       <MenuTab />
@@ -14,4 +14,4 @@ export default function AppMain() {
       </div>
     </section>
   )
-}
+})

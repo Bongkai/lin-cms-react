@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAppSelector, useDispatch } from '@/hooks/project/useRedux'
+import { useSelector, commitMutation } from '@/store'
 import { useLocation } from 'react-router-dom'
 import { Layout } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
@@ -10,31 +10,31 @@ import {
   ReuseTab,
   // BackTop,
 } from '@/components/layout'
-import { updateRoute, clearRoute } from '@/store/actions/app.actions'
+import { updateRoute, clearRoute } from '@/store/mutations/app.mutations'
 
 import './home.scss'
 
 const { Header, Sider, Content } = Layout
 
 /**
- * Home 首页
+ * Home 主页面
  */
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false)
-  const reuseLength = useAppSelector().histories.length
-  const dispatch = useDispatch()
+  const histories = useSelector(state => state.app.histories)
+  const reuseLength = histories.length
   const { pathname } = useLocation()
 
   useEffect(() => {
     // 组件卸载时清空 redux 中的路由信息，避免干扰后续数据的操作
     return () => {
-      dispatch(clearRoute())
+      commitMutation(clearRoute())
     }
   }, []) // eslint-disable-line
 
   useEffect(() => {
-    dispatch(updateRoute(pathname))
-  }, [pathname, dispatch])
+    commitMutation(updateRoute(pathname))
+  }, [pathname])
 
   function changeSidebarState() {
     setCollapsed(collapsed => !collapsed)
