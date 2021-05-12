@@ -55,7 +55,7 @@
     "screenfull": "^5.0.2",
     "semver": "6.3.0",
     "source-map-loader": "^0.2.4",
-    "swiper": "^5.3.7",
+    "swiper": "^6.5.1",
     "terser-webpack-plugin": "1.4.1",
     "tinymce": "^5.2.1",
     "ts-pnp": "1.1.4",
